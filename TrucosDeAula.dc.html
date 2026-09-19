@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #FAF9F6; }
+  body { -webkit-font-smoothing: antialiased; }
+  a { color: #1B44E8; text-decoration: none; }
+  a:hover { color: #C79A3E; }
+  ::selection { background: #C79A3E; color: #101012; }
+  @keyframes ms-mq { from { transform: translate3d(0,0,0); } to { transform: translate3d(-50%,0,0); } }
+  @keyframes ms-float-a { 0%,100% { transform: translate3d(0,0,0) rotate(0deg); } 50% { transform: translate3d(0,-18px,0) rotate(8deg); } }
+  @keyframes ms-float-b { 0%,100% { transform: translate3d(0,0,0) rotate(0deg); } 50% { transform: translate3d(10px,14px,0) rotate(-10deg); } }
+  @keyframes ms-spin { to { transform: rotate(360deg); } }
+  @keyframes ms-pulse { 0%,100% { transform: scale(1); opacity: .9; } 50% { transform: scale(1.12); opacity: 1; } }
+</style>
+</helmet>
+<div style="font-family:'Instrument Sans',Helvetica,Arial,sans-serif;background:#FAF9F6;color:#101012;overflow-x:hidden">
+
+  <header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:16px clamp(16px,4vw,56px);background:rgba(250,249,246,.82);backdrop-filter:blur(14px);border-bottom:1px solid rgba(16,16,18,.09)">
+    <a href="#top" style="display:flex;align-items:center;gap:10px;color:#101012">
+      <span style="display:block;width:22px;height:22px;border-radius:999px;background:#1B44E8;animation:ms-pulse 3.6s ease-in-out infinite"></span>
+      <span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:19px;letter-spacing:-.02em">TrucosDeAula</span>
+    </a>
+    <nav style="display:flex;align-items:center;gap:clamp(14px,2.4vw,34px);flex-wrap:wrap">
+      <a href="#infografias" style="font-size:14px;color:#101012;letter-spacing:.01em" style-hover="color:#1B44E8">Infografías</a>
+      <a href="#juegos" style="font-size:14px;color:#101012" style-hover="color:#1B44E8">Juegos</a>
+      <a href="#tips" style="font-size:14px;color:#101012" style-hover="color:#1B44E8">Tips</a>
+      <a href="#manifiesto" style="font-size:14px;color:#101012" style-hover="color:#1B44E8">Manifiesto</a>
+      <a href="#empieza" style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;background:#101012;color:#FAF9F6;font-size:14px;font-weight:600;transition:background .3s ease,transform .3s cubic-bezier(.16,1,.3,1),gap .3s ease" style-hover="background:#1B44E8;color:#FAF9F6;transform:translateY(-2px);gap:14px">Empieza gratis <span style="font-family:'JetBrains Mono',monospace">→</span></a>
+    </nav>
+  </header>
+
+  <section id="top" data-cursor-zone="1" style="position:relative;padding:clamp(48px,9vw,120px) clamp(16px,4vw,56px) clamp(40px,6vw,80px);overflow:hidden">
+    <div style="position:absolute;inset:0;pointer-events:none;opacity:.5;background-image:linear-gradient(rgba(16,16,18,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(16,16,18,.055) 1px,transparent 1px);background-size:88px 88px"></div>
+    <span data-parallax="0.18" style="position:absolute;top:16%;right:8%;font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(60px,9vw,140px);color:#C79A3E;opacity:.5;animation:ms-float-a 9s ease-in-out infinite;pointer-events:none">π</span>
+    <span data-parallax="-0.12" style="position:absolute;bottom:14%;right:24%;font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(40px,5vw,84px);color:#1B44E8;opacity:.35;animation:ms-float-b 11s ease-in-out infinite;pointer-events:none">÷</span>
+    <span data-parallax="0.26" style="position:absolute;top:60%;left:3%;display:block;width:clamp(34px,5vw,72px);height:clamp(34px,5vw,72px);border:2px solid #101012;opacity:.22;transform:rotate(18deg);animation:ms-float-b 13s ease-in-out infinite;pointer-events:none"></span>
+    <span data-parallax="-0.2" style="position:absolute;top:10%;left:38%;display:block;width:clamp(26px,3.4vw,54px);height:clamp(26px,3.4vw,54px);border-radius:999px;background:#DCE9E2;animation:ms-float-a 7.5s ease-in-out infinite;pointer-events:none"></span>
+
+    <div style="position:relative;max-width:1280px;margin:0 auto">
+      <p data-reveal="1" style="display:flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#101012;opacity:.62;margin:0 0 clamp(20px,3vw,38px)">
+        <span style="display:block;width:44px;height:1px;background:#C79A3E"></span>Divulgación matemática, sin bata de laboratorio
+      </p>
+      <h1 data-reveal="2" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:clamp(44px,8.6vw,132px);line-height:.92;letter-spacing:-.035em;margin:0;max-width:16ch;text-wrap:balance">Las mates ya las usas <span style="color:#1B44E8;font-style:italic">{{ heroWord }}</span> todos los días.</h1>
+      <div style="display:flex;flex-wrap:wrap;gap:clamp(28px,5vw,72px);align-items:flex-end;margin-top:clamp(28px,4vw,56px)">
+        <p data-reveal="3" style="flex:1 1 380px;max-width:46ch;font-size:clamp(16px,1.35vw,20px);line-height:1.55;margin:0;color:rgba(16,16,18,.78);text-wrap:pretty">Sólo que nadie te lo contó así. Infografías, juegos y trucos mentales para que las matemáticas dejen de ser un examen y vuelvan a ser una herramienta.</p>
+        <div data-reveal="4" style="flex:0 1 auto;display:flex;flex-wrap:wrap;gap:12px">
+          <a href="#juegos" style="display:inline-flex;align-items:center;gap:10px;padding:16px 26px;border-radius:999px;background:#1B44E8;color:#FAF9F6;font-weight:600;font-size:15px;transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s ease" style-hover="transform:translateY(-3px) scale(1.02);box-shadow:0 18px 34px -18px rgba(27,68,232,.75);color:#FAF9F6">Juega 2 minutos</a>
+          <a href="#infografias" style="display:inline-flex;align-items:center;gap:10px;padding:16px 26px;border-radius:999px;border:1.5px solid rgba(16,16,18,.24);color:#101012;font-weight:600;font-size:15px;transition:border-color .3s ease,background .3s ease,transform .35s cubic-bezier(.16,1,.3,1)" style-hover="border-color:#C79A3E;background:#EFE6D9;transform:translateY(-3px);color:#101012">Ver infografías</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div data-marquee="1" style="border-top:1px solid rgba(16,16,18,.12);border-bottom:1px solid rgba(16,16,18,.12);background:#101012;color:#FAF9F6;overflow:hidden;padding:14px 0">
+    <div data-marquee-track="1" style="display:flex;width:max-content;gap:0;animation:ms-mq 34s linear infinite">
+      <div style="display:flex;align-items:center;gap:clamp(24px,4vw,56px);padding-right:clamp(24px,4vw,56px);font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(18px,2vw,30px);letter-spacing:-.01em;white-space:nowrap">
+        <span>propinas</span><span style="color:#C79A3E">+</span><span>descuentos</span><span style="color:#C79A3E">×</span><span>recetas al doble</span><span style="color:#C79A3E">÷</span><span>tandas y ahorros</span><span style="color:#C79A3E">√</span><span>rendimiento del carro</span><span style="color:#C79A3E">∑</span><span>probabilidad de lluvia</span><span style="color:#C79A3E">π</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:clamp(24px,4vw,56px);padding-right:clamp(24px,4vw,56px);font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(18px,2vw,30px);letter-spacing:-.01em;white-space:nowrap">
+        <span>propinas</span><span style="color:#C79A3E">+</span><span>descuentos</span><span style="color:#C79A3E">×</span><span>recetas al doble</span><span style="color:#C79A3E">÷</span><span>tandas y ahorros</span><span style="color:#C79A3E">√</span><span>rendimiento del carro</span><span style="color:#C79A3E">∑</span><span>probabilidad de lluvia</span><span style="color:#C79A3E">π</span>
+      </div>
+    </div>
+  </div>
+
+  <section id="manifiesto" style="padding:clamp(56px,9vw,130px) clamp(16px,4vw,56px);background:#EFE6D9">
+    <div style="max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;gap:clamp(32px,5vw,80px)">
+      <div style="flex:1 1 420px">
+        <h2 data-reveal="1" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:clamp(30px,4.4vw,66px);line-height:1.02;letter-spacing:-.03em;margin:0;max-width:22ch">No eres malo para las mates. Te las contaron mal.</h2>
+        <p data-reveal="2" style="margin:clamp(20px,3vw,32px) 0 0;max-width:48ch;font-size:clamp(15px,1.2vw,18px);line-height:1.6;color:rgba(16,16,18,.75);text-wrap:pretty">Cada vez que calculas si te alcanza, si conviene, si cabe o cuánto falta, estás haciendo matemáticas. TrucosDeAula traduce eso: del cuaderno cuadriculado a la vida real.</p>
+      </div>
+      <div style="flex:1 1 320px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:clamp(18px,2.5vw,32px);align-content:start">
+        <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+          <div data-reveal="1" style="border-top:1px solid rgba(16,16,18,.22);padding-top:14px">
+            <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(32px,3.6vw,52px);line-height:1;letter-spacing:-.03em;color:#101012">{{ s.n }}</div>
+            <div style="margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(16,16,18,.6);line-height:1.5">{{ s.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="infografias" style="padding:clamp(56px,9vw,130px) clamp(16px,4vw,56px)">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:clamp(32px,5vw,64px)">
+        <h2 data-reveal="1" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:clamp(30px,5vw,74px);line-height:.98;letter-spacing:-.035em;margin:0">Infografías<span style="color:#C79A3E">.</span></h2>
+        <p data-reveal="2" style="margin:0;max-width:34ch;font-size:15px;line-height:1.6;color:rgba(16,16,18,.68)">Un tema, una hoja, cero prerrequisitos. Descárgalas, imprímelas, pégalas en el refri.</p>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:clamp(20px,2.6vw,36px)">
+        <sc-for list="{{ posters }}" as="p" hint-placeholder-count="4">
+          <a href="#empieza" data-reveal="1" style="flex:1 1 {{ p.basis }};min-width:250px;margin-top:{{ p.offset }};display:block;color:#101012;transition:transform .5s cubic-bezier(.16,1,.3,1)" style-hover="transform:translateY(-10px);color:#101012">
+            <div style="position:relative;aspect-ratio:4/5;border:1px solid rgba(16,16,18,.16);border-radius:6px;overflow:hidden;background-color:{{ p.bg }};background-image:repeating-linear-gradient(135deg,rgba(16,16,18,.07) 0 1px,transparent 1px 9px);display:flex;align-items:flex-end;padding:18px">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:rgba(16,16,18,.55)">[ infografía · {{ p.slug }} ]</span>
+              <span style="position:absolute;top:14px;right:14px;display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:999px;background:#101012;color:#FAF9F6;font-family:'JetBrains Mono',monospace;font-size:14px;transition:background .3s ease,transform .45s cubic-bezier(.16,1,.3,1)">↗</span>
+            </div>
+            <div style="display:flex;align-items:baseline;gap:10px;margin-top:14px">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#C79A3E">{{ p.num }}</span>
+              <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:clamp(18px,1.6vw,24px);letter-spacing:-.02em;margin:0;line-height:1.15">{{ p.title }}</h3>
+            </div>
+            <p style="margin:8px 0 0 34px;font-size:14px;line-height:1.55;color:rgba(16,16,18,.62);max-width:32ch">{{ p.desc }}</p>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="juegos" style="padding:clamp(56px,9vw,130px) clamp(16px,4vw,56px);background:#101012;color:#FAF9F6">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="display:flex;flex-wrap:wrap;gap:clamp(28px,4vw,64px);align-items:flex-start">
+        <div style="flex:1 1 380px">
+          <h2 data-reveal="1" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:clamp(30px,5vw,74px);line-height:.98;letter-spacing:-.035em;margin:0;color:#FAF9F6">Juega<span style="color:#C79A3E">.</span><br />Luego lo entiendes.</h2>
+          <p data-reveal="2" style="margin:clamp(18px,2.6vw,30px) 0 0;max-width:40ch;font-size:15px;line-height:1.65;color:rgba(250,249,246,.68)">Nadie aprende a andar en bici leyendo. Cada juego dura menos que una canción.</p>
+          <div data-reveal="3" style="margin-top:clamp(26px,4vw,44px);border:1px solid rgba(250,249,246,.18);border-radius:14px;padding:clamp(20px,3vw,30px);background:rgba(250,249,246,.04)">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#C79A3E">Prueba rápida · propinas</div>
+            <div style="margin-top:14px;font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(22px,2.4vw,32px);letter-spacing:-.02em;line-height:1.15">La cuenta es <span style="color:#C79A3E">${{ bill }}</span>. ¿Cuánto dejas de propina al 10%?</div>
+            <input type="range" min="120" max="1600" step="20" value="{{ bill }}" onInput="{{ onBill }}" aria-label="Monto de la cuenta" style="width:100%;margin:22px 0 6px;accent-color:#1B44E8" />
+            <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(250,249,246,.55)">mueve el punto decimal una casilla ←</div>
+              <button onClick="{{ onToggleAnswer }}" style="border:0;cursor:pointer;padding:12px 22px;border-radius:999px;background:#1B44E8;color:#FAF9F6;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:14px;transition:transform .35s cubic-bezier(.16,1,.3,1),background .3s ease" style-hover="transform:translateY(-2px);background:#C79A3E;color:#101012">{{ answerLabel }}</button>
+            </div>
+            <sc-if value="{{ showAnswer }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top:18px;padding-top:16px;border-top:1px solid rgba(250,249,246,.16);font-size:15px;line-height:1.6;color:rgba(250,249,246,.86)">{{ answerText }}</div>
+            </sc-if>
+          </div>
+        </div>
+        <div style="flex:1 1 380px;display:grid;gap:14px">
+          <sc-for list="{{ games }}" as="g" hint-placeholder-count="3">
+            <a href="#empieza" data-reveal="1" style="display:flex;align-items:center;gap:18px;padding:clamp(18px,2.4vw,26px);border:1px solid rgba(250,249,246,.16);border-radius:14px;color:#FAF9F6;transition:background .35s ease,transform .45s cubic-bezier(.16,1,.3,1),border-color .35s ease" style-hover="background:#FAF9F6;color:#101012;transform:translateX(8px);border-color:#FAF9F6">
+              <span style="flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:999px;background:{{ g.chip }};color:#101012;font-family:'Bricolage Grotesque',sans-serif;font-size:22px">{{ g.sym }}</span>
+              <span style="flex:1 1 auto;min-width:0">
+                <span style="display:block;font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(17px,1.5vw,22px);letter-spacing:-.02em">{{ g.title }}</span>
+                <span style="display:block;margin-top:5px;font-size:13.5px;line-height:1.5;opacity:.72">{{ g.desc }}</span>
+              </span>
+              <span style="flex:0 0 auto;font-family:'JetBrains Mono',monospace;font-size:12px;opacity:.7">{{ g.time }}</span>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tips" style="padding:clamp(56px,9vw,130px) clamp(16px,4vw,56px)">
+    <div style="max-width:1100px;margin:0 auto">
+      <h2 data-reveal="1" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:clamp(30px,5vw,74px);line-height:.98;letter-spacing:-.035em;margin:0 0 clamp(28px,4vw,56px)">Tips que sí<br />vas a usar<span style="color:#1B44E8">.</span></h2>
+      <sc-for list="{{ tips }}" as="t" hint-placeholder-count="4">
+        <div data-reveal="1" onClick="{{ t.onToggle }}" style="border-top:1px solid rgba(16,16,18,.16);padding:clamp(18px,2.4vw,26px) 0;cursor:pointer;transition:padding-left .4s cubic-bezier(.16,1,.3,1)" style-hover="padding-left:14px">
+          <div style="display:flex;align-items:baseline;gap:clamp(14px,2vw,28px)">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#C79A3E;flex:0 0 auto">{{ t.n }}</span>
+            <h3 style="flex:1 1 auto;margin:0;font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:clamp(20px,2.4vw,34px);letter-spacing:-.025em;line-height:1.12">{{ t.title }}</h3>
+            <span style="flex:0 0 auto;font-family:'JetBrains Mono',monospace;font-size:18px;color:#1B44E8">{{ t.icon }}</span>
+          </div>
+          <sc-if value="{{ t.open }}" hint-placeholder-val="{{ false }}">
+            <p style="margin:14px 0 0 clamp(26px,4vw,50px);max-width:56ch;font-size:clamp(15px,1.2vw,17px);line-height:1.6;color:rgba(16,16,18,.74);text-wrap:pretty">{{ t.body }}</p>
+          </sc-if>
+        </div>
+      </sc-for>
+      <div style="border-top:1px solid rgba(16,16,18,.16)"></div>
+    </div>
+  </section>
+
+  <section id="empieza" style="padding:clamp(56px,9vw,130px) clamp(16px,4vw,56px);background:#DCE6F5">
+    <div style="max-width:1000px;margin:0 auto;text-align:center">
+      <div data-reveal="1" style="display:inline-flex;gap:10px;align-items:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(16,16,18,.6)">
+        <span style="display:block;width:9px;height:9px;border-radius:999px;background:#1B44E8;animation:ms-pulse 2.4s ease-in-out infinite"></span>Boletín semanal · gratis
+      </div>
+      <h2 data-reveal="2" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:clamp(32px,6vw,86px);line-height:.96;letter-spacing:-.035em;margin:clamp(18px,2.6vw,28px) 0 0">Una idea matemática cada martes.</h2>
+      <div data-reveal="3" style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:clamp(26px,4vw,42px)">
+        <input type="email" placeholder="tu@correo.com" aria-label="Correo electrónico" style="flex:1 1 300px;max-width:400px;padding:16px 20px;border-radius:999px;border:1.5px solid rgba(16,16,18,.2);background:#FAF9F6;font-family:'Instrument Sans',sans-serif;font-size:15px;color:#101012;outline:none" style-focus="border-color:#1B44E8" />
+        <button style="border:0;cursor:pointer;padding:16px 28px;border-radius:999px;background:#101012;color:#FAF9F6;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:15px;transition:background .3s ease,transform .35s cubic-bezier(.16,1,.3,1)" style-hover="background:#1B44E8;transform:translateY(-2px)">Suscribirme</button>
+      </div>
+      <p data-reveal="4" style="margin:16px 0 0;font-size:13px;color:rgba(16,16,18,.55)">Sin tareas, sin exámenes, sin spam.</p>
+    </div>
+  </section>
+
+  <footer style="padding:clamp(36px,5vw,64px) clamp(16px,4vw,56px);background:#101012;color:rgba(250,249,246,.7)">
+    <div style="max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between">
+      <span style="font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(24px,3vw,40px);color:#FAF9F6;letter-spacing:-.03em">TrucosDeAula</span>
+      <div style="display:flex;flex-wrap:wrap;gap:22px;font-size:14px">
+        <a href="#infografias" style="color:rgba(250,249,246,.7)" style-hover="color:#C79A3E">Infografías</a>
+        <a href="#juegos" style="color:rgba(250,249,246,.7)" style-hover="color:#C79A3E">Juegos</a>
+        <a href="#tips" style="color:rgba(250,249,246,.7)" style-hover="color:#C79A3E">Tips</a>
+        <a href="#empieza" style="color:rgba(250,249,246,.7)" style-hover="color:#C79A3E">Boletín</a>
+      </div>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em">© 2026 · las mates ya las usabas</span>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;motion&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;completo&quot;,&quot;suave&quot;,&quot;ninguno&quot;],&quot;default&quot;:&quot;completo&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Movimiento&quot;},&quot;heroGlow&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Movimiento&quot;},&quot;marqueeSpeed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:34,&quot;min&quot;:12,&quot;max&quot;:70,&quot;step&quot;:2,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Movimiento&quot;}}">
+class Component extends DCLogic {
+  state = { bill: 480, showAnswer: false, openTip: 0, word: 0 };
+
+  motion() { return this.props.motion ?? "completo"; }
+
+  componentDidMount() {
+    this._setup();
+    this._t1 = setTimeout(() => this._setup(), 400);
+    this._t2 = setTimeout(() => this._setup(), 1400);
+    this._wi = setInterval(() => {
+      if (this.motion() === "ninguno") return;
+      this.setState(s => ({ word: (s.word + 1) % 4 }));
+    }, 2600);
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this._t1); clearTimeout(this._t2); clearInterval(this._wi);
+    clearInterval(this._sweepTimer);
+    if (this._sweepScroll) {
+      window.removeEventListener("scroll", this._sweepScroll);
+      window.removeEventListener("resize", this._sweepScroll);
+      window.removeEventListener("hashchange", this._sweepScroll);
+    }
+    if (this._onScroll) window.removeEventListener("scroll", this._onScroll);
+    if (this._onMove) window.removeEventListener("pointermove", this._onMove);
+    if (this._cursor) this._cursor.remove();
+  }
+
+  _setup() {
+    const m = this.motion();
+    const track = document.querySelector("[data-marquee-track]");
+    if (track) {
+      const sp = this.props.marqueeSpeed ?? 34;
+      track.style.animationDuration = m === "ninguno" ? "0s" : sp + "s";
+      track.style.animationPlayState = m === "ninguno" ? "paused" : "running";
+    }
+    if (m === "ninguno") return;
+
+    // scroll reveals with stagger
+    if (!this._sweep) {
+      this._sweep = () => {
+        const h = window.innerHeight;
+        document.querySelectorAll("[data-reveal]").forEach(el => {
+          if (el.style.opacity !== "0") return;
+          if (el.getBoundingClientRect().top < h * 0.95) {
+            const d = Number(el.getAttribute("data-stagger") || 0);
+            setTimeout(() => { el.style.opacity = "1"; el.style.transform = "none"; }, d);
+            if (this._io) this._io.unobserve(el);
+          }
+        });
+      };
+      this._sweepScroll = () => {
+        if (this._sr) return;
+        this._sr = requestAnimationFrame(() => { this._sr = null; this._sweep(); });
+      };
+      window.addEventListener("scroll", this._sweepScroll, { passive: true });
+      window.addEventListener("resize", this._sweepScroll, { passive: true });
+      window.addEventListener("hashchange", this._sweepScroll);
+      this._sweepTimer = setInterval(this._sweep, 900);
+    }
+    if (!this._io) {
+      this._io = new IntersectionObserver(es => {
+        es.forEach(e => {
+          if (!e.isIntersecting) return;
+          const el = e.target;
+          const d = Number(el.getAttribute("data-stagger") || 0);
+          setTimeout(() => { el.style.opacity = "1"; el.style.transform = "none"; }, d);
+          this._io.unobserve(el);
+        });
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+    }
+    const vh = window.innerHeight;
+    document.querySelectorAll("[data-reveal]").forEach(el => {
+      if (el.dataset.msReveal) return;
+      el.dataset.msReveal = "1";
+      const sibs = Array.from(el.parentElement ? el.parentElement.children : []).filter(n => n.hasAttribute && n.hasAttribute("data-reveal"));
+      const idx = Math.max(0, sibs.indexOf(el));
+      const step = m === "suave" ? 55 : 95;
+      el.setAttribute("data-stagger", String(idx * step));
+      el.style.transition = "opacity .75s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1)";
+      if (el.getBoundingClientRect().top > vh * 0.86) {
+        el.style.opacity = "0";
+        el.style.transform = m === "suave" ? "translateY(14px)" : "translateY(30px)";
+        this._io.observe(el);
+      }
+    });
+
+    // light parallax on hero motifs
+    if (!this._onScroll) {
+      const nodes = () => document.querySelectorAll("[data-parallax]");
+      let raf = null;
+      this._onScroll = () => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          raf = null;
+          const y = window.scrollY;
+          nodes().forEach(n => {
+            const k = Number(n.getAttribute("data-parallax")) * (m === "suave" ? 0.45 : 1);
+            n.style.translate = "0 " + (y * k).toFixed(1) + "px";
+          });
+        });
+      };
+      window.addEventListener("scroll", this._onScroll, { passive: true });
+    }
+
+    // soft cursor glow inside the hero
+    if ((this.props.heroGlow ?? true) && !this._cursor) {
+      const zone = document.querySelector("[data-cursor-zone]");
+      if (zone) {
+        const c = document.createElement("div");
+        c.style.cssText = "position:absolute;left:0;top:0;width:340px;height:340px;margin:-170px 0 0 -170px;border-radius:999px;pointer-events:none;opacity:0;transition:opacity .5s ease;background:radial-gradient(circle,rgba(199,154,62,.42) 0%,rgba(27,68,232,.16) 45%,rgba(27,68,232,0) 70%);filter:blur(6px);z-index:1";
+        zone.appendChild(c);
+        this._cursor = c;
+        let tx = 0, ty = 0, cx = 0, cy = 0, on = false, raf2 = null;
+        const loop = () => {
+          cx += (tx - cx) * 0.09; cy += (ty - cy) * 0.09;
+          c.style.transform = "translate3d(" + cx.toFixed(1) + "px," + cy.toFixed(1) + "px,0)";
+          raf2 = requestAnimationFrame(loop);
+        };
+        this._onMove = ev => {
+          const r = zone.getBoundingClientRect();
+          const inside = ev.clientY >= r.top && ev.clientY <= r.bottom;
+          if (inside !== on) { on = inside; c.style.opacity = inside ? "1" : "0"; }
+          tx = ev.clientX - r.left; ty = ev.clientY - r.top;
+          if (!raf2) loop();
+        };
+        window.addEventListener("pointermove", this._onMove, { passive: true });
+      }
+    }
+  }
+
+  renderVals() {
+    const words = ["a diario", "sin darte cuenta", "en el súper", "en la cocina"];
+    const bill = this.state.bill;
+    const tipDefs = [
+      ["01", "El 10% es sólo mover el punto", "Para el 10% de cualquier número, corre el punto decimal una casilla a la izquierda. $480 → $48. Y si quieres 15%, súmale la mitad de eso: $48 + $24 = $72."],
+      ["02", "Descuentos: piensa en lo que pagas, no en lo que ahorras", "30% de descuento significa que pagas el 70%. Multiplica por 0.7 y ya. Es un paso en vez de dos, y no te equivocas de signo."],
+      ["03", "Compara precios con la unidad, no con el envase", "Divide precio entre cantidad para tener el precio por 100 g o por litro. Es la única forma honesta de comparar dos empaques distintos."],
+      ["04", "Estimar primero, calcular después", "Redondea a números fáciles y quédate con el orden de magnitud. Si la calculadora te da algo 10 veces más grande, te equivocaste al teclear."]
+    ];
+    return {
+      heroWord: words[this.state.word],
+      bill,
+      showAnswer: this.state.showAnswer,
+      answerLabel: this.state.showAnswer ? "Ocultar respuesta" : "Ver respuesta",
+      answerText: "$" + (bill / 10).toFixed(0) + ". Nada de multiplicar: el punto decimal de " + bill + " se corre una casilla y listo. Y si el servicio fue bueno, súmale la mitad: $" + (bill * 0.15).toFixed(0) + " es el 15%.",
+      onBill: e => this.setState({ bill: Number(e.target.value) }),
+      onToggleAnswer: () => this.setState(s => ({ showAnswer: !s.showAnswer })),
+      stats: [
+        { n: "0", label: "prerrequisitos" },
+        { n: "3 min", label: "por infografía" },
+        { n: "48", label: "temas cotidianos" },
+        { n: "100%", label: "sin fórmulas sueltas" }
+      ],
+      posters: [
+        { num: "01", slug: "porcentajes", title: "Porcentajes sin sudar", desc: "Propinas, descuentos e IVA con aritmética de servilleta.", bg: "#EFE6D9", basis: "460px", offset: "0px" },
+        { num: "02", slug: "probabilidad", title: "¿Qué tan probable?", desc: "Del clima a la rifa de la escuela: leer probabilidades sin miedo.", bg: "#DCE9E2", basis: "340px", offset: "48px" },
+        { num: "03", slug: "proporciones", title: "Reglas de tres reales", desc: "Duplicar recetas, escalar planos, repartir gastos.", bg: "#E4DEF0", basis: "340px", offset: "16px" },
+        { num: "04", slug: "graficas", title: "Cómo te mienten con gráficas", desc: "Ejes cortados, escalas raras y otros trucos de titular.", bg: "#DCE6F5", basis: "460px", offset: "56px" }
+      ],
+      games: [
+        { sym: "%", chip: "#EFE6D9", title: "Cuenta rápida", desc: "Divide la cuenta del restaurante antes de que llegue el mesero.", time: "2 min" },
+        { sym: "◆", chip: "#DCE9E2", title: "Adivina la escala", desc: "¿Cabe un elefante en tu sala? Estimación pura.", time: "3 min" },
+        { sym: "∑", chip: "#E4DEF0", title: "Ruleta de probabilidad", desc: "Apuesta, falla y descubre por qué tu intuición te engaña.", time: "4 min" }
+      ],
+      tips: tipDefs.map(([n, title, body], i) => ({
+        n, title, body,
+        open: this.state.openTip === i,
+        icon: this.state.openTip === i ? "−" : "+",
+        onToggle: () => this.setState(s => ({ openTip: s.openTip === i ? null : i }))
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>
