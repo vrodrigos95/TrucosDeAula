@@ -11,6 +11,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Prerender (HTML estático y datos desde site/data/*.json)
+        run: node scripts/prerender.mjs
+
       - name: Deploy site/ via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
