@@ -1,0 +1,46 @@
+[
+  {
+    "nombre": "CalificaYa",
+    "descripcion": "Califica exámenes de opción múltiple con la cámara de tu celular y descarga las calificaciones en Excel.",
+    "categoria": "Apps para maestros",
+    "paraQuien": "Maestros",
+    "estado": "gratis",
+    "ligaPrincipal": "https://calificaya.trucosdeaula.com",
+    "ligaCompra": "",
+    "precio": "",
+    "imagen": ""
+  },
+  {
+    "nombre": "Los primeros 5 minutos",
+    "descripcion": "20 ganchos para enganchar a tu grupo desde el inicio de la clase, con 4 bonos.",
+    "categoria": "Para maestros",
+    "paraQuien": "Maestros",
+    "estado": "disponible",
+    "ligaPrincipal": "https://rodrigos5.gumroad.com/l/qdway",
+    "ligaCompra": "",
+    "precio": "",
+    "imagen": ""
+  },
+  {
+    "nombre": "Casa de Apuestas Matemática",
+    "descripcion": "Juego de repaso de probabilidad y conteo para proyectar en clase.",
+    "categoria": "Juegos",
+    "paraQuien": "Maestros y alumnos",
+    "estado": "disponible",
+    "ligaPrincipal": "https://rodrigos5.gumroad.com/l/ccfmxp",
+    "ligaCompra": "",
+    "precio": "",
+    "imagen": ""
+  },
+  {
+    "nombre": "Biuan",
+    "descripcion": "Inglés de cero a B1 desde el celular, con examen de nivel gratis.",
+    "categoria": "Inglés",
+    "paraQuien": "Todo público",
+    "estado": "proximamente",
+    "ligaPrincipal": "https://biuan.trucosdeaula.com",
+    "ligaCompra": "",
+    "precio": "",
+    "imagen": ""
+  }
+]
