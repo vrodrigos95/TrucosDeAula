@@ -3,10 +3,21 @@
     "nombre": "CalificaYa",
     "descripcion": "Califica exámenes de opción múltiple con la cámara de tu celular y descarga las calificaciones en Excel.",
     "categoria": "Apps para maestros",
-    "paraQuien": "Maestros",
+    "paraQuien": "Maestros · incluida en el Pase Maestro",
     "estado": "proximamente",
-    "ligaPrincipal": "",
-    "ligaCompra": "",
+    "ligaPrincipal": "https://calificaya.trucosdeaula.com",
+    "ligaCompra": "PLACEHOLDER_URL_CALIFICAYA",
+    "precio": "",
+    "imagen": ""
+  },
+  {
+    "nombre": "Cuadra",
+    "descripcion": "La nueva app para el aula. Muy pronto.",
+    "categoria": "Apps para maestros",
+    "paraQuien": "Maestros · incluida en el Pase Maestro",
+    "estado": "proximamente",
+    "ligaPrincipal": "https://cuadra.trucosdeaula.com",
+    "ligaCompra": "PLACEHOLDER_URL_CUADRA",
     "precio": "",
     "imagen": ""
   },
@@ -36,10 +47,10 @@
     "nombre": "Biuan",
     "descripcion": "Inglés de cero a B1 desde el celular, con examen de nivel gratis.",
     "categoria": "Inglés",
-    "paraQuien": "Todo público",
+    "paraQuien": "Todo público · no incluida en el Pase Maestro",
     "estado": "proximamente",
     "ligaPrincipal": "https://biuan.trucosdeaula.com",
-    "ligaCompra": "",
+    "ligaCompra": "PLACEHOLDER_URL_BIUAN",
     "precio": "",
     "imagen": ""
   }
