@@ -1,0 +1,28 @@
+{
+  "infografias": [
+    { "num": "01", "slug": "porcentajes", "title": "Porcentajes sin sudar", "desc": "Propinas, descuentos e IVA con aritmética de servilleta.", "bg": "#EFE6D9", "basis": "460px", "offset": "0px", "url": "" },
+    { "num": "02", "slug": "probabilidad", "title": "¿Qué tan probable?", "desc": "Del clima a la rifa de la escuela: leer probabilidades sin miedo.", "bg": "#DCE9E2", "basis": "340px", "offset": "48px", "url": "" },
+    { "num": "03", "slug": "proporciones", "title": "Reglas de tres reales", "desc": "Duplicar recetas, escalar planos, repartir gastos.", "bg": "#E4DEF0", "basis": "340px", "offset": "16px", "url": "" },
+    { "num": "04", "slug": "graficas", "title": "Cómo te mienten con gráficas", "desc": "Ejes cortados, escalas raras y otros trucos de titular.", "bg": "#DCE6F5", "basis": "460px", "offset": "56px", "url": "" }
+  ],
+  "juegos": [
+    { "sym": "%", "chip": "#EFE6D9", "title": "Cuenta rápida", "desc": "Divide la cuenta del restaurante antes de que llegue el mesero.", "time": "2 min", "url": "" },
+    { "sym": "◆", "chip": "#DCE9E2", "title": "Adivina la escala", "desc": "¿Cabe un elefante en tu sala? Estimación pura.", "time": "3 min", "url": "" },
+    { "sym": "∑", "chip": "#E4DEF0", "title": "Ruleta de probabilidad", "desc": "Apuesta, falla y descubre por qué tu intuición te engaña.", "time": "4 min", "url": "" }
+  ],
+  "tips": [
+    { "n": "01", "title": "El 10% es sólo mover el punto", "body": "Para el 10% de cualquier número, corre el punto decimal una casilla a la izquierda. $480 → $48. Y si quieres 15%, súmale la mitad de eso: $48 + $24 = $72." },
+    { "n": "02", "title": "Descuentos: piensa en lo que pagas, no en lo que ahorras", "body": "30% de descuento significa que pagas el 70%. Multiplica por 0.7 y ya. Es un paso en vez de dos, y no te equivocas de signo." },
+    { "n": "03", "title": "Compara precios con la unidad, no con el envase", "body": "Divide precio entre cantidad para tener el precio por 100 g o por litro. Es la única forma honesta de comparar dos empaques distintos." },
+    { "n": "04", "title": "Estimar primero, calcular después", "body": "Redondea a números fáciles y quédate con el orden de magnitud. Si la calculadora te da algo 10 veces más grande, te equivocaste al teclear." }
+  ],
+  "pase": {
+    "url": "PLACEHOLDER_URL_PASE",
+    "incluye": [
+      { "sym": "▦", "chip": "#DCE6F5", "title": "Cuadra", "desc": "La nueva app para el aula, en cuanto salga." },
+      { "sym": "✓", "chip": "#DCE9E2", "title": "CalificaYa", "desc": "Califica exámenes de opción múltiple con la cámara del celular." },
+      { "sym": "∑", "chip": "#E4DEF0", "title": "Juegos en versión aula", "desc": "Para proyectar y jugar con todo el grupo." },
+      { "sym": "%", "chip": "#EFE6D9", "title": "Infografías", "desc": "Listas para imprimir y pegar en el salón." }
+    ]
+  }
+}
