@@ -1,23 +1,12 @@
 [
   {
-    "nombre": "CalificaYa",
-    "descripcion": "Califica exámenes de opción múltiple con la cámara de tu celular y descarga las calificaciones en Excel.",
-    "categoria": "Apps para maestros",
-    "paraQuien": "Maestros · incluida en el Pase Maestro",
-    "estado": "proximamente",
-    "ligaPrincipal": "",
-    "ligaCompra": "PLACEHOLDER_URL_CALIFICAYA",
-    "precio": "",
-    "imagen": ""
-  },
-  {
-    "nombre": "Cuadra",
-    "descripcion": "La nueva app para el aula. Muy pronto.",
-    "categoria": "Apps para maestros",
-    "paraQuien": "Maestros · incluida en el Pase Maestro",
-    "estado": "proximamente",
-    "ligaPrincipal": "",
-    "ligaCompra": "PLACEHOLDER_URL_CUADRA",
+    "nombre": "Parejo",
+    "descripcion": "Ecuaciones en equilibrio: despeja con una balanza y resuelve sistemas 2×2. Con Modo Equipos para el proyector.",
+    "categoria": "Juegos",
+    "paraQuien": "Maestros y alumnos",
+    "estado": "disponible",
+    "ligaPrincipal": "https://parejo.trucosdeaula.com",
+    "ligaCompra": "",
     "precio": "",
     "imagen": ""
   },
@@ -44,13 +33,35 @@
     "imagen": ""
   },
   {
+    "nombre": "CalificaYa",
+    "descripcion": "Califica exámenes de opción múltiple con la cámara de tu celular y descarga las calificaciones en Excel.",
+    "categoria": "Apps para maestros",
+    "paraQuien": "Maestros · incluida en el Pase Maestro",
+    "estado": "proximamente",
+    "ligaPrincipal": "",
+    "ligaCompra": "",
+    "precio": "",
+    "imagen": ""
+  },
+  {
+    "nombre": "Cuadra",
+    "descripcion": "Productos notables y factorización, de ida y de vuelta: del binomio al trinomio y de regreso, con fichas y retos por equipos.",
+    "categoria": "Apps para maestros",
+    "paraQuien": "Maestros · incluida en el Pase Maestro",
+    "estado": "proximamente",
+    "ligaPrincipal": "",
+    "ligaCompra": "",
+    "precio": "",
+    "imagen": ""
+  },
+  {
     "nombre": "Biuan",
     "descripcion": "Inglés de cero a B1 desde el celular, con examen de nivel gratis.",
     "categoria": "Inglés",
     "paraQuien": "Todo público · no incluida en el Pase Maestro",
     "estado": "proximamente",
-    "ligaPrincipal": "https://biuan.trucosdeaula.com",
-    "ligaCompra": "PLACEHOLDER_URL_BIUAN",
+    "ligaPrincipal": "",
+    "ligaCompra": "",
     "precio": "",
     "imagen": ""
   }
