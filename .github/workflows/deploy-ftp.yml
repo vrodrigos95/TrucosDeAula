@@ -14,6 +14,9 @@ jobs:
       - name: Prerender (HTML estático y datos desde site/data/*.json)
         run: node scripts/prerender.mjs
 
+      - name: Verificar datos y ligas
+        run: npm run verificar
+
       - name: Deploy site/ via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
