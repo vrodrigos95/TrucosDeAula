@@ -81,7 +81,7 @@
         <p data-reveal="3" style="flex:1 1 380px;max-width:46ch;font-size:clamp(16px,1.35vw,20px);line-height:1.55;margin:0;color:rgba(16,16,18,.78);text-wrap:pretty">Sólo que nadie te lo contó así. Infografías, juegos y trucos mentales para que las matemáticas dejen de ser un examen y vuelvan a ser una herramienta.</p>
         <div data-reveal="4" style="flex:0 1 auto;display:flex;flex-wrap:wrap;gap:12px">
           <a href="#juegos" style="display:inline-flex;align-items:center;gap:10px;padding:16px 26px;border-radius:999px;background:#1B44E8;color:#FAF9F6;font-weight:600;font-size:15px;transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s ease" style-hover="transform:translateY(-3px) scale(1.02);box-shadow:0 18px 34px -18px rgba(27,68,232,.75);color:#FAF9F6">Juega ahora</a>
-          <a href="#infografias" style="display:inline-flex;align-items:center;gap:10px;padding:16px 26px;border-radius:999px;border:1.5px solid rgba(16,16,18,.24);color:#101012;font-weight:600;font-size:15px;transition:border-color .3s ease,background .3s ease,transform .35s cubic-bezier(.16,1,.3,1)" style-hover="border-color:#C79A3E;background:#EFE6D9;transform:translateY(-3px);color:#101012">Ver infografías</a>
+          <a href="{{ heroAlt.href }}" style="display:inline-flex;align-items:center;gap:10px;padding:16px 26px;border-radius:999px;border:1.5px solid rgba(16,16,18,.24);color:#101012;font-weight:600;font-size:15px;transition:border-color .3s ease,background .3s ease,transform .35s cubic-bezier(.16,1,.3,1)" style-hover="border-color:#C79A3E;background:#EFE6D9;transform:translateY(-3px);color:#101012">{{ heroAlt.label }}</a>
         </div>
       </div>
     </div>
@@ -119,11 +119,16 @@
     <div style="max-width:1280px;margin:0 auto">
       <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:clamp(32px,5vw,64px)">
         <h2 data-reveal="1" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:clamp(30px,5vw,74px);line-height:.98;letter-spacing:-.035em;margin:0">Infografías<span style="color:#C79A3E">.</span></h2>
-        <p data-reveal="2" style="margin:0;max-width:34ch;font-size:15px;line-height:1.6;color:rgba(16,16,18,.68)">Un tema, una hoja, cero prerrequisitos. Descárgalas, imprímelas, pégalas en el refri.</p>
+        <sc-if value="{{ hayPosters }}">
+          <p data-reveal="2" style="margin:0;max-width:34ch;font-size:15px;line-height:1.6;color:rgba(16,16,18,.68)">Un tema, una hoja, cero prerrequisitos. Descárgalas, imprímelas, pégalas en el refri.</p>
+        </sc-if>
       </div>
-      <div style="display:flex;flex-wrap:wrap;gap:clamp(20px,2.6vw,36px)">
-        <sc-for list="{{ posters }}" as="p" hint-placeholder-count="4">
-          <sc-if value="{{ p.url }}">
+      <sc-if value="{{ !hayPosters }}">
+        <p data-reveal="2" style="margin:0;max-width:34ch;font-size:15px;line-height:1.6;color:rgba(16,16,18,.68)">Estamos preparando las primeras. Suscríbete y te avisamos.</p>
+      </sc-if>
+      <sc-if value="{{ hayPosters }}">
+        <div style="display:flex;flex-wrap:wrap;gap:clamp(20px,2.6vw,36px)">
+          <sc-for list="{{ posters }}" as="p" hint-placeholder-count="4">
             <a href="{{ p.url }}" target="_blank" rel="noopener" data-reveal="1" style="flex:1 1 {{ p.basis }};min-width:250px;margin-top:{{ p.offset }};display:block;color:#101012;transition:transform .5s cubic-bezier(.16,1,.3,1)" style-hover="transform:translateY(-10px);color:#101012">
               <div style="position:relative;aspect-ratio:4/5;border:1px solid rgba(16,16,18,.16);border-radius:6px;overflow:hidden;background-color:{{ p.bg }};background-image:repeating-linear-gradient(135deg,rgba(16,16,18,.07) 0 1px,transparent 1px 9px);display:flex;align-items:flex-end;padding:18px">
                 <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:rgba(16,16,18,.55)">[ infografía · {{ p.slug }} ]</span>
@@ -135,22 +140,12 @@
               </div>
               <p style="margin:8px 0 0 34px;font-size:14px;line-height:1.55;color:rgba(16,16,18,.62);max-width:32ch">{{ p.desc }}</p>
             </a>
-          </sc-if>
-          <sc-if value="{{ !p.url }}">
-            <div data-reveal="1" style="flex:1 1 {{ p.basis }};min-width:250px;margin-top:{{ p.offset }};display:block;color:#101012">
-              <div style="position:relative;aspect-ratio:4/5;border:1px solid rgba(16,16,18,.16);border-radius:6px;overflow:hidden;background-color:{{ p.bg }};background-image:repeating-linear-gradient(135deg,rgba(16,16,18,.07) 0 1px,transparent 1px 9px);display:flex;align-items:flex-end;padding:18px">
-                <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:rgba(16,16,18,.55)">[ infografía · {{ p.slug }} ]</span>
-                <span style="position:absolute;top:14px;right:14px;display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;background:#FAF9F6;border:1px solid rgba(16,16,18,.16);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#101012">Próximamente</span>
-              </div>
-              <div style="display:flex;align-items:baseline;gap:10px;margin-top:14px">
-                <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#C79A3E">{{ p.num }}</span>
-                <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:clamp(18px,1.6vw,24px);letter-spacing:-.02em;margin:0;line-height:1.15">{{ p.title }}</h3>
-              </div>
-              <p style="margin:8px 0 0 34px;font-size:14px;line-height:1.55;color:rgba(16,16,18,.62);max-width:32ch">{{ p.desc }}</p>
-            </div>
-          </sc-if>
-        </sc-for>
-      </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{ postersPendientes }}">
+          <p style="margin:clamp(24px,3vw,36px) 0 0;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.04em;color:rgba(16,16,18,.55)">{{ postersPendientes }}</p>
+        </sc-if>
+      </sc-if>
     </div>
   </section>
 
@@ -174,31 +169,22 @@
           </div>
         </div>
         <div style="flex:1 1 380px;display:grid;gap:14px">
+          <sc-if value="{{ !hayGames }}">
+            <p style="margin:0;max-width:40ch;font-size:15px;line-height:1.65;color:rgba(250,249,246,.68)">Estamos preparando los primeros. Suscríbete y te avisamos.</p>
+          </sc-if>
           <sc-for list="{{ games }}" as="g" hint-placeholder-count="3">
-            <sc-if value="{{ g.url }}">
-              <a href="{{ g.url }}" target="_blank" rel="noopener" data-reveal="1" style="display:flex;align-items:center;gap:18px;padding:clamp(18px,2.4vw,26px);border:1px solid rgba(250,249,246,.16);border-radius:14px;color:#FAF9F6;transition:background .35s ease,transform .45s cubic-bezier(.16,1,.3,1),border-color .35s ease" style-hover="background:#FAF9F6;color:#101012;transform:translateX(8px);border-color:#FAF9F6">
-                <span style="flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:999px;background:{{ g.chip }};color:#101012;font-family:'Bricolage Grotesque',sans-serif;font-size:22px">{{ g.sym }}</span>
-                <span style="flex:1 1 auto;min-width:0">
-                  <span style="display:block;font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(17px,1.5vw,22px);letter-spacing:-.02em">{{ g.title }}</span>
-                  <span style="display:block;margin-top:5px;font-size:13.5px;line-height:1.5;opacity:.72">{{ g.desc }}</span>
-                </span>
-                <span style="flex:0 0 auto;font-family:'JetBrains Mono',monospace;font-size:12px;opacity:.7">{{ g.etiqueta }}</span>
-              </a>
-            </sc-if>
-            <sc-if value="{{ !g.url }}">
-              <div data-reveal="1" style="display:flex;align-items:center;gap:18px;padding:clamp(18px,2.4vw,26px);border:1px solid rgba(250,249,246,.16);border-radius:14px;color:#FAF9F6">
-                <span style="flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:999px;background:{{ g.chip }};color:#101012;font-family:'Bricolage Grotesque',sans-serif;font-size:22px">{{ g.sym }}</span>
-                <span style="flex:1 1 auto;min-width:0">
-                  <span style="display:block;font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(17px,1.5vw,22px);letter-spacing:-.02em">{{ g.title }}</span>
-                  <span style="display:block;margin-top:5px;font-size:13.5px;line-height:1.5;opacity:.72">{{ g.desc }}</span>
-                </span>
-                <span style="flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-                  <span style="display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;background:rgba(250,249,246,.12);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#FAF9F6">Próximamente</span>
-                  <span style="font-family:'JetBrains Mono',monospace;font-size:12px;opacity:.7">{{ g.etiqueta }}</span>
-                </span>
-              </div>
-            </sc-if>
+            <a href="{{ g.url }}" target="_blank" rel="noopener" data-reveal="1" style="display:flex;align-items:center;gap:18px;padding:clamp(18px,2.4vw,26px);border:1px solid rgba(250,249,246,.16);border-radius:14px;color:#FAF9F6;transition:background .35s ease,transform .45s cubic-bezier(.16,1,.3,1),border-color .35s ease" style-hover="background:#FAF9F6;color:#101012;transform:translateX(8px);border-color:#FAF9F6">
+              <span style="flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:999px;background:{{ g.chip }};color:#101012;font-family:'Bricolage Grotesque',sans-serif;font-size:22px">{{ g.sym }}</span>
+              <span style="flex:1 1 auto;min-width:0">
+                <span style="display:block;font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(17px,1.5vw,22px);letter-spacing:-.02em">{{ g.title }}</span>
+                <span style="display:block;margin-top:5px;font-size:13.5px;line-height:1.5;opacity:.72">{{ g.desc }}</span>
+              </span>
+              <span style="flex:0 0 auto;font-family:'JetBrains Mono',monospace;font-size:12px;opacity:.7">{{ g.etiqueta }}</span>
+            </a>
           </sc-for>
+          <sc-if value="{{ gamesPendientes }}">
+            <p style="margin:4px 0 0;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.04em;color:rgba(250,249,246,.55)">{{ gamesPendientes }}</p>
+          </sc-if>
         </div>
       </div>
     </div>
@@ -284,7 +270,7 @@
             <a href="{{ pase.url }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;padding:16px 26px;border-radius:999px;background:#1B44E8;color:#FAF9F6;font-weight:600;font-size:15px;transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s ease" style-hover="transform:translateY(-3px) scale(1.02);box-shadow:0 18px 34px -18px rgba(27,68,232,.75);color:#FAF9F6">Obtener el Pase Maestro <span style="font-family:'JetBrains Mono',monospace">→</span></a>
           </sc-if>
           <sc-if value="{{ !pase.url }}">
-            <span style="display:inline-flex;align-items:center;padding:16px 26px;border-radius:999px;background:#E4DEF0;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#101012">Pase Maestro · muy pronto</span>
+            <a href="#empieza" style="display:inline-flex;align-items:center;gap:10px;padding:16px 26px;border-radius:999px;background:#1B44E8;color:#FAF9F6;font-weight:600;font-size:15px;transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s ease" style-hover="transform:translateY(-3px) scale(1.02);box-shadow:0 18px 34px -18px rgba(27,68,232,.75);color:#FAF9F6">Avísame cuando salga</a>
           </sc-if>
           <sc-if value="{{ hayCompraSuelta }}">
             <a href="#proyectos" style="display:inline-flex;align-items:center;gap:10px;padding:16px 26px;border-radius:999px;border:1.5px solid rgba(16,16,18,.24);color:#101012;font-weight:600;font-size:15px;transition:border-color .3s ease,background .3s ease,transform .35s cubic-bezier(.16,1,.3,1)" style-hover="border-color:#C79A3E;background:#FAF9F6;transform:translateY(-3px);color:#101012">Comprar una app suelta</a>
@@ -314,10 +300,9 @@
       </div>
       <h2 data-reveal="2" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:clamp(32px,6vw,86px);line-height:.96;letter-spacing:-.035em;margin:clamp(18px,2.6vw,28px) 0 0">Material nuevo, directo a tu correo.</h2>
       <div data-reveal="3" style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:clamp(26px,4vw,42px)">
-        <input type="email" placeholder="tu@correo.com" aria-label="Correo electrónico" style="flex:1 1 300px;max-width:400px;padding:16px 20px;border-radius:999px;border:1.5px solid rgba(16,16,18,.2);background:#FAF9F6;font-family:'Instrument Sans',sans-serif;font-size:15px;color:#101012;outline:none" style-focus="border-color:#1B44E8" />
-        <button style="border:0;cursor:pointer;padding:16px 28px;border-radius:999px;background:#101012;color:#FAF9F6;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:15px;transition:background .3s ease,transform .35s cubic-bezier(.16,1,.3,1)" style-hover="background:#1B44E8;transform:translateY(-2px)">Suscribirme</button>
+        <a href="https://rodrigos5.gumroad.com" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;padding:16px 28px;border-radius:999px;background:#101012;color:#FAF9F6;font-weight:600;font-size:15px;transition:background .3s ease,transform .35s cubic-bezier(.16,1,.3,1)" style-hover="background:#1B44E8;transform:translateY(-2px);color:#FAF9F6">Seguir en Gumroad <span style="font-family:'JetBrains Mono',monospace">↗</span></a>
       </div>
-      <p data-reveal="4" style="margin:16px 0 0;font-size:13px;color:rgba(16,16,18,.55)">Sin tareas, sin exámenes, sin spam.</p>
+      <p data-reveal="4" style="margin:16px 0 0;font-size:13px;color:rgba(16,16,18,.55)">Te llega un correo cuando sale material nuevo.</p>
     </div>
   </section>
 
@@ -382,7 +367,7 @@
         <p data-reveal="3" style="flex:1 1 380px;max-width:46ch;font-size:clamp(16px,1.35vw,20px);line-height:1.55;margin:0;color:rgba(16,16,18,.78);text-wrap:pretty">Sólo que nadie te lo contó así. Infografías, juegos y trucos mentales para que las matemáticas dejen de ser un examen y vuelvan a ser una herramienta.</p>
         <div data-reveal="4" style="flex:0 1 auto;display:flex;flex-wrap:wrap;gap:12px">
           <a href="#juegos" style="display:inline-flex;align-items:center;gap:10px;padding:16px 26px;border-radius:999px;background:#1B44E8;color:#FAF9F6;font-weight:600;font-size:15px;transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s ease">Juega ahora</a>
-          <a href="#infografias" style="display:inline-flex;align-items:center;gap:10px;padding:16px 26px;border-radius:999px;border:1.5px solid rgba(16,16,18,.24);color:#101012;font-weight:600;font-size:15px;transition:border-color .3s ease,background .3s ease,transform .35s cubic-bezier(.16,1,.3,1)">Ver infografías</a>
+          <a href="#proyectos" style="display:inline-flex;align-items:center;gap:10px;padding:16px 26px;border-radius:999px;border:1.5px solid rgba(16,16,18,.24);color:#101012;font-weight:600;font-size:15px;transition:border-color .3s ease,background .3s ease,transform .35s cubic-bezier(.16,1,.3,1)">Ver proyectos</a>
         </div>
       </div>
     </div>
@@ -427,54 +412,8 @@
     <div style="max-width:1280px;margin:0 auto">
       <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:clamp(32px,5vw,64px)">
         <h2 data-reveal="1" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:clamp(30px,5vw,74px);line-height:.98;letter-spacing:-.035em;margin:0">Infografías<span style="color:#C79A3E">.</span></h2>
-        <p data-reveal="2" style="margin:0;max-width:34ch;font-size:15px;line-height:1.6;color:rgba(16,16,18,.68)">Un tema, una hoja, cero prerrequisitos. Descárgalas, imprímelas, pégalas en el refri.</p>
       </div>
-      <div style="display:flex;flex-wrap:wrap;gap:clamp(20px,2.6vw,36px)">
-            <div data-reveal="1" style="flex:1 1 460px;min-width:250px;margin-top:0px;display:block;color:#101012">
-              <div style="position:relative;aspect-ratio:4/5;border:1px solid rgba(16,16,18,.16);border-radius:6px;overflow:hidden;background-color:#EFE6D9;background-image:repeating-linear-gradient(135deg,rgba(16,16,18,.07) 0 1px,transparent 1px 9px);display:flex;align-items:flex-end;padding:18px">
-                <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:rgba(16,16,18,.55)">[ infografía · porcentajes ]</span>
-                <span style="position:absolute;top:14px;right:14px;display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;background:#FAF9F6;border:1px solid rgba(16,16,18,.16);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#101012">Próximamente</span>
-              </div>
-              <div style="display:flex;align-items:baseline;gap:10px;margin-top:14px">
-                <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#C79A3E">01</span>
-                <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:clamp(18px,1.6vw,24px);letter-spacing:-.02em;margin:0;line-height:1.15">Porcentajes sin sudar</h3>
-              </div>
-              <p style="margin:8px 0 0 34px;font-size:14px;line-height:1.55;color:rgba(16,16,18,.62);max-width:32ch">Propinas, descuentos e IVA con aritmética de servilleta.</p>
-            </div>
-            <div data-reveal="1" style="flex:1 1 340px;min-width:250px;margin-top:48px;display:block;color:#101012">
-              <div style="position:relative;aspect-ratio:4/5;border:1px solid rgba(16,16,18,.16);border-radius:6px;overflow:hidden;background-color:#DCE9E2;background-image:repeating-linear-gradient(135deg,rgba(16,16,18,.07) 0 1px,transparent 1px 9px);display:flex;align-items:flex-end;padding:18px">
-                <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:rgba(16,16,18,.55)">[ infografía · probabilidad ]</span>
-                <span style="position:absolute;top:14px;right:14px;display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;background:#FAF9F6;border:1px solid rgba(16,16,18,.16);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#101012">Próximamente</span>
-              </div>
-              <div style="display:flex;align-items:baseline;gap:10px;margin-top:14px">
-                <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#C79A3E">02</span>
-                <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:clamp(18px,1.6vw,24px);letter-spacing:-.02em;margin:0;line-height:1.15">¿Qué tan probable?</h3>
-              </div>
-              <p style="margin:8px 0 0 34px;font-size:14px;line-height:1.55;color:rgba(16,16,18,.62);max-width:32ch">Del clima a la rifa de la escuela: leer probabilidades sin miedo.</p>
-            </div>
-            <div data-reveal="1" style="flex:1 1 340px;min-width:250px;margin-top:16px;display:block;color:#101012">
-              <div style="position:relative;aspect-ratio:4/5;border:1px solid rgba(16,16,18,.16);border-radius:6px;overflow:hidden;background-color:#E4DEF0;background-image:repeating-linear-gradient(135deg,rgba(16,16,18,.07) 0 1px,transparent 1px 9px);display:flex;align-items:flex-end;padding:18px">
-                <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:rgba(16,16,18,.55)">[ infografía · proporciones ]</span>
-                <span style="position:absolute;top:14px;right:14px;display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;background:#FAF9F6;border:1px solid rgba(16,16,18,.16);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#101012">Próximamente</span>
-              </div>
-              <div style="display:flex;align-items:baseline;gap:10px;margin-top:14px">
-                <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#C79A3E">03</span>
-                <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:clamp(18px,1.6vw,24px);letter-spacing:-.02em;margin:0;line-height:1.15">Reglas de tres reales</h3>
-              </div>
-              <p style="margin:8px 0 0 34px;font-size:14px;line-height:1.55;color:rgba(16,16,18,.62);max-width:32ch">Duplicar recetas, escalar planos, repartir gastos.</p>
-            </div>
-            <div data-reveal="1" style="flex:1 1 460px;min-width:250px;margin-top:56px;display:block;color:#101012">
-              <div style="position:relative;aspect-ratio:4/5;border:1px solid rgba(16,16,18,.16);border-radius:6px;overflow:hidden;background-color:#DCE6F5;background-image:repeating-linear-gradient(135deg,rgba(16,16,18,.07) 0 1px,transparent 1px 9px);display:flex;align-items:flex-end;padding:18px">
-                <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:rgba(16,16,18,.55)">[ infografía · graficas ]</span>
-                <span style="position:absolute;top:14px;right:14px;display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;background:#FAF9F6;border:1px solid rgba(16,16,18,.16);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#101012">Próximamente</span>
-              </div>
-              <div style="display:flex;align-items:baseline;gap:10px;margin-top:14px">
-                <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#C79A3E">04</span>
-                <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:clamp(18px,1.6vw,24px);letter-spacing:-.02em;margin:0;line-height:1.15">Cómo te mienten con gráficas</h3>
-              </div>
-              <p style="margin:8px 0 0 34px;font-size:14px;line-height:1.55;color:rgba(16,16,18,.62);max-width:32ch">Ejes cortados, escalas raras y otros trucos de titular.</p>
-            </div>
-      </div>
+        <p data-reveal="2" style="margin:0;max-width:34ch;font-size:15px;line-height:1.6;color:rgba(16,16,18,.68)">Estamos preparando las primeras. Suscríbete y te avisamos.</p>
     </div>
   </section>
   <section id="juegos" style="padding:clamp(56px,9vw,130px) clamp(16px,4vw,56px);background:#101012;color:#FAF9F6">
@@ -494,22 +433,22 @@
           </div>
         </div>
         <div style="flex:1 1 380px;display:grid;gap:14px">
-              <a href="https://parejo.trucosdeaula.com" target="_blank" rel="noopener" data-reveal="1" style="display:flex;align-items:center;gap:18px;padding:clamp(18px,2.4vw,26px);border:1px solid rgba(250,249,246,.16);border-radius:14px;color:#FAF9F6;transition:background .35s ease,transform .45s cubic-bezier(.16,1,.3,1),border-color .35s ease">
-                <span style="flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:999px;background:#DCE6F5;color:#101012;font-family:'Bricolage Grotesque',sans-serif;font-size:22px">=</span>
-                <span style="flex:1 1 auto;min-width:0">
-                  <span style="display:block;font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(17px,1.5vw,22px);letter-spacing:-.02em">Parejo</span>
-                  <span style="display:block;margin-top:5px;font-size:13.5px;line-height:1.5;opacity:.72">Ecuaciones en equilibrio: despeja con una balanza y resuelve sistemas 2×2.</span>
-                </span>
-                <span style="flex:0 0 auto;font-family:'JetBrains Mono',monospace;font-size:12px;opacity:.7">Gratis · en el navegador</span>
-              </a>
-              <a href="https://rodrigos5.gumroad.com/l/ccfmxp" target="_blank" rel="noopener" data-reveal="1" style="display:flex;align-items:center;gap:18px;padding:clamp(18px,2.4vw,26px);border:1px solid rgba(250,249,246,.16);border-radius:14px;color:#FAF9F6;transition:background .35s ease,transform .45s cubic-bezier(.16,1,.3,1),border-color .35s ease">
-                <span style="flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:999px;background:#EFE6D9;color:#101012;font-family:'Bricolage Grotesque',sans-serif;font-size:22px">∑</span>
-                <span style="flex:1 1 auto;min-width:0">
-                  <span style="display:block;font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(17px,1.5vw,22px);letter-spacing:-.02em">Casa de Apuestas Matemática</span>
-                  <span style="display:block;margin-top:5px;font-size:13.5px;line-height:1.5;opacity:.72">Repaso de probabilidad y conteo para proyectar en clase.</span>
-                </span>
-                <span style="flex:0 0 auto;font-family:'JetBrains Mono',monospace;font-size:12px;opacity:.7">De pago · Gumroad</span>
-              </a>
+            <a href="https://parejo.trucosdeaula.com" target="_blank" rel="noopener" data-reveal="1" style="display:flex;align-items:center;gap:18px;padding:clamp(18px,2.4vw,26px);border:1px solid rgba(250,249,246,.16);border-radius:14px;color:#FAF9F6;transition:background .35s ease,transform .45s cubic-bezier(.16,1,.3,1),border-color .35s ease">
+              <span style="flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:999px;background:#DCE6F5;color:#101012;font-family:'Bricolage Grotesque',sans-serif;font-size:22px">=</span>
+              <span style="flex:1 1 auto;min-width:0">
+                <span style="display:block;font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(17px,1.5vw,22px);letter-spacing:-.02em">Parejo</span>
+                <span style="display:block;margin-top:5px;font-size:13.5px;line-height:1.5;opacity:.72">Ecuaciones en equilibrio: despeja con una balanza y resuelve sistemas 2×2.</span>
+              </span>
+              <span style="flex:0 0 auto;font-family:'JetBrains Mono',monospace;font-size:12px;opacity:.7">Gratis · en el navegador</span>
+            </a>
+            <a href="https://rodrigos5.gumroad.com/l/ccfmxp" target="_blank" rel="noopener" data-reveal="1" style="display:flex;align-items:center;gap:18px;padding:clamp(18px,2.4vw,26px);border:1px solid rgba(250,249,246,.16);border-radius:14px;color:#FAF9F6;transition:background .35s ease,transform .45s cubic-bezier(.16,1,.3,1),border-color .35s ease">
+              <span style="flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:999px;background:#EFE6D9;color:#101012;font-family:'Bricolage Grotesque',sans-serif;font-size:22px">∑</span>
+              <span style="flex:1 1 auto;min-width:0">
+                <span style="display:block;font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(17px,1.5vw,22px);letter-spacing:-.02em">Casa de Apuestas Matemática</span>
+                <span style="display:block;margin-top:5px;font-size:13.5px;line-height:1.5;opacity:.72">Repaso de probabilidad y conteo para proyectar en clase.</span>
+              </span>
+              <span style="flex:0 0 auto;font-family:'JetBrains Mono',monospace;font-size:12px;opacity:.7">De pago · Gumroad</span>
+            </a>
         </div>
       </div>
     </div>
@@ -691,7 +630,7 @@
         <h2 data-reveal="2" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:clamp(30px,5vw,74px);line-height:.98;letter-spacing:-.035em;margin:0">Para maestros<span style="color:#C79A3E">.</span></h2>
         <p data-reveal="3" style="margin:clamp(18px,2.6vw,30px) 0 0;max-width:46ch;font-size:clamp(15px,1.2vw,18px);line-height:1.6;color:rgba(16,16,18,.75);text-wrap:pretty">Un solo pase con todo lo que uso en el salón: Cuadra, CalificaYa, los juegos en versión aula y las infografías. Se cobra cada 6 meses en Gumroad. Si lo cancelas, te sigue funcionando hasta el final del periodo que ya pagaste.</p>
         <div data-reveal="4" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(24px,3.4vw,40px)">
-            <span style="display:inline-flex;align-items:center;padding:16px 26px;border-radius:999px;background:#E4DEF0;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#101012">Pase Maestro · muy pronto</span>
+            <a href="#empieza" style="display:inline-flex;align-items:center;gap:10px;padding:16px 26px;border-radius:999px;background:#1B44E8;color:#FAF9F6;font-weight:600;font-size:15px;transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s ease">Avísame cuando salga</a>
         </div>
         <p data-reveal="5" style="margin:16px 0 0;font-size:13px;line-height:1.55;color:rgba(16,16,18,.55)">Solo para maestros. Cada app funciona en hasta 3 dispositivos con la misma clave.</p>
       </div>
@@ -735,10 +674,9 @@
       </div>
       <h2 data-reveal="2" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:clamp(32px,6vw,86px);line-height:.96;letter-spacing:-.035em;margin:clamp(18px,2.6vw,28px) 0 0">Material nuevo, directo a tu correo.</h2>
       <div data-reveal="3" style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:clamp(26px,4vw,42px)">
-        <input type="email" placeholder="tu@correo.com" aria-label="Correo electrónico" style="flex:1 1 300px;max-width:400px;padding:16px 20px;border-radius:999px;border:1.5px solid rgba(16,16,18,.2);background:#FAF9F6;font-family:'Instrument Sans',sans-serif;font-size:15px;color:#101012;outline:none" />
-        <button style="border:0;cursor:pointer;padding:16px 28px;border-radius:999px;background:#101012;color:#FAF9F6;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:15px;transition:background .3s ease,transform .35s cubic-bezier(.16,1,.3,1)">Suscribirme</button>
+        <a href="https://rodrigos5.gumroad.com" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;padding:16px 28px;border-radius:999px;background:#101012;color:#FAF9F6;font-weight:600;font-size:15px;transition:background .3s ease,transform .35s cubic-bezier(.16,1,.3,1)">Seguir en Gumroad <span style="font-family:'JetBrains Mono',monospace">↗</span></a>
       </div>
-      <p data-reveal="4" style="margin:16px 0 0;font-size:13px;color:rgba(16,16,18,.55)">Sin tareas, sin exámenes, sin spam.</p>
+      <p data-reveal="4" style="margin:16px 0 0;font-size:13px;color:rgba(16,16,18,.55)">Te llega un correo cuando sale material nuevo.</p>
     </div>
   </section>
   <footer style="padding:clamp(36px,5vw,64px) clamp(16px,4vw,56px);background:#101012;color:rgba(250,249,246,.7)">
@@ -759,7 +697,7 @@
 </div>
 <!-- prerender:fin -->
 <!-- datos:inicio -->
-<script id="datos-sitio" type="application/json">{"infografias":[{"num":"01","slug":"porcentajes","title":"Porcentajes sin sudar","desc":"Propinas, descuentos e IVA con aritmética de servilleta.","bg":"#EFE6D9","basis":"460px","offset":"0px","url":""},{"num":"02","slug":"probabilidad","title":"¿Qué tan probable?","desc":"Del clima a la rifa de la escuela: leer probabilidades sin miedo.","bg":"#DCE9E2","basis":"340px","offset":"48px","url":""},{"num":"03","slug":"proporciones","title":"Reglas de tres reales","desc":"Duplicar recetas, escalar planos, repartir gastos.","bg":"#E4DEF0","basis":"340px","offset":"16px","url":""},{"num":"04","slug":"graficas","title":"Cómo te mienten con gráficas","desc":"Ejes cortados, escalas raras y otros trucos de titular.","bg":"#DCE6F5","basis":"460px","offset":"56px","url":""}],"juegos":[{"sym":"=","chip":"#DCE6F5","title":"Parejo","desc":"Ecuaciones en equilibrio: despeja con una balanza y resuelve sistemas 2×2.","etiqueta":"Gratis · en el navegador","url":"https://parejo.trucosdeaula.com"},{"sym":"∑","chip":"#EFE6D9","title":"Casa de Apuestas Matemática","desc":"Repaso de probabilidad y conteo para proyectar en clase.","etiqueta":"De pago · Gumroad","url":"https://rodrigos5.gumroad.com/l/ccfmxp"}],"tips":[{"n":"01","title":"El 10% es sólo mover el punto","body":"Para el 10% de cualquier número, corre el punto decimal una casilla a la izquierda. $480 → $48. Y si quieres 15%, súmale la mitad de eso: $48 + $24 = $72."},{"n":"02","title":"Descuentos: piensa en lo que pagas, no en lo que ahorras","body":"30% de descuento significa que pagas el 70%. Multiplica por 0.7 y ya. Es un paso en vez de dos, y no te equivocas de signo."},{"n":"03","title":"Compara precios con la unidad, no con el envase","body":"Divide precio entre cantidad para tener el precio por 100 g o por litro. Es la única forma honesta de comparar dos empaques distintos."},{"n":"04","title":"Estimar primero, calcular después","body":"Redondea a números fáciles y quédate con el orden de magnitud. Si la calculadora te da algo 10 veces más grande, te equivocaste al teclear."}],"pase":{"url":"","incluye":[{"sym":"▦","chip":"#DCE6F5","title":"Cuadra","desc":"Productos notables y factorización con fichas y retos."},{"sym":"✓","chip":"#DCE9E2","title":"CalificaYa","desc":"Califica exámenes de opción múltiple con la cámara del celular."},{"sym":"∑","chip":"#E4DEF0","title":"Juegos en versión aula","desc":"Para proyectar y jugar con todo el grupo."},{"sym":"%","chip":"#EFE6D9","title":"Infografías","desc":"Listas para imprimir y pegar en el salón."}]},"proyectos":[{"nombre":"Parejo","descripcion":"Ecuaciones en equilibrio: despeja con una balanza y resuelve sistemas 2×2. Con Modo Equipos para el proyector.","categoria":"Juegos","paraQuien":"Maestros y alumnos","estado":"disponible","ligaPrincipal":"https://parejo.trucosdeaula.com","ligaCompra":"","precio":"","imagen":""},{"nombre":"Los primeros 5 minutos","descripcion":"20 ganchos para enganchar a tu grupo desde el inicio de la clase, con 4 bonos.","categoria":"Para maestros","paraQuien":"Maestros","estado":"disponible","ligaPrincipal":"https://rodrigos5.gumroad.com/l/qdway","ligaCompra":"","precio":"","imagen":""},{"nombre":"Casa de Apuestas Matemática","descripcion":"Juego de repaso de probabilidad y conteo para proyectar en clase.","categoria":"Juegos","paraQuien":"Maestros y alumnos","estado":"disponible","ligaPrincipal":"https://rodrigos5.gumroad.com/l/ccfmxp","ligaCompra":"","precio":"","imagen":""},{"nombre":"CalificaYa","descripcion":"Califica exámenes de opción múltiple con la cámara de tu celular y descarga las calificaciones en Excel.","categoria":"Apps para maestros","paraQuien":"Maestros · incluida en el Pase Maestro","estado":"proximamente","ligaPrincipal":"","ligaCompra":"","precio":"","imagen":""},{"nombre":"Cuadra","descripcion":"Productos notables y factorización, de ida y de vuelta: del binomio al trinomio y de regreso, con fichas y retos por equipos.","categoria":"Apps para maestros","paraQuien":"Maestros · incluida en el Pase Maestro","estado":"proximamente","ligaPrincipal":"","ligaCompra":"","precio":"","imagen":""},{"nombre":"Biuan","descripcion":"Inglés de cero a B1 desde el celular, con examen de nivel gratis.","categoria":"Inglés","paraQuien":"Todo público · no incluida en el Pase Maestro","estado":"proximamente","ligaPrincipal":"","ligaCompra":"","precio":"","imagen":""}]}</script>
+<script id="datos-sitio" type="application/json">{"infografias":[{"num":"01","slug":"porcentajes","title":"Porcentajes sin sudar","desc":"Propinas, descuentos e IVA con aritmética de servilleta.","bg":"#EFE6D9","basis":"460px","offset":"0px","min":3,"url":""},{"num":"02","slug":"probabilidad","title":"¿Qué tan probable?","desc":"Del clima a la rifa de la escuela: leer probabilidades sin miedo.","bg":"#DCE9E2","basis":"340px","offset":"48px","min":3,"url":""},{"num":"03","slug":"proporciones","title":"Reglas de tres reales","desc":"Duplicar recetas, escalar planos, repartir gastos.","bg":"#E4DEF0","basis":"340px","offset":"16px","min":3,"url":""},{"num":"04","slug":"graficas","title":"Cómo te mienten con gráficas","desc":"Ejes cortados, escalas raras y otros trucos de titular.","bg":"#DCE6F5","basis":"460px","offset":"56px","min":3,"url":""}],"juegos":[{"sym":"=","chip":"#DCE6F5","title":"Parejo","desc":"Ecuaciones en equilibrio: despeja con una balanza y resuelve sistemas 2×2.","etiqueta":"Gratis · en el navegador","url":"https://parejo.trucosdeaula.com"},{"sym":"∑","chip":"#EFE6D9","title":"Casa de Apuestas Matemática","desc":"Repaso de probabilidad y conteo para proyectar en clase.","etiqueta":"De pago · Gumroad","url":"https://rodrigos5.gumroad.com/l/ccfmxp"}],"tips":[{"n":"01","title":"El 10% es sólo mover el punto","body":"Para el 10% de cualquier número, corre el punto decimal una casilla a la izquierda. $480 → $48. Y si quieres 15%, súmale la mitad de eso: $48 + $24 = $72."},{"n":"02","title":"Descuentos: piensa en lo que pagas, no en lo que ahorras","body":"30% de descuento significa que pagas el 70%. Multiplica por 0.7 y ya. Es un paso en vez de dos, y no te equivocas de signo."},{"n":"03","title":"Compara precios con la unidad, no con el envase","body":"Divide precio entre cantidad para tener el precio por 100 g o por litro. Es la única forma honesta de comparar dos empaques distintos."},{"n":"04","title":"Estimar primero, calcular después","body":"Redondea a números fáciles y quédate con el orden de magnitud. Si la calculadora te da algo 10 veces más grande, te equivocaste al teclear."}],"pase":{"url":"","incluye":[{"sym":"▦","chip":"#DCE6F5","title":"Cuadra","desc":"Productos notables y factorización con fichas y retos."},{"sym":"✓","chip":"#DCE9E2","title":"CalificaYa","desc":"Califica exámenes de opción múltiple con la cámara del celular."},{"sym":"∑","chip":"#E4DEF0","title":"Juegos en versión aula","desc":"Para proyectar y jugar con todo el grupo."},{"sym":"%","chip":"#EFE6D9","title":"Infografías","desc":"Listas para imprimir y pegar en el salón."}]},"proyectos":[{"nombre":"Parejo","descripcion":"Ecuaciones en equilibrio: despeja con una balanza y resuelve sistemas 2×2. Con Modo Equipos para el proyector.","categoria":"Juegos","paraQuien":"Maestros y alumnos","estado":"disponible","ligaPrincipal":"https://parejo.trucosdeaula.com","ligaCompra":"","precio":"","imagen":""},{"nombre":"Los primeros 5 minutos","descripcion":"20 ganchos para enganchar a tu grupo desde el inicio de la clase, con 4 bonos.","categoria":"Para maestros","paraQuien":"Maestros","estado":"disponible","ligaPrincipal":"https://rodrigos5.gumroad.com/l/qdway","ligaCompra":"","precio":"","imagen":""},{"nombre":"Casa de Apuestas Matemática","descripcion":"Juego de repaso de probabilidad y conteo para proyectar en clase.","categoria":"Juegos","paraQuien":"Maestros y alumnos","estado":"disponible","ligaPrincipal":"https://rodrigos5.gumroad.com/l/ccfmxp","ligaCompra":"","precio":"","imagen":""},{"nombre":"CalificaYa","descripcion":"Califica exámenes de opción múltiple con la cámara de tu celular y descarga las calificaciones en Excel.","categoria":"Apps para maestros","paraQuien":"Maestros · incluida en el Pase Maestro","estado":"proximamente","ligaPrincipal":"","ligaCompra":"","precio":"","imagen":""},{"nombre":"Cuadra","descripcion":"Productos notables y factorización, de ida y de vuelta: del binomio al trinomio y de regreso, con fichas y retos por equipos.","categoria":"Apps para maestros","paraQuien":"Maestros · incluida en el Pase Maestro","estado":"proximamente","ligaPrincipal":"","ligaCompra":"","precio":"","imagen":""},{"nombre":"Biuan","descripcion":"Inglés de cero a B1 desde el celular, con examen de nivel gratis.","categoria":"Inglés","paraQuien":"Todo público · no incluida en el Pase Maestro","estado":"proximamente","ligaPrincipal":"","ligaCompra":"","precio":"","imagen":""}]}</script>
 <!-- datos:fin -->
 <script type="text/x-dc" data-dc-script data-props="{&quot;motion&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;completo&quot;,&quot;suave&quot;,&quot;ninguno&quot;],&quot;default&quot;:&quot;completo&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Movimiento&quot;},&quot;heroGlow&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Movimiento&quot;},&quot;marqueeSpeed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:34,&quot;min&quot;:12,&quot;max&quot;:70,&quot;step&quot;:2,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Movimiento&quot;}}">
 class Component extends DCLogic {
@@ -925,12 +863,13 @@ class Component extends DCLogic {
       const cat = p.categoria || "Otros";
       if (!byCat[cat]) { byCat[cat] = []; order.push(cat); }
       const estadoInfo = this._estadoInfo(p.estado);
+      const proxima = p.estado === "proximamente";
       byCat[cat].push({
         nombre: p.nombre || "",
         descripcion: p.descripcion || "",
         paraQuien: p.paraQuien || "",
-        ligaPrincipal: this._liga(p.ligaPrincipal),
-        ligaCompra: this._liga(p.ligaCompra),
+        ligaPrincipal: proxima ? "" : this._liga(p.ligaPrincipal),
+        ligaCompra: proxima ? "" : this._liga(p.ligaCompra),
         estadoLabel: estadoInfo.label,
         estadoBg: estadoInfo.bg,
         ctaLabel: p.precio ? "Comprar · " + p.precio : "Comprar",
@@ -945,7 +884,14 @@ class Component extends DCLogic {
     const words = ["a diario", "sin darte cuenta", "en el súper", "en la cocina"];
     const bill = this.state.bill;
     const d = this.datos();
-    const posters = (d.infografias || []).map(p => ({ ...p, url: this._liga(p.url) }));
+    const temas = (d.infografias || []).map(p => ({ ...p, url: this._liga(p.url) }));
+    const posters = temas.filter(p => p.url);
+    const juegos = (d.juegos || []).map(g => ({ ...g, url: this._liga(g.url) }));
+    const games = juegos.filter(g => g.url);
+    // "Próximamente: A, B" con los que aún no tienen liga (solo si ya hay alguno publicado).
+    const pendientes = (todos, listos) => listos.length && todos.length > listos.length
+      ? "Próximamente: " + todos.filter(x => !x.url).map(x => x.title).join(", ") : "";
+    const minutos = Math.max(0, ...temas.map(p => Number(p.min) || 0));
     return {
       heroWord: words[this.state.word],
       bill,
@@ -958,12 +904,17 @@ class Component extends DCLogic {
       onToggleAnswer: () => this.setState(s => ({ showAnswer: !s.showAnswer })),
       stats: [
         { n: "0", label: "prerrequisitos" },
-        { n: "3 min", label: "por infografía" },
-        { n: String(posters.length), label: posters.length === 1 ? "tema cotidiano" : "temas cotidianos" },
+        ...(minutos ? [{ n: minutos + " min", label: "por infografía" }] : []),
+        { n: String(temas.length), label: temas.length === 1 ? "tema cotidiano" : "temas cotidianos" },
         { n: "100%", label: "sin fórmulas sueltas" }
       ],
       posters,
-      games: (d.juegos || []).map(g => ({ ...g, url: this._liga(g.url) })),
+      hayPosters: posters.length > 0,
+      postersPendientes: pendientes(temas, posters),
+      heroAlt: posters.length ? { href: "#infografias", label: "Ver infografías" } : { href: "#proyectos", label: "Ver proyectos" },
+      games,
+      hayGames: games.length > 0,
+      gamesPendientes: pendientes(juegos, games),
       pase: { incluye: [], ...d.pase, url: this._liga(d.pase && d.pase.url) },
       tips: (d.tips || []).map(({ n, title, body }, i) => ({
         n, title, body,

@@ -1,9 +1,9 @@
 {
   "infografias": [
-    { "num": "01", "slug": "porcentajes", "title": "Porcentajes sin sudar", "desc": "Propinas, descuentos e IVA con aritmética de servilleta.", "bg": "#EFE6D9", "basis": "460px", "offset": "0px", "url": "" },
-    { "num": "02", "slug": "probabilidad", "title": "¿Qué tan probable?", "desc": "Del clima a la rifa de la escuela: leer probabilidades sin miedo.", "bg": "#DCE9E2", "basis": "340px", "offset": "48px", "url": "" },
-    { "num": "03", "slug": "proporciones", "title": "Reglas de tres reales", "desc": "Duplicar recetas, escalar planos, repartir gastos.", "bg": "#E4DEF0", "basis": "340px", "offset": "16px", "url": "" },
-    { "num": "04", "slug": "graficas", "title": "Cómo te mienten con gráficas", "desc": "Ejes cortados, escalas raras y otros trucos de titular.", "bg": "#DCE6F5", "basis": "460px", "offset": "56px", "url": "" }
+    { "num": "01", "slug": "porcentajes", "title": "Porcentajes sin sudar", "desc": "Propinas, descuentos e IVA con aritmética de servilleta.", "bg": "#EFE6D9", "basis": "460px", "offset": "0px", "min": 3, "url": "" },
+    { "num": "02", "slug": "probabilidad", "title": "¿Qué tan probable?", "desc": "Del clima a la rifa de la escuela: leer probabilidades sin miedo.", "bg": "#DCE9E2", "basis": "340px", "offset": "48px", "min": 3, "url": "" },
+    { "num": "03", "slug": "proporciones", "title": "Reglas de tres reales", "desc": "Duplicar recetas, escalar planos, repartir gastos.", "bg": "#E4DEF0", "basis": "340px", "offset": "16px", "min": 3, "url": "" },
+    { "num": "04", "slug": "graficas", "title": "Cómo te mienten con gráficas", "desc": "Ejes cortados, escalas raras y otros trucos de titular.", "bg": "#DCE6F5", "basis": "460px", "offset": "56px", "min": 3, "url": "" }
   ],
   "juegos": [
     { "sym": "=", "chip": "#DCE6F5", "title": "Parejo", "desc": "Ecuaciones en equilibrio: despeja con una balanza y resuelve sistemas 2×2.", "etiqueta": "Gratis · en el navegador", "url": "https://parejo.trucosdeaula.com" },
