@@ -1,14 +1,13 @@
 {
   "infografias": [
-    { "num": "01", "slug": "porcentajes", "title": "Porcentajes sin sudar", "desc": "Propinas, descuentos e IVA con aritmética de servilleta.", "bg": "#EFE6D9", "basis": "460px", "offset": "0px", "url": "" },
-    { "num": "02", "slug": "probabilidad", "title": "¿Qué tan probable?", "desc": "Del clima a la rifa de la escuela: leer probabilidades sin miedo.", "bg": "#DCE9E2", "basis": "340px", "offset": "48px", "url": "" },
-    { "num": "03", "slug": "proporciones", "title": "Reglas de tres reales", "desc": "Duplicar recetas, escalar planos, repartir gastos.", "bg": "#E4DEF0", "basis": "340px", "offset": "16px", "url": "" },
-    { "num": "04", "slug": "graficas", "title": "Cómo te mienten con gráficas", "desc": "Ejes cortados, escalas raras y otros trucos de titular.", "bg": "#DCE6F5", "basis": "460px", "offset": "56px", "url": "" }
+    { "num": "01", "slug": "porcentajes", "title": "Porcentajes sin sudar", "desc": "Propinas, descuentos e IVA con aritmética de servilleta.", "bg": "#EFE6D9", "basis": "460px", "offset": "0px", "min": 3, "url": "" },
+    { "num": "02", "slug": "probabilidad", "title": "¿Qué tan probable?", "desc": "Del clima a la rifa de la escuela: leer probabilidades sin miedo.", "bg": "#DCE9E2", "basis": "340px", "offset": "48px", "min": 3, "url": "" },
+    { "num": "03", "slug": "proporciones", "title": "Reglas de tres reales", "desc": "Duplicar recetas, escalar planos, repartir gastos.", "bg": "#E4DEF0", "basis": "340px", "offset": "16px", "min": 3, "url": "" },
+    { "num": "04", "slug": "graficas", "title": "Cómo te mienten con gráficas", "desc": "Ejes cortados, escalas raras y otros trucos de titular.", "bg": "#DCE6F5", "basis": "460px", "offset": "56px", "min": 3, "url": "" }
   ],
   "juegos": [
-    { "sym": "%", "chip": "#EFE6D9", "title": "Cuenta rápida", "desc": "Divide la cuenta del restaurante antes de que llegue el mesero.", "time": "2 min", "url": "" },
-    { "sym": "◆", "chip": "#DCE9E2", "title": "Adivina la escala", "desc": "¿Cabe un elefante en tu sala? Estimación pura.", "time": "3 min", "url": "" },
-    { "sym": "∑", "chip": "#E4DEF0", "title": "Ruleta de probabilidad", "desc": "Apuesta, falla y descubre por qué tu intuición te engaña.", "time": "4 min", "url": "" }
+    { "sym": "=", "chip": "#DCE6F5", "title": "Parejo", "desc": "Ecuaciones en equilibrio: despeja con una balanza y resuelve sistemas 2×2.", "etiqueta": "Gratis · en el navegador", "url": "https://parejo.trucosdeaula.com" },
+    { "sym": "∑", "chip": "#EFE6D9", "title": "Casa de Apuestas Matemática", "desc": "Repaso de probabilidad y conteo para proyectar en clase.", "etiqueta": "De pago · Gumroad", "url": "https://rodrigos5.gumroad.com/l/ccfmxp" }
   ],
   "tips": [
     { "n": "01", "title": "El 10% es sólo mover el punto", "body": "Para el 10% de cualquier número, corre el punto decimal una casilla a la izquierda. $480 → $48. Y si quieres 15%, súmale la mitad de eso: $48 + $24 = $72." },
@@ -17,9 +16,9 @@
     { "n": "04", "title": "Estimar primero, calcular después", "body": "Redondea a números fáciles y quédate con el orden de magnitud. Si la calculadora te da algo 10 veces más grande, te equivocaste al teclear." }
   ],
   "pase": {
-    "url": "PLACEHOLDER_URL_PASE",
+    "url": "",
     "incluye": [
-      { "sym": "▦", "chip": "#DCE6F5", "title": "Cuadra", "desc": "La nueva app para el aula, en cuanto salga." },
+      { "sym": "▦", "chip": "#DCE6F5", "title": "Cuadra", "desc": "Productos notables y factorización con fichas y retos." },
       { "sym": "✓", "chip": "#DCE9E2", "title": "CalificaYa", "desc": "Califica exámenes de opción múltiple con la cámara del celular." },
       { "sym": "∑", "chip": "#E4DEF0", "title": "Juegos en versión aula", "desc": "Para proyectar y jugar con todo el grupo." },
       { "sym": "%", "chip": "#EFE6D9", "title": "Infografías", "desc": "Listas para imprimir y pegar en el salón." }
