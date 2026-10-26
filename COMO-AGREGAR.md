@@ -14,7 +14,6 @@ Copia un elemento existente, cambia sus campos, haz commit y `git push` a `main`
 - `pagina`: `"maestros"` para que también salga en /maestros/ (opcional).
 
 **Juego** (`contenido.json` → `juegos`): `title`, `desc`, `etiqueta` (ej. "Gratis · en el navegador"), `url` (vacía → tarjeta "Próximamente"), `sym` (símbolo del círculo) y `chip` (color del círculo).
-
 **Tip** (`contenido.json` → `tips`): `n` (número), `title`, `body`.
 
 **Infografía** (`contenido.json` → `infografias`): `num`, `title`, `desc`, `slug`, `url`, `min` (minutos de lectura), `bg` (color), `basis`/`offset` (tamaño y desfase en la rejilla).
