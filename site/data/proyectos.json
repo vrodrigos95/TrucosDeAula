@@ -13,8 +13,9 @@
   {
     "nombre": "Los primeros 5 minutos",
     "descripcion": "20 ganchos para enganchar a tu grupo desde el inicio de la clase, con 4 bonos.",
-    "categoria": "Para maestros",
+    "categoria": "Ebooks",
     "paraQuien": "Maestros",
+    "pagina": "maestros",
     "estado": "disponible",
     "ligaPrincipal": "https://rodrigos5.gumroad.com/l/qdway",
     "ligaCompra": "",
@@ -33,23 +34,12 @@
     "imagen": ""
   },
   {
-    "nombre": "CalificaYa",
-    "descripcion": "Califica exámenes de opción múltiple con la cámara de tu celular y descarga las calificaciones en Excel.",
-    "categoria": "Apps para maestros",
-    "paraQuien": "Maestros · incluida en el Pase Maestro",
-    "estado": "proximamente",
-    "ligaPrincipal": "",
-    "ligaCompra": "",
-    "precio": "",
-    "imagen": ""
-  },
-  {
     "nombre": "Cuadra",
     "descripcion": "Productos notables y factorización, de ida y de vuelta: del binomio al trinomio y de regreso, con fichas y retos por equipos.",
     "categoria": "Apps para maestros",
     "paraQuien": "Maestros · incluida en el Pase Maestro",
-    "estado": "proximamente",
-    "ligaPrincipal": "",
+    "estado": "disponible",
+    "ligaPrincipal": "https://cuadra.trucosdeaula.com",
     "ligaCompra": "",
     "precio": "",
     "imagen": ""
@@ -59,6 +49,18 @@
     "descripcion": "Inglés de cero a B1 desde el celular, con examen de nivel gratis.",
     "categoria": "Inglés",
     "paraQuien": "Todo público · no incluida en el Pase Maestro",
+    "estado": "disponible",
+    "ligaPrincipal": "https://biuan.trucosdeaula.com",
+    "ligaCompra": "",
+    "precio": "",
+    "imagen": ""
+  },
+  {
+    "nombre": "CalificaYa",
+    "descripcion": "Califica exámenes de opción múltiple con la cámara de tu celular y descarga las calificaciones en Excel.",
+    "categoria": "Apps para maestros",
+    "paraQuien": "Maestros · incluida en el Pase Maestro",
+    "pagina": "maestros",
     "estado": "proximamente",
     "ligaPrincipal": "",
     "ligaCompra": "",

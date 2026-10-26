@@ -1,7 +1,12 @@
 // Genera el HTML estático de respaldo de site/index.html (sin dependencias).
 //
-//   node scripts/prerender.mjs          → reescribe site/index.html
-//   node scripts/prerender.mjs --check  → falla si site/index.html no está al día
+//   node scripts/prerender.mjs          → reescribe site/index.html y las páginas de sección
+//   node scripts/prerender.mjs --check  → falla si alguna no está al día
+//
+// site/index.html es la plantilla de todo el sitio. De ella salen también
+// site/juegos/, site/maestros/ y site/tips/ (ver SECCIONES): mismo HTML con
+// <html data-vista="…"> y sus propios metadatos; la clase Component muestra
+// solo los bloques de esa vista.
 //
 // 1. Junta site/data/contenido.json y site/data/proyectos.json y los mete en
 //    <script id="datos-sitio" type="application/json"> (lo lee la clase Component).
@@ -11,7 +16,7 @@
 //
 // Solo se reescribe lo que está entre los marcadores <!-- prerender:… --> y <!-- datos:… -->.
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -39,13 +44,18 @@ const scriptClase = html.match(/<script type="text\/x-dc" data-dc-script[^>]*>([
 if (!scriptClase) throw new Error("No encontré el <script data-dc-script> en site/index.html");
 
 const jsonDatos = JSON.stringify(datos).replace(/</g, "\\u003c");
-const documentoFalso = { getElementById: (id) => (id === "datos-sitio" ? { textContent: jsonDatos } : null) };
 class DCLogic {
   constructor(props) { this.props = props || {}; }
   setState() {}
 }
-const Component = new Function("DCLogic", "document", scriptClase[1] + "\n;return Component;")(DCLogic, documentoFalso);
-const vals = new Component({}).renderVals();
+const valoresDe = (vista) => {
+  const documentoFalso = {
+    getElementById: (id) => (id === "datos-sitio" ? { textContent: jsonDatos } : null),
+    documentElement: { dataset: vista === "inicio" ? {} : { vista } }
+  };
+  const Component = new Function("DCLogic", "document", scriptClase[1] + "\n;return Component;")(DCLogic, documentoFalso);
+  return new Component({}).renderVals();
+};
 
 // --- Mini intérprete de la plantilla (mismo subconjunto que usa support.js) ---
 
@@ -103,7 +113,7 @@ function renderizar(txt, ctx) {
   return salida + interpolar(txt.slice(i), ctx);
 }
 
-const estatico = renderizar(plantilla, vals)
+const estaticoDe = (vista) => renderizar(plantilla, valoresDe(vista))
   // Atributos que solo entiende el runtime (eventos, hover, pistas).
   .replace(/\s(?:on[A-Z]\w*|style-hover|style-focus|hint-[\w-]+)="[^"]*"/g, "")
   .replace(/\n\s*\n+/g, "\n");
@@ -117,16 +127,51 @@ const reemplazar = (txt, nombre, contenido) => {
   return txt.replace(re, () => bloque(nombre, contenido));
 };
 
-let nuevo = reemplazar(html, "prerender", `<div id="prerender">\n${estilosHelmet}\n${estatico}\n</div>`);
-nuevo = reemplazar(nuevo, "datos", `<script id="datos-sitio" type="application/json">${jsonDatos}</script>`);
+const pagina = (vista) => {
+  let txt = reemplazar(html, "prerender", `<div id="prerender">\n${estilosHelmet}\n${estaticoDe(vista)}\n</div>`);
+  return reemplazar(txt, "datos", `<script id="datos-sitio" type="application/json">${jsonDatos}</script>`);
+};
+
+// Las demás páginas salen de site/index.html: mismo diseño, otra vista y otros metadatos.
+const SECCIONES = {
+  juegos: { titulo: "Juegos", descripcion: "Juegos de matemáticas para jugar en el navegador o proyectar en clase: Casa de Apuestas, Cuadra y Parejo." },
+  maestros: { titulo: "Para maestros", descripcion: "El Pase Maestro, CalificaYa y ebooks para llevar las mates al salón." },
+  tips: { titulo: "Tips y datos curiosos", descripcion: "Trucos y datos curiosos para usar las matemáticas en el día a día." }
+};
+const rehacerMetas = (txt, vista, { titulo, descripcion }) => {
+  const url = `https://trucosdeaula.com/${vista}/`;
+  const cambios = [
+    [/<html lang="es">/, `<html lang="es" data-vista="${vista}">`],
+    [/<title>[^<]*<\/title>/, `<title>${titulo} · TrucosDeAula</title>`],
+    [/(<meta (?:property="og:title"|name="twitter:title") content=")[^"]*/g, `$1${titulo} · TrucosDeAula`],
+    [/(<meta (?:name="description"|property="og:description"|name="twitter:description") content=")[^"]*/g, `$1${descripcion}`],
+    [/(<link rel="canonical" href=")[^"]*/, `$1${url}`],
+    [/(<meta property="og:url" content=")[^"]*/, `$1${url}`]
+  ];
+  for (const [re, por] of cambios) {
+    if (!re.test(txt)) throw new Error(`No encontré ${re} en site/index.html`);
+    txt = txt.replace(re, por);
+  }
+  return txt;
+};
+
+const salidas = [[rutaIndex, pagina("inicio")]];
+for (const [vista, meta] of Object.entries(SECCIONES)) {
+  salidas.push([join(raiz, "site", vista, "index.html"), rehacerMetas(pagina(vista), vista, meta)]);
+}
+const relativa = (r) => r.slice(raiz.length + 1);
 
 if (process.argv.includes("--check")) {
-  if (nuevo !== html) {
-    console.error("site/index.html no está al día: corre `node scripts/prerender.mjs` y sube el cambio.");
+  const viejas = salidas.filter(([r, txt]) => !existsSync(r) || readFileSync(r, "utf8") !== txt);
+  if (viejas.length) {
+    console.error(`No están al día: ${viejas.map(([r]) => relativa(r)).join(", ")}. Corre \`node scripts/prerender.mjs\` y sube el cambio.`);
     process.exit(1);
   }
-  console.log("site/index.html al día.");
+  console.log("Páginas al día.");
 } else {
-  writeFileSync(rutaIndex, nuevo);
-  console.log("site/index.html actualizado.");
+  for (const [r, txt] of salidas) {
+    mkdirSync(dirname(r), { recursive: true });
+    writeFileSync(r, txt);
+    console.log(`${relativa(r)} actualizado.`);
+  }
 }
