@@ -8,7 +8,8 @@
   "juegos": [
     { "sym": "∑", "chip": "#EFE6D9", "title": "Casa de Apuestas Matemática", "desc": "Repaso de probabilidad y conteo para proyectar en clase.", "etiqueta": "De pago · Gumroad", "url": "https://rodrigos5.gumroad.com/l/ccfmxp" },
     { "sym": "▦", "chip": "#E4DEF0", "title": "Cuadra", "desc": "Productos notables y factorización: del binomio al trinomio y de regreso, con fichas y retos por equipos.", "etiqueta": "Incluido en el Pase Maestro", "url": "https://cuadra.trucosdeaula.com" },
-    { "sym": "=", "chip": "#DCE6F5", "title": "Parejo", "desc": "Ecuaciones en equilibrio: despeja con una balanza y resuelve sistemas 2×2.", "etiqueta": "Gratis · en el navegador", "url": "https://parejo.trucosdeaula.com" }
+    { "sym": "=", "chip": "#DCE6F5", "title": "Parejo", "desc": "Ecuaciones en equilibrio: despeja con una balanza y resuelve sistemas 2×2.", "etiqueta": "Gratis · en el navegador", "url": "https://parejo.trucosdeaula.com" },
+    { "sym": "◠", "chip": "#F3E1D6", "title": "Tajo", "desc": "Secciones cónicas: corta un cono con un plano y saca la ecuación de la circunferencia, la parábola, la elipse y la hipérbola paso a paso.", "etiqueta": "Cono 3D gratis · en el navegador", "url": "https://tajo.trucosdeaula.com" }
   ],
   "tips": [
     { "n": "01", "title": "Una pizza grande rinde más que dos medianas", "body": "El área crece con el cuadrado del tamaño. Una pizza de 30 cm tiene unos 707 cm² (π × 15²); dos de 20 cm suman unos 628 cm² (2 × π × 10²). Con una grande comes casi 80 cm² más, aunque parezca que dos son más." },
