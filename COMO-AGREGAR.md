@@ -1,7 +1,7 @@
 # Cómo agregar contenido
 
 Todo sale de dos archivos; no toques `site/index.html` ni `site/juegos/`, `site/maestros/`, `site/tips/` (el deploy los regenera):
-- `site/data/proyectos.json` → proyectos · `site/data/contenido.json` → juegos, infografías, tips y Pase Maestro.
+- `site/data/proyectos.json` → proyectos · `site/data/contenido.json` → juegos, infografías, tips y tienda de maestros.
 - Páginas: inicio (infografías y proyectos), `/juegos/`, `/maestros/` y `/tips/`.
 
 Copia un elemento existente, cambia sus campos, haz commit y `git push` a `main`. GitHub Actions regenera la página, corre `npm run verificar` y sube por FTP. Si el verificador falla, no se publica nada: mira el log.
@@ -23,7 +23,11 @@ Copia un elemento existente, cambia sus campos, haz commit y `git push` a `main`
 - El buscador encuentra por título, descripción, tema y slug, sin importar acentos.
 Sin `url` no aparece la tarjeta: sale en la línea "Próximamente: …".
 
-**Pase Maestro**: `pase.url` = liga de compra (vacía → botón "Avísame cuando salga"); `pase.incluye` = lista de lo que incluye.
+**Tienda de maestros** (`contenido.json` → `tienda`, se ve en /maestros/):
+- `productos`: cada app suelta con `id`, `nombre`, `precio` (número, en pesos), `periodo` (`"semestre"` o `"pago único"`), `estado`, `url` (la app) y `ligaCompra` (Gumroad). Sin `ligaCompra` el botón lleva a la app; con `estado: "proximamente"` sale «Próximamente».
+- `paquetes`: `nombre`, `sub`, `lema`, `precio`, `incluye` (lista de `id` de productos), `extras` y `ligaCompra`. El precio tachado, el ahorro y el «≈ al mes» se calculan solos con los precios de `productos`. `destacado: true` + `sello` marca el recomendado (en celular sale primero).
+- Sin `ligaCompra` el botón del paquete dice «Avísame cuando salga».
+- `preguntas`: `p` (pregunta) y `r` (respuesta) del bloque de preguntas frecuentes.
 
 Nunca dejes ligas con `PLACEHOLDER`: déjalas en `""` hasta tenerlas.
 Para revisar en tu compu antes de subir: `node scripts/prerender.mjs && npm run verificar`.

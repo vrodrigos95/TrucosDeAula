@@ -135,7 +135,7 @@ const pagina = (vista) => {
 // Las demás páginas salen de site/index.html: mismo diseño, otra vista y otros metadatos.
 const SECCIONES = {
   juegos: { titulo: "Juegos", descripcion: "Juegos de matemáticas para jugar en el navegador o proyectar en clase: Casa de Apuestas, Cuadra y Parejo." },
-  maestros: { titulo: "Para maestros", descripcion: "El Pase Maestro, CalificaYa y ebooks para llevar las mates al salón." },
+  maestros: { titulo: "Para maestros", descripcion: "Pupitre y CalificaYa: pasa lista, califica y cierra el semestre sin pelearte con Excel. Pases desde $149 por semestre." },
   tips: { titulo: "Tips y datos curiosos", descripcion: "Trucos y datos curiosos para usar las matemáticas en el día a día." }
 };
 const rehacerMetas = (txt, vista, { titulo, descripcion }) => {

@@ -50,13 +50,33 @@
     { "n": "21", "title": "Restar de 1000 sin pedir prestado", "body": "Resta cada cifra de 9 y a la última súmale 1. 1000 − 637: 9 − 6 = 3, 9 − 3 = 6, 9 − 7 = 2 → 362, más 1 = 363. Ideal para calcular el cambio de un billete." },
     { "n": "22", "title": "La propina del 15%: el 10% más su mitad", "body": "Para una cuenta de $480, el 10% es $48 (corre el punto decimal) y la mitad de eso es $24. Súmalos: $72 es el 15%. Para el 20%, solo duplica el 10%." }
   ],
-  "pase": {
-    "url": "",
-    "incluye": [
-      { "sym": "▦", "chip": "#DCE6F5", "title": "Cuadra", "desc": "Productos notables y factorización con fichas y retos." },
-      { "sym": "✓", "chip": "#DCE9E2", "title": "CalificaYa", "desc": "Califica exámenes de opción múltiple con la cámara del celular." },
-      { "sym": "∑", "chip": "#E4DEF0", "title": "Juegos en versión aula", "desc": "Para proyectar y jugar con todo el grupo." },
-      { "sym": "%", "chip": "#EFE6D9", "title": "Infografías", "desc": "Listas para imprimir y pegar en el salón." }
+  "tienda": {
+    "productos": [
+      { "id": "pupitre", "nombre": "Pupitre Pro", "precio": 149, "periodo": "semestre", "estado": "disponible", "url": "https://pupitre.rsrapps.com", "ligaCompra": "" },
+      { "id": "calificaya", "nombre": "CalificaYa", "precio": 129, "periodo": "semestre", "estado": "proximamente", "url": "", "ligaCompra": "" },
+      { "id": "cuadra", "nombre": "Cuadra", "precio": 99, "periodo": "semestre", "estado": "disponible", "url": "https://cuadra.trucosdeaula.com", "ligaCompra": "" },
+      { "id": "casa", "nombre": "Casa de Apuestas Matemática", "precio": 99, "periodo": "pago único", "estado": "disponible", "url": "", "ligaCompra": "https://rodrigos5.gumroad.com/l/ccfmxp" }
+    ],
+    "paquetes": [
+      {
+        "id": "juegos", "nombre": "Pase Juegos", "sub": "Solo juegos", "precio": 149, "ligaCompra": "",
+        "lema": "Para que tu grupo practique jugando, en el proyector y por equipos.",
+        "incluye": ["cuadra", "casa"],
+        "extras": [{ "nombre": "Parejo y Tajo", "nota": "gratis para todos" }]
+      },
+      {
+        "id": "todo", "nombre": "Pase Maestro", "sub": "Todo incluido", "sello": "El que más conviene", "destacado": true, "precio": 299, "ligaCompra": "",
+        "lema": "Las apps que te regresan tus tardes y los juegos para tu clase, en un solo pago cada semestre.",
+        "incluye": ["pupitre", "calificaya", "cuadra", "casa"],
+        "extras": [{ "nombre": "Infografías", "nota": "listas para imprimir y pegar en el salón" }]
+      }
+    ],
+    "preguntas": [
+      { "p": "¿Qué pasa si cancelo?", "r": "Nada se pierde de golpe: todo te sigue funcionando hasta el final del semestre que ya pagaste. En Pupitre tus grupos y listas se quedan; vuelves al plan gratis y recuperas todo al renovar." },
+      { "p": "¿En cuántos dispositivos lo uso?", "r": "Hasta 3 por clave, por ejemplo tu computadora, tu celular y la del salón. Si cambias de equipo, liberas uno y activas el nuevo." },
+      { "p": "¿Mis datos y los de mis alumnos se usan para algo más?", "r": "No. Solo para que uses la app. No hay publicidad ni venta de datos." },
+      { "p": "¿Funciona sin internet?", "r": "En Pupitre, sí: pasas lista en el salón sin señal y se sincroniza cuando vuelve la red." },
+      { "p": "¿Cómo pago y cómo recibo mi clave?", "r": "Pagas en Gumroad. La clave te llega por correo al momento; la pegas en la app y listo." }
     ]
   }
 }
