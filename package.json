@@ -1,0 +1,8 @@
+{
+  "name": "trucosdeaula",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "verificar": "node scripts/verificar-sitio.mjs"
+  }
+}

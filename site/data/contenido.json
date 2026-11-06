@@ -1,25 +1,44 @@
 {
   "infografias": [
-    { "num": "01", "slug": "porcentajes", "title": "Porcentajes sin sudar", "desc": "Propinas, descuentos e IVA con aritmética de servilleta.", "bg": "#EFE6D9", "basis": "460px", "offset": "0px", "url": "" },
-    { "num": "02", "slug": "probabilidad", "title": "¿Qué tan probable?", "desc": "Del clima a la rifa de la escuela: leer probabilidades sin miedo.", "bg": "#DCE9E2", "basis": "340px", "offset": "48px", "url": "" },
-    { "num": "03", "slug": "proporciones", "title": "Reglas de tres reales", "desc": "Duplicar recetas, escalar planos, repartir gastos.", "bg": "#E4DEF0", "basis": "340px", "offset": "16px", "url": "" },
-    { "num": "04", "slug": "graficas", "title": "Cómo te mienten con gráficas", "desc": "Ejes cortados, escalas raras y otros trucos de titular.", "bg": "#DCE6F5", "basis": "460px", "offset": "56px", "url": "" }
+    { "num": "01", "slug": "porcentajes", "title": "Porcentajes sin sudar", "desc": "Propinas, descuentos e IVA con aritmética de servilleta.", "bg": "#EFE6D9", "basis": "460px", "offset": "0px", "min": 3, "url": "" },
+    { "num": "02", "slug": "probabilidad", "title": "¿Qué tan probable?", "desc": "Del clima a la rifa de la escuela: leer probabilidades sin miedo.", "bg": "#DCE9E2", "basis": "340px", "offset": "48px", "min": 3, "url": "" },
+    { "num": "03", "slug": "proporciones", "title": "Reglas de tres reales", "desc": "Duplicar recetas, escalar planos, repartir gastos.", "bg": "#E4DEF0", "basis": "340px", "offset": "16px", "min": 3, "url": "" },
+    { "num": "04", "slug": "graficas", "title": "Cómo te mienten con gráficas", "desc": "Ejes cortados, escalas raras y otros trucos de titular.", "bg": "#DCE6F5", "basis": "460px", "offset": "56px", "min": 3, "url": "" }
   ],
   "juegos": [
-    { "sym": "%", "chip": "#EFE6D9", "title": "Cuenta rápida", "desc": "Divide la cuenta del restaurante antes de que llegue el mesero.", "time": "2 min", "url": "" },
-    { "sym": "◆", "chip": "#DCE9E2", "title": "Adivina la escala", "desc": "¿Cabe un elefante en tu sala? Estimación pura.", "time": "3 min", "url": "" },
-    { "sym": "∑", "chip": "#E4DEF0", "title": "Ruleta de probabilidad", "desc": "Apuesta, falla y descubre por qué tu intuición te engaña.", "time": "4 min", "url": "" }
+    { "sym": "∑", "chip": "#EFE6D9", "title": "Casa de Apuestas Matemática", "desc": "Repaso de probabilidad y conteo para proyectar en clase.", "etiqueta": "De pago · Gumroad", "url": "https://rodrigos5.gumroad.com/l/ccfmxp" },
+    { "sym": "▦", "chip": "#E4DEF0", "title": "Cuadra", "desc": "Productos notables y factorización: del binomio al trinomio y de regreso, con fichas y retos por equipos.", "etiqueta": "Incluido en el Pase Maestro", "url": "https://cuadra.trucosdeaula.com" },
+    { "sym": "=", "chip": "#DCE6F5", "title": "Parejo", "desc": "Ecuaciones en equilibrio: despeja con una balanza y resuelve sistemas 2×2.", "etiqueta": "Gratis · en el navegador", "url": "https://parejo.trucosdeaula.com" },
+    { "sym": "◠", "chip": "#F3E1D6", "title": "Tajo", "desc": "Secciones cónicas: corta un cono con un plano y saca la ecuación de la circunferencia, la parábola, la elipse y la hipérbola paso a paso.", "etiqueta": "Cono 3D gratis · en el navegador", "url": "https://tajo.trucosdeaula.com" }
   ],
   "tips": [
-    { "n": "01", "title": "El 10% es sólo mover el punto", "body": "Para el 10% de cualquier número, corre el punto decimal una casilla a la izquierda. $480 → $48. Y si quieres 15%, súmale la mitad de eso: $48 + $24 = $72." },
-    { "n": "02", "title": "Descuentos: piensa en lo que pagas, no en lo que ahorras", "body": "30% de descuento significa que pagas el 70%. Multiplica por 0.7 y ya. Es un paso en vez de dos, y no te equivocas de signo." },
-    { "n": "03", "title": "Compara precios con la unidad, no con el envase", "body": "Divide precio entre cantidad para tener el precio por 100 g o por litro. Es la única forma honesta de comparar dos empaques distintos." },
-    { "n": "04", "title": "Estimar primero, calcular después", "body": "Redondea a números fáciles y quédate con el orden de magnitud. Si la calculadora te da algo 10 veces más grande, te equivocaste al teclear." }
+    { "n": "01", "title": "Una pizza grande rinde más que dos medianas", "body": "El área crece con el cuadrado del tamaño. Una pizza de 30 cm tiene unos 707 cm² (π × 15²); dos de 20 cm suman unos 628 cm² (2 × π × 10²). Con una grande comes casi 80 cm² más, aunque parezca que dos son más." },
+    { "n": "02", "title": "En un grupo de 23, lo más probable es que dos cumplan años el mismo día", "body": "Suena imposible con 365 días, pero lo que cuenta son las parejas: con 23 personas hay 253 parejas posibles. La probabilidad de que coincidan al menos dos es de 50.7%, y con 40 alumnos sube a 89%." },
+    { "n": "03", "title": "Multiplicar por 5 es dividir entre 2", "body": "5 es la mitad de 10. Para 48 × 5, agrega un cero (480) y saca la mitad: 240. Funciona con cualquier número y es mucho más rápido que multiplicar." },
+    { "n": "04", "title": "El 8% de 25 es lo mismo que el 25% de 8", "body": "Los porcentajes se pueden voltear: x% de y = y% de x. El 8% de 25 suena difícil, pero el 25% de 8 es una cuarta parte de 8: 2. Elige siempre el orden más fácil." },
+    { "n": "05", "title": "Dos descuentos del 20% no son un 40%", "body": "El segundo descuento se aplica sobre el precio ya rebajado. De $100 pasas a $80 y luego a $64: en total ahorras 36%, no 40%. Ojo con el \"20% + 20% adicional\"." },
+    { "n": "06", "title": "Si algo sube 50% y luego baja 50%, sales perdiendo", "body": "Un precio de $100 sube 50% a $150; bajar 50% de $150 deja $75. Cada porcentaje se calcula sobre un número distinto, por eso no se cancelan." },
+    { "n": "07", "title": "La regla del 72: cuánto tarda en duplicarse tu dinero", "body": "Divide 72 entre la tasa de interés anual. Al 8% tu ahorro se duplica en unos 9 años (72 ÷ 8); al 6%, en unos 12. Sirve igual para saber en cuánto tiempo la inflación reduce tu dinero a la mitad." },
+    { "n": "08", "title": "Divisible entre 3: suma sus cifras", "body": "Si la suma de las cifras es múltiplo de 3, el número también lo es. 471 → 4 + 7 + 1 = 12, así que 471 ÷ 3 es exacto (157). Con 9 pasa lo mismo: si la suma es múltiplo de 9, el número también." },
+    { "n": "09", "title": "El cuadrado de un número que termina en 5, en un segundo", "body": "Toma la cifra de las decenas, multiplícala por la siguiente y pega 25 al final. 35²: 3 × 4 = 12 → 1225. 65²: 6 × 7 = 42 → 4225." },
+    { "n": "10", "title": "Multiplicar por 11 un número de dos cifras", "body": "Separa las cifras y pon en medio su suma. 53 × 11: 5 _ 3, y en medio 5 + 3 = 8 → 583. Si la suma pasa de 9, lleva uno: 78 × 11 → 7 (15) 8 → 858." },
+    { "n": "11", "title": "Doblar una hoja 42 veces llegaría a la Luna", "body": "Una hoja mide unos 0.1 mm de grueso y cada doblez duplica el grosor. Tras 42 dobleces serían 0.1 mm × 2⁴², unos 440,000 km, más que los 384,000 km que nos separan de la Luna. Así crece lo exponencial." },
+    { "n": "12", "title": "Cada vez que barajas, casi seguro creas un orden que nunca ha existido", "body": "Una baraja de 52 cartas se puede ordenar de 52! maneras: un 8 seguido de 67 ceros. Aunque todas las personas de la historia hubieran barajado sin parar, no se habría repetido ni de cerca." },
+    { "n": "13", "title": "La tabla del 9 está en tus manos", "body": "Extiende los 10 dedos y baja el que corresponde al número. Para 9 × 7 baja el séptimo: quedan 6 dedos a la izquierda y 3 a la derecha → 63. Funciona del 9 × 1 al 9 × 10." },
+    { "n": "14", "title": "Para pasar de km/h a m/s, divide entre 3.6", "body": "A 90 km/h avanzas 25 metros cada segundo (90 ÷ 3.6). Por eso mirar el celular 2 segundos en carretera es manejar medio campo de futbol a ciegas." },
+    { "n": "15", "title": "En el problema de Monty Hall, conviene cambiar de puerta", "body": "Hay 3 puertas y un premio. Eliges una, el presentador abre otra vacía y te deja cambiar. Si cambias, ganas 2 de cada 3 veces: tu primera elección solo tenía 1/3 de probabilidad y eso no cambia al abrir otra puerta." },
+    { "n": "16", "title": "De Celsius a Fahrenheit sin calculadora: duplica y suma 30", "body": "20 °C → 20 × 2 + 30 = 70 °F (el valor exacto es 68 °F). La fórmula real es × 1.8 + 32, pero el atajo te deja a un par de grados en temperaturas del día a día." },
+    { "n": "17", "title": "Para quitar el IVA, divide entre 1.16; no restes 16%", "body": "Si algo cuesta $580 con IVA, el precio sin IVA es 580 ÷ 1.16 = $500. Restar el 16% daría $487.20, porque el 16% se calculó sobre $500, no sobre $580." },
+    { "n": "18", "title": "El empaque grande no siempre es más barato", "body": "Compara precio por unidad. 1 litro a $28 cuesta $28 por litro; 600 ml a $18 cuestan $30 por litro (18 ÷ 0.6). Muchos súper ya lo traen en letra chiquita en la etiqueta." },
+    { "n": "19", "title": "Multiplicar por 25: agrega dos ceros y divide entre 4", "body": "25 es 100 entre 4. Para 36 × 25: 3600 ÷ 4 = 900. Igual con 50: agrega dos ceros y saca la mitad (36 × 50 = 1800)." },
+    { "n": "20", "title": "Sumar del 1 al 100 en segundos, como Gauss", "body": "Junta el primero con el último: 1 + 100, 2 + 99, 3 + 98… Cada pareja suma 101 y hay 50 parejas: 50 × 101 = 5050. Sirve para sumar cualquier lista de números seguidos." },
+    { "n": "21", "title": "Restar de 1000 sin pedir prestado", "body": "Resta cada cifra de 9 y a la última súmale 1. 1000 − 637: 9 − 6 = 3, 9 − 3 = 6, 9 − 7 = 2 → 362, más 1 = 363. Ideal para calcular el cambio de un billete." },
+    { "n": "22", "title": "La propina del 15%: el 10% más su mitad", "body": "Para una cuenta de $480, el 10% es $48 (corre el punto decimal) y la mitad de eso es $24. Súmalos: $72 es el 15%. Para el 20%, solo duplica el 10%." }
   ],
   "pase": {
-    "url": "PLACEHOLDER_URL_PASE",
+    "url": "",
     "incluye": [
-      { "sym": "▦", "chip": "#DCE6F5", "title": "Cuadra", "desc": "La nueva app para el aula, en cuanto salga." },
+      { "sym": "▦", "chip": "#DCE6F5", "title": "Cuadra", "desc": "Productos notables y factorización con fichas y retos." },
       { "sym": "✓", "chip": "#DCE9E2", "title": "CalificaYa", "desc": "Califica exámenes de opción múltiple con la cámara del celular." },
       { "sym": "∑", "chip": "#E4DEF0", "title": "Juegos en versión aula", "desc": "Para proyectar y jugar con todo el grupo." },
       { "sym": "%", "chip": "#EFE6D9", "title": "Infografías", "desc": "Listas para imprimir y pegar en el salón." }
