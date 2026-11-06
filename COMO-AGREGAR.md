@@ -1,8 +1,8 @@
 # Cómo agregar contenido
 
-Todo sale de dos archivos; no toques `site/index.html` ni `site/juegos/`, `site/maestros/`, `site/tips/` (el deploy los regenera):
-- `site/data/proyectos.json` → proyectos · `site/data/contenido.json` → juegos, infografías, tips y Pase Maestro.
-- Páginas: inicio (infografías y proyectos), `/juegos/`, `/maestros/` y `/tips/`.
+Todo sale de dos archivos; no toques `site/index.html` ni el `index.html` de `site/infografias/`, `site/proyectos/`, `site/juegos/`, `site/maestros/` y `site/tips/` (el deploy los regenera):
+- `site/data/proyectos.json` → proyectos · `site/data/contenido.json` → retos, juegos, infografías, tips y Pase Maestro.
+- Páginas: inicio (reto de 10 segundos y manifiesto), `/infografias/`, `/proyectos/`, `/juegos/`, `/maestros/` y `/tips/`.
 
 Copia un elemento existente, cambia sus campos, haz commit y `git push` a `main`. GitHub Actions regenera la página, corre `npm run verificar` y sube por FTP. Si el verificador falla, no se publica nada: mira el log.
 
@@ -15,6 +15,7 @@ Copia un elemento existente, cambia sus campos, haz commit y `git push` a `main`
 
 **Juego** (`contenido.json` → `juegos`): `title`, `desc`, `etiqueta` (ej. "Gratis · en el navegador"), `url` (vacía → tarjeta "Próximamente"), `sym` (símbolo del círculo) y `chip` (color del círculo).
 **Tip** (`contenido.json` → `tips`): `n` (número), `title`, `body`.
+**Reto** (`contenido.json` → `retos`; el inicio muestra uno al azar en cada visita): `pregunta`, `opciones` (dos, cada una con `texto`, `dato` que se revela, `valor` numérico para el largo de la barra y `correcta: true` en la buena), `titulo` (la respuesta en una frase), `truco` (la explicación) y `ligas` (`texto` + `url`, por ejemplo a una infografía `/infografias/<slug>.pdf` o a `/tips/`).
 
 **Infografía** (`contenido.json` → `infografias`): `num`, `tema`, `title`, `desc`, `slug`, `url`, `img`, `min` (minutos de lectura), `bg` (color del tema).
 - El PDF va en `site/infografias/<slug>.pdf` y su miniatura en `site/infografias/miniaturas/<slug>.webp`; `url` e `img` apuntan ahí (`/infografias/…`).
