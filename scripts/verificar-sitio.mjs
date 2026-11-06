@@ -5,9 +5,10 @@
 // Saca el JSON de <script id="datos-sitio"> de site/index.html y falla (exit 1) si:
 //   - algún texto contiene "PLACEHOLDER";
 //   - un proyecto "disponible" no tiene ligaPrincipal;
-//   - alguna liga (ligaPrincipal, ligaCompra, url) no responde 200 tras redirecciones.
+//   - alguna liga (ligaPrincipal, ligaCompra, url, img) no responde 200 tras redirecciones;
+//   - una liga local (que empieza con "/", como /infografias/x.pdf) no existe dentro de site/.
 
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -23,7 +24,7 @@ const errores = [];
 
 // Recorre todo el JSON: textos con PLACEHOLDER y ligas a revisar.
 const ligas = [];
-const CAMPOS_LIGA = ["ligaPrincipal", "ligaCompra", "url"];
+const CAMPOS_LIGA = ["ligaPrincipal", "ligaCompra", "url", "img"];
 function recorrer(v, ruta, dueño) {
   if (typeof v === "string") {
     if (v.includes("PLACEHOLDER")) errores.push(`${ruta} contiene PLACEHOLDER`);
@@ -55,6 +56,12 @@ async function codigo(url) {
 }
 
 for (const l of ligas) {
+  // Liga local: se publica junto con site/, así que basta con que el archivo exista.
+  if (l.url.startsWith("/")) {
+    const ruta = join(raiz, "site", decodeURIComponent(l.url.split(/[?#]/)[0]));
+    if (!existsSync(ruta)) errores.push(`${l.nombre}: ${l.url} no existe en site/`);
+    continue;
+  }
   const c = await codigo(l.url);
   console.log(`${l.nombre} · ${c}  (${l.campo}: ${l.url})`);
   if (c !== 200) errores.push(`${l.nombre}: ${l.url} respondió ${c}`);

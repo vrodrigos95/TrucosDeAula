@@ -16,7 +16,11 @@ Copia un elemento existente, cambia sus campos, haz commit y `git push` a `main`
 **Juego** (`contenido.json` → `juegos`): `title`, `desc`, `etiqueta` (ej. "Gratis · en el navegador"), `url` (vacía → tarjeta "Próximamente"), `sym` (símbolo del círculo) y `chip` (color del círculo).
 **Tip** (`contenido.json` → `tips`): `n` (número), `title`, `body`.
 
-**Infografía** (`contenido.json` → `infografias`): `num`, `title`, `desc`, `slug`, `url`, `min` (minutos de lectura), `bg` (color), `basis`/`offset` (tamaño y desfase en la rejilla).
+**Infografía** (`contenido.json` → `infografias`): `num`, `tema`, `title`, `desc`, `slug`, `url`, `img`, `min` (minutos de lectura), `bg` (color del tema).
+- El PDF va en `site/infografias/<slug>.pdf` y su miniatura en `site/infografias/miniaturas/<slug>.webp`; `url` e `img` apuntan ahí (`/infografias/…`).
+- `tema` agrupa las tarjetas y crea su botón en el buscador (hoy: Álgebra, Geometría, Trigonometría, Probabilidad). Un tema nuevo aparece solo; usa el mismo `bg` en todas las de ese tema.
+- Miniatura desde el PDF: `pdftoppm -f 1 -l 1 -r 60 -png <slug>.pdf t && convert t-1.png -resize 480x -gravity north -crop 480x600+0+0 +repage -quality 72 miniaturas/<slug>.webp`.
+- El buscador encuentra por título, descripción, tema y slug, sin importar acentos.
 Sin `url` no aparece la tarjeta: sale en la línea "Próximamente: …".
 
 **Pase Maestro**: `pase.url` = liga de compra (vacía → botón "Avísame cuando salga"); `pase.incluye` = lista de lo que incluye.
