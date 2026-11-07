@@ -45,6 +45,17 @@
     "imagen": ""
   },
   {
+    "nombre": "Pupitre",
+    "descripcion": "Pasa lista en segundos, ve a tiempo quién va a extraordinario y cierra el semestre en Excel. Gratis con un grupo.",
+    "categoria": "Apps para maestros",
+    "paraQuien": "Maestros · incluida en el Pase Maestro",
+    "estado": "disponible",
+    "ligaPrincipal": "https://pupitre.rsrapps.com",
+    "ligaCompra": "",
+    "precio": "",
+    "imagen": ""
+  },
+  {
     "nombre": "Cuadra",
     "descripcion": "Productos notables y factorización, de ida y de vuelta: del binomio al trinomio y de regreso, con fichas y retos por equipos.",
     "categoria": "Apps para maestros",
@@ -71,7 +82,6 @@
     "descripcion": "Califica exámenes de opción múltiple con la cámara de tu celular y descarga las calificaciones en Excel.",
     "categoria": "Apps para maestros",
     "paraQuien": "Maestros · incluida en el Pase Maestro",
-    "pagina": "maestros",
     "estado": "proximamente",
     "ligaPrincipal": "",
     "ligaCompra": "",
