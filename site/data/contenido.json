@@ -62,8 +62,8 @@
   ],
   "tienda": {
     "productos": [
-      { "id": "pupitre", "nombre": "Pupitre Pro", "precio": 149, "periodo": "semestre", "estado": "disponible", "url": "https://pupitre.rsrapps.com", "ligaCompra": "" },
-      { "id": "calificaya", "nombre": "CalificaYa", "precio": 129, "periodo": "semestre", "estado": "proximamente", "url": "", "ligaCompra": "" },
+      { "id": "pupitre", "nombre": "Pupitre Pro", "precio": 249, "periodo": "semestre", "estado": "disponible", "url": "https://pupitre.rsrapps.com", "ligaCompra": "https://rodrigos5.gumroad.com/l/pupitre" },
+      { "id": "calificaya", "nombre": "CalificaYa", "precio": 129, "periodo": "semestre", "estado": "disponible", "url": "", "ligaCompra": "https://rodrigos5.gumroad.com/l/calificaya" },
       { "id": "cuadra", "nombre": "Cuadra", "precio": 99, "periodo": "semestre", "estado": "disponible", "url": "https://cuadra.trucosdeaula.com", "ligaCompra": "" },
       { "id": "casa", "nombre": "Casa de Apuestas Matemática", "precio": 99, "periodo": "pago único", "estado": "disponible", "url": "", "ligaCompra": "https://rodrigos5.gumroad.com/l/ccfmxp" }
     ],
