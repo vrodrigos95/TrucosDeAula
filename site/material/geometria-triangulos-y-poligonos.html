@@ -329,7 +329,9 @@ footer a{color:rgba(250,249,246,.7);font-size:14px}
     var n=+nIn.value,cx=200,cy=135,R=100;
     var V=[];for(var i=0;i<n;i++){var t=-Math.PI/2+2*Math.PI*i/n;V.push({x:cx+R*Math.cos(t),y:cy+R*Math.sin(t)})}
     var fp=[fills[0],fills[1],fills[2]];
-    var s='';
+    var pts=V.map(function(p){return p.x+','+p.y}).join(' ');
+    /* Primero el relleno, luego diagonales y triángulos, y al final el contorno: así nada queda tapado. */
+    var s=mode==='tri'?'':'<polygon points="'+pts+'" fill="var(--fill1)" stroke="none"/>';
     if(mode==='tri'){
       for(var k=1;k<n-1;k++){
         s+='<polygon points="'+V[0].x+','+V[0].y+' '+V[k].x+','+V[k].y+' '+V[k+1].x+','+V[k+1].y+'" fill="'+fp[(k-1)%3]+'" stroke="var(--line)" stroke-width="1"/>';
@@ -339,13 +341,13 @@ footer a{color:rgba(250,249,246,.7);font-size:14px}
       for(var a=0;a<n;a++)for(var b=a+2;b<n;b++){
         if(a===0&&b===n-1)continue;
         var fromTop=a===0;
-        s+='<line x1="'+V[a].x+'" y1="'+V[a].y+'" x2="'+V[b].x+'" y2="'+V[b].y+'" stroke="'+(fromTop?'var(--c2)':'var(--muted)')+'" stroke-width="'+(fromTop?3:1)+'" opacity="'+(fromTop?1:.55)+'"/>';
+        s+='<line x1="'+V[a].x+'" y1="'+V[a].y+'" x2="'+V[b].x+'" y2="'+V[b].y+'" stroke="'+(fromTop?'var(--c2)':'var(--ink)')+'" stroke-width="'+(fromTop?3:1.25)+'" opacity="'+(fromTop?1:.4)+'"/>';
       }
     }
     if(mode==='tri'){
       for(var k2=2;k2<n-1;k2++)s+='<line x1="'+V[0].x+'" y1="'+V[0].y+'" x2="'+V[k2].x+'" y2="'+V[k2].y+'" stroke="var(--accent)" stroke-width="2"/>';
     }
-    s+='<polygon points="'+V.map(function(p){return p.x+','+p.y}).join(' ')+'" fill="'+(mode==='tri'?'none':'var(--fill1)')+'" stroke="var(--accent)" stroke-width="3" stroke-linejoin="round"/>';
+    s+='<polygon points="'+pts+'" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linejoin="round"/>';
     if(mode==='ext'){
       var r=34;
       for(var j=0;j<n;j++){
