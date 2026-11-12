@@ -24,8 +24,8 @@ Copia un elemento existente, cambia sus campos, haz commit y `git push` a `main`
 - El buscador encuentra por título, descripción, tema y slug, sin importar acentos.
 Sin `url` no aparece la tarjeta: sale en la línea "Próximamente: …".
 
-**Material** (`contenido.json` → `material`, sale en /infografias/ debajo de las infografías, en «Material para practicar»): páginas HTML interactivas. Mismos campos que una infografía menos `min`, más `tipo` (ej. "Interactivo").
-- La página va en `site/material/<slug>.html` y su miniatura en `site/material/miniaturas/<slug>.webp`; `url` e `img` apuntan ahí (`/material/…`).
+**Material** (`contenido.json` → `material`, sale en /infografias/ debajo de las infografías, en «Material para practicar»): páginas HTML interactivas. Mismos campos que una infografía menos `min`, más `tipo` (ej. "Interactivo", "Cuadernillo") y `pie` (la línea bajo la tarjeta, ej. "PDF · 2 páginas para imprimir").
+- La página (o el PDF) va en `site/material/<slug>.html` (o `.pdf`) y su miniatura en `site/material/miniaturas/<slug>.webp`; `url` e `img` apuntan ahí (`/material/…`).
 - Usa el mismo `tema` y `bg` que las infografías: comparte buscador y botones de tema.
 
 **Tienda de maestros** (`contenido.json` → `tienda`, se ve en /maestros/):
