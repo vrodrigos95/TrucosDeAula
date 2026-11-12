@@ -90,14 +90,14 @@ footer a{color:rgba(250,249,246,.7);font-size:14px}
 </header>
 <main>
   <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:clamp(8px,2vw,24px)">
-    <span class="tag">Material interactivo · Geometría · Examen departamental, temas 7 y 8</span>
+    <span class="tag">Material interactivo · Geometría</span>
     <h1>Triángulos y polígonos<span>.</span></h1>
     <p class="lead">Mueve las figuras, mira cómo cambian los números y quédate con la regla que aparece debajo de cada una.</p>
   </div>
 
-  <!-- TEMA 7 -->
+  <!-- TRIÁNGULOS -->
   <section class="card" aria-labelledby="t7">
-    <span class="tag">Tema 7 · Paso 1</span>
+    <span class="tag">Triángulos · Paso 1</span>
     <h2 id="t7">Los tres ángulos siempre suman 180°</h2>
     <p>Arrastra cualquier vértice del triángulo. Los ángulos cambian, la suma no.</p>
     <div class="row">
@@ -119,7 +119,7 @@ footer a{color:rgba(250,249,246,.7);font-size:14px}
   </section>
 
   <section class="card" aria-labelledby="t7b">
-    <span class="tag">Tema 7 · Paso 2</span>
+    <span class="tag">Triángulos · Paso 2</span>
     <h2 id="t7b">¿Los tres lados cierran un triángulo?</h2>
     <p>Mueve las tres longitudes. El triángulo se forma solo si cada lado es menor que la suma de los otros dos.</p>
     <div class="row">
@@ -137,9 +137,9 @@ footer a{color:rgba(250,249,246,.7);font-size:14px}
     </div>
   </section>
 
-  <!-- TEMA 8 -->
+  <!-- POLÍGONOS -->
   <section class="card" aria-labelledby="t8">
-    <span class="tag">Tema 8 · Paso 1</span>
+    <span class="tag">Polígonos · Paso 1</span>
     <h2 id="t8">Un polígono se corta en n − 2 triángulos</h2>
     <p>Elige el número de lados y cambia de vista. Cada triángulo aporta 180°.</p>
     <div class="slider"><label for="n">Lados (n)</label><input id="n" type="range" min="3" max="12" step="1" value="6"><output id="on"></output></div>
@@ -173,7 +173,7 @@ footer a{color:rgba(250,249,246,.7);font-size:14px}
   </section>
 
   <section class="card" aria-labelledby="t8b">
-    <span class="tag">Tema 8 · Paso 2</span>
+    <span class="tag">Polígonos · Paso 2</span>
     <h2 id="t8b">¿Qué dato te dan? Elige la ruta</h2>
     <p>Escribe un dato en la fila que corresponda y obtén todo lo demás. Ya hay tres ejemplos de práctica puestos.</p>
     <div class="calc">
@@ -253,7 +253,7 @@ footer a{color:rgba(250,249,246,.7);font-size:14px}
     });
     strip+='<line x1="10" y1="52" x2="390" y2="52" stroke="var(--ink)" stroke-width="2"/><text x="200" y="66" font-size="13" text-anchor="middle">180°</text>';
     $('strip').innerHTML=strip;
-    $('triStats').innerHTML=T.map(function(v,i){return '<div class="stat"><small>'+names[i]+'</small><strong style="color:'+cols[i]+'">'+fmt(v,1)+'°</strong></div>'}).join('')+
+    $('triStats').innerHTML=T.map(function(v,i){return '<div class="stat"><small style="text-transform:none;font-size:13px">'+names[i]+'</small><strong style="color:'+cols[i]+'">'+fmt(v,1)+'°</strong></div>'}).join('')+
       '<div class="stat"><small>Suma</small><strong>'+fmt(T[0]+T[1]+T[2],1)+'°</strong></div>';
     var L=[dist(pts[1],pts[2]),dist(pts[0],pts[2]),dist(pts[0],pts[1])];
     var eq=function(a,b){return Math.abs(a-b)/Math.max(a,b)<0.04};
