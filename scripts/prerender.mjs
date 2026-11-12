@@ -134,7 +134,7 @@ const pagina = (vista) => {
 
 // Las demás páginas salen de site/index.html: mismo diseño, otra vista y otros metadatos.
 const SECCIONES = {
-  infografias: { titulo: "Infografías", descripcion: "Infografías de álgebra, geometría, trigonometría y probabilidad para descargar, imprimir y usar en clase." },
+  infografias: { titulo: "Infografías y material", descripcion: "Infografías de álgebra, geometría, trigonometría y probabilidad para descargar e imprimir, y material interactivo para practicar en clase." },
   proyectos: { titulo: "Proyectos", descripcion: "Apps, juegos y ebooks de TrucosDeAula para llevar las matemáticas más allá del salón." },
   juegos: { titulo: "Juegos", descripcion: "Juegos de matemáticas para jugar en el navegador o proyectar en clase: Casa de Apuestas, Cuadra y Parejo." },
   maestros: { titulo: "Para maestros", descripcion: "Pupitre y CalificaYa: pasa lista, califica y cierra el semestre sin pelearte con Excel. Pases desde $149 por semestre." },

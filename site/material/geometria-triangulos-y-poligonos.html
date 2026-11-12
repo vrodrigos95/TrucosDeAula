@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Triángulos y polígonos · TrucosDeAula</title>
+<meta name="description" content="Material interactivo de geometría: suma de ángulos del triángulo, desigualdad triangular, ángulos internos y externos y diagonales de polígonos.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Mismo sistema visual que trucosdeaula.com: papel #FAF9F6, tinta #101012, azul #1B44E8, oro #C79A3E. */
+:root{
+  --bg:#FAF9F6; --surface:#FFFFFF; --ink:#101012; --muted:rgba(16,16,18,.62); --line:rgba(16,16,18,.16);
+  --accent:#1B44E8; --gold:#C79A3E; --good:#2E8B57; --bad:#E2574C;
+  --c1:#1B44E8; --c2:#C79A3E; --c3:#2E8B57;
+  --fill1:#DCE6F5; --fill2:#EFE6D9; --fill3:#DCE9E2;
+  --display:"Bricolage Grotesque",Helvetica,Arial,sans-serif;
+  --body:"Instrument Sans",Helvetica,Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--accent);text-decoration:none}
+a:hover{color:var(--gold)}
+::selection{background:var(--gold);color:var(--ink)}
+.top{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px clamp(16px,4vw,56px);background:rgba(250,249,246,.86);backdrop-filter:blur(14px);border-bottom:1px solid rgba(16,16,18,.09)}
+.brand{display:flex;align-items:center;gap:10px;color:var(--ink);font:700 19px/1 var(--display);letter-spacing:-.02em}
+.brand:hover{color:var(--ink)}
+.brand i{display:block;width:22px;height:22px;border-radius:999px;background:var(--accent)}
+.back{font-size:14px;color:var(--ink)}
+main{max-width:980px;margin:0 auto;padding:clamp(40px,7vw,96px) 16px 72px;display:flex;flex-direction:column;gap:clamp(20px,3vw,32px)}
+h1,h2,h3{font-family:var(--display);font-weight:500;text-wrap:balance;margin:0;line-height:1.02;letter-spacing:-.03em}
+h1{font-size:clamp(36px,7vw,80px);letter-spacing:-.035em}
+h1 span,h2 span{color:var(--gold)}
+h2{font-size:clamp(24px,3.6vw,38px)}
+h3{font-size:20px;letter-spacing:-.02em}
+p{margin:0}
+.lead{color:var(--muted);max-width:52ch;font-size:clamp(16px,1.35vw,19px)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:clamp(20px,3vw,32px);display:flex;flex-direction:column;gap:18px}
+.tag{font:500 11px/1.3 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.row{display:flex;gap:20px;flex-wrap:wrap}
+.row>*{flex:1 1 280px;min-width:0}
+svg{width:100%;height:auto;display:block;background:var(--bg);border:1px solid var(--line);border-radius:6px;touch-action:none;background-image:repeating-linear-gradient(135deg,rgba(16,16,18,.035) 0 1px,transparent 1px 9px)}
+.rule{border-left:3px solid var(--gold);padding:4px 0 4px 16px;display:flex;flex-direction:column;gap:6px}
+.rule p{color:var(--muted);font-size:15px}
+.big{font:500 clamp(20px,2.4vw,26px)/1.2 var(--display);letter-spacing:-.02em;color:var(--ink)}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:14px;background:var(--bg)}
+.pill b{color:var(--accent);font-weight:600}
+.ok{color:var(--good);font-weight:700}
+.no{color:var(--bad);font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.stat{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+.stat small{display:block;font:500 10px/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.stat strong{font:500 24px/1.2 var(--display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+label{font-weight:600;font-size:15px}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.slider{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
+.slider output{font:500 15px var(--mono);min-width:3ch;text-align:right;font-variant-numeric:tabular-nums}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+button,input[type=number]{font:600 14px var(--body);color:var(--ink)}
+.seg button{background:transparent;border:1px solid rgba(16,16,18,.22);border-radius:999px;padding:9px 16px;cursor:pointer;transition:background .25s ease,color .25s ease,border-color .25s ease}
+.seg button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.calc{display:grid;grid-template-columns:1fr;gap:10px}
+.calc .line{display:grid;grid-template-columns:minmax(0,1fr) 120px;gap:12px;align-items:center}
+.calc input{width:100%;padding:10px 14px;border:1px solid rgba(16,16,18,.22);border-radius:999px;background:var(--surface);font-family:var(--mono);font-weight:500;outline:none}
+.calc input:focus{border-color:var(--accent)}
+.res{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:12px 14px;min-height:3.2em;font-size:15px}
+.errs{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;color:var(--muted)}
+.trap{background:var(--bg);border:1px dashed rgba(16,16,18,.3);border-radius:6px;padding:14px 16px;font-size:15px}
+.trap b{color:var(--gold)}
+text{font-family:var(--body);font-weight:600;fill:var(--ink)}
+.vt{cursor:grab}
+.vt:active{cursor:grabbing}
+footer{padding:28px clamp(16px,4vw,56px);background:var(--ink);color:rgba(250,249,246,.7);display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center}
+footer b{font:500 24px var(--display);color:var(--bg);letter-spacing:-.03em}
+footer a{color:rgba(250,249,246,.7);font-size:14px}
+@media (max-width:420px){.calc .line{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/"><i></i>TrucosDeAula</a>
+  <a class="back" href="/infografias/">← Infografías y material</a>
+</header>
+<main>
+  <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:clamp(8px,2vw,24px)">
+    <span class="tag">Material interactivo · Geometría · Examen departamental, temas 7 y 8</span>
+    <h1>Triángulos y polígonos<span>.</span></h1>
+    <p class="lead">Mueve las figuras, mira cómo cambian los números y quédate con la regla que aparece debajo de cada una.</p>
+  </div>
+
+  <!-- TEMA 7 -->
+  <section class="card" aria-labelledby="t7">
+    <span class="tag">Tema 7 · Paso 1</span>
+    <h2 id="t7">Los tres ángulos siempre suman 180°</h2>
+    <p>Arrastra cualquier vértice del triángulo. Los ángulos cambian, la suma no.</p>
+    <div class="row">
+      <svg id="tri" viewBox="0 0 400 260" role="img" aria-label="Triángulo con vértices que se pueden arrastrar"></svg>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="stats" id="triStats"></div>
+        <div>
+          <p style="font-weight:600;margin-bottom:6px">Junta las tres esquinas y forman una línea recta</p>
+          <svg id="strip" viewBox="0 0 400 70" role="img" aria-label="Los tres ángulos juntos forman un ángulo llano de 180 grados"></svg>
+        </div>
+      </div>
+    </div>
+    <div class="pills" id="triClass"></div>
+    <div class="rule">
+      <div class="big">α + β + γ = 180°</div>
+      <p>Con incógnitas: suma los tres ángulos, iguala a 180° y despeja. Ejemplo: x, x + 20 y 2x − 40 dan 4x − 20 = 180, así que x = 50 y los ángulos son 50°, 70° y 60°.</p>
+    </div>
+    <div class="trap"><b>Pregunta trampa.</b> ¿Existe un triángulo con 40°, 65° y 70°? Suman 175°, así que no existe.</div>
+  </section>
+
+  <section class="card" aria-labelledby="t7b">
+    <span class="tag">Tema 7 · Paso 2</span>
+    <h2 id="t7b">¿Los tres lados cierran un triángulo?</h2>
+    <p>Mueve las tres longitudes. El triángulo se forma solo si cada lado es menor que la suma de los otros dos.</p>
+    <div class="row">
+      <svg id="ineq" viewBox="0 0 460 250" role="img" aria-label="Dos circunferencias que se cruzan solo si los lados cierran un triángulo"></svg>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="slider"><label for="la">Lado a</label><input id="la" type="range" min="1" max="15" step="1" value="5"><output id="oa"></output></div>
+        <div class="slider"><label for="lb">Lado b</label><input id="lb" type="range" min="1" max="15" step="1" value="12"><output id="ob"></output></div>
+        <div class="slider"><label for="lc">Lado c</label><input id="lc" type="range" min="1" max="15" step="1" value="13" disabled><output id="oc"></output></div>
+        <div class="res" id="ineqRes"></div>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="big">a + b &gt; c, a + c &gt; b, b + c &gt; a</div>
+      <p>Para clasificar por ángulos compara el cuadrado del lado mayor con la suma de los otros dos cuadrados: si es igual, rectángulo; si es menor, acutángulo; si es mayor, obtusángulo. Ejemplo: 5, 12 y 13 cierran y 5² + 12² = 13², así que es rectángulo.</p>
+    </div>
+  </section>
+
+  <!-- TEMA 8 -->
+  <section class="card" aria-labelledby="t8">
+    <span class="tag">Tema 8 · Paso 1</span>
+    <h2 id="t8">Un polígono se corta en n − 2 triángulos</h2>
+    <p>Elige el número de lados y cambia de vista. Cada triángulo aporta 180°.</p>
+    <div class="slider"><label for="n">Lados (n)</label><input id="n" type="range" min="3" max="12" step="1" value="6"><output id="on"></output></div>
+    <div class="seg" role="group" aria-label="Vista del polígono">
+      <button type="button" data-mode="tri" aria-pressed="true">Triángulos</button>
+      <button type="button" data-mode="ext" aria-pressed="false">Ángulos externos</button>
+      <button type="button" data-mode="diag" aria-pressed="false">Diagonales</button>
+    </div>
+    <div class="row">
+      <svg id="poly" viewBox="0 0 400 270" role="img" aria-label="Polígono regular"></svg>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <h3 id="polyName"></h3>
+        <div class="stats" id="polyStats"></div>
+        <p id="polyNote" class="lead"></p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="rule">
+        <div class="big">Suma interna = (n − 2) · 180°</div>
+        <p>Regular: cada ángulo interno = (n − 2) · 180° ÷ n.</p>
+      </div>
+      <div class="rule">
+        <div class="big">Externo = 360° ÷ n</div>
+        <p>Caminas por el borde y giras en cada esquina. Al volver al inicio diste una vuelta completa. Interno + externo = 180°.</p>
+      </div>
+      <div class="rule">
+        <div class="big">Diagonales = n(n − 3) ÷ 2</div>
+        <p>Desde un vértice salen n − 3. Se divide entre 2 porque cada diagonal se contó dos veces.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="t8b">
+    <span class="tag">Tema 8 · Paso 2</span>
+    <h2 id="t8b">¿Qué dato te dan? Elige la ruta</h2>
+    <p>Escribe un dato en la fila que corresponda y obtén todo lo demás. Ya hay tres ejemplos de práctica puestos.</p>
+    <div class="calc">
+      <div class="line"><label for="cS">Te dan la suma de ángulos internos S (grados)</label><input id="cS" type="number" inputmode="decimal" value="1080"></div>
+      <div class="res" id="rS"></div>
+      <div class="line"><label for="cE">Te dan un ángulo externo e (grados)</label><input id="cE" type="number" inputmode="decimal" value="30"></div>
+      <div class="res" id="rE"></div>
+      <div class="line"><label for="cN">Te dan el número de lados n</label><input id="cN" type="number" inputmode="decimal" value="8"></div>
+      <div class="res" id="rN"></div>
+    </div>
+    <div class="rule">
+      <div class="big">Área regular = perímetro × apotema ÷ 2</div>
+      <p>Pentágono de lado 10 cm y apotema 6.9 cm: perímetro 50 cm, área 50 · 6.9 ÷ 2 = 172.5 cm².</p>
+    </div>
+    <div>
+      <h3 style="margin-bottom:8px">Errores que más se repiten</h3>
+      <ul class="errs">
+        <li>Usar n · 180° en lugar de (n − 2) · 180°.</li>
+        <li>Confundir ángulo interno con externo. Siempre suman 180°.</li>
+        <li>Olvidar dividir entre 2 en el total de diagonales.</li>
+        <li>No revisar que los tres ángulos de un triángulo sumen 180°.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+<footer>
+  <b>TrucosDeAula</b>
+  <span style="display:flex;flex-wrap:wrap;gap:22px"><a href="/infografias/">Infografías y material</a><a href="/juegos/">Juegos</a><a href="/tips/">Tips</a><a href="/maestros/">Para maestros</a></span>
+</footer>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var fmt=function(x,d){return Number(x.toFixed(d==null?2:d)).toString()};
+
+  /* ---------- Triángulo interactivo ---------- */
+  var pts=[{x:70,y:210},{x:330,y:210},{x:150,y:50}];
+  var names=['α','β','γ'], cols=['var(--c1)','var(--c2)','var(--c3)'], fills=['var(--fill1)','var(--fill2)','var(--fill3)'];
+  var tri=$('tri'), drag=-1;
+  var dist=function(a,b){return Math.hypot(a.x-b.x,a.y-b.y)};
+  function angles(){
+    var r=[];
+    for(var i=0;i<3;i++){
+      var a=pts[i],b=pts[(i+1)%3],c=pts[(i+2)%3];
+      var ux=b.x-a.x,uy=b.y-a.y,vx=c.x-a.x,vy=c.y-a.y;
+      var d=Math.hypot(ux,uy)*Math.hypot(vx,vy);
+      var cos=d?(ux*vx+uy*vy)/d:1;
+      r.push(Math.acos(Math.max(-1,Math.min(1,cos)))*180/Math.PI);
+    }
+    return r;
+  }
+  function tenths(a){ /* redondeo a décimas que suma exactamente 180.0 */
+    var t=a.map(function(x){return Math.floor(x*10)});
+    var rem=1800-t.reduce(function(s,x){return s+x},0);
+    var order=a.map(function(x,i){return [x*10-Math.floor(x*10),i]}).sort(function(p,q){return q[0]-p[0]});
+    for(var k=0;k<rem;k++)t[order[k][1]]++;
+    return t.map(function(x){return x/10});
+  }
+  function drawTri(){
+    var A=angles(), T=tenths(A);
+    var cx=(pts[0].x+pts[1].x+pts[2].x)/3, cy=(pts[0].y+pts[1].y+pts[2].y)/3;
+    var s='<polygon points="'+pts.map(function(p){return p.x+','+p.y}).join(' ')+'" fill="var(--fill1)" stroke="var(--accent)" stroke-width="3" stroke-linejoin="round"/>';
+    pts.forEach(function(p,i){
+      var dx=cx-p.x,dy=cy-p.y,l=Math.hypot(dx,dy)||1;
+      var lx=p.x+dx/l*34,ly=p.y+dy/l*34;
+      s+='<text x="'+lx+'" y="'+(ly+5)+'" font-size="15" text-anchor="middle" style="fill:'+cols[i]+'">'+fmt(T[i],1)+'°</text>';
+      s+='<circle class="vt" data-i="'+i+'" cx="'+p.x+'" cy="'+p.y+'" r="13" fill="'+cols[i]+'" stroke="var(--surface)" stroke-width="3"/>';
+      s+='<text x="'+p.x+'" y="'+(p.y+4)+'" font-size="12" text-anchor="middle" style="fill:var(--surface);pointer-events:none">'+names[i]+'</text>';
+    });
+    tri.innerHTML=s;
+    var strip='',x=10,W=380;
+    T.forEach(function(v,i){
+      var w=W*v/180;
+      strip+='<rect x="'+x+'" y="14" width="'+w+'" height="30" fill="'+cols[i]+'"/>';
+      if(w>46)strip+='<text x="'+(x+w/2)+'" y="34" font-size="14" text-anchor="middle" style="fill:var(--surface)">'+names[i]+' '+fmt(v,1)+'°</text>';
+      x+=w;
+    });
+    strip+='<line x1="10" y1="52" x2="390" y2="52" stroke="var(--ink)" stroke-width="2"/><text x="200" y="66" font-size="13" text-anchor="middle">180°</text>';
+    $('strip').innerHTML=strip;
+    $('triStats').innerHTML=T.map(function(v,i){return '<div class="stat"><small>'+names[i]+'</small><strong style="color:'+cols[i]+'">'+fmt(v,1)+'°</strong></div>'}).join('')+
+      '<div class="stat"><small>Suma</small><strong>'+fmt(T[0]+T[1]+T[2],1)+'°</strong></div>';
+    var L=[dist(pts[1],pts[2]),dist(pts[0],pts[2]),dist(pts[0],pts[1])];
+    var eq=function(a,b){return Math.abs(a-b)/Math.max(a,b)<0.04};
+    var same=(eq(L[0],L[1])?1:0)+(eq(L[1],L[2])?1:0)+(eq(L[0],L[2])?1:0);
+    var bySide=same===3?'Equilátero':(same>=1?'Isósceles':'Escaleno');
+    var mx=Math.max.apply(null,A);
+    var byAng=Math.abs(mx-90)<1.5?'Rectángulo':(mx>90?'Obtusángulo':'Acutángulo');
+    $('triClass').innerHTML='<span class="pill">Por sus lados: <b>'+bySide+'</b></span><span class="pill">Por sus ángulos: <b>'+byAng+'</b></span>';
+  }
+  function svgPoint(svg,e){
+    var r=svg.getBoundingClientRect(),vb=svg.viewBox.baseVal;
+    return {x:(e.clientX-r.left)*vb.width/r.width,y:(e.clientY-r.top)*vb.height/r.height};
+  }
+  tri.addEventListener('pointerdown',function(e){
+    var t=e.target;
+    if(t.classList&&t.classList.contains('vt')){drag=+t.getAttribute('data-i');try{tri.setPointerCapture(e.pointerId)}catch(_){}}
+  });
+  tri.addEventListener('pointermove',function(e){
+    if(drag<0)return;
+    var p=svgPoint(tri,e);
+    pts[drag]={x:Math.max(20,Math.min(380,p.x)),y:Math.max(20,Math.min(240,p.y))};
+    drawTri();
+  });
+  var endDrag=function(){drag=-1};
+  tri.addEventListener('pointerup',endDrag);
+  tri.addEventListener('pointercancel',endDrag);
+  drawTri();
+
+  /* ---------- Desigualdad triangular ---------- */
+  var la=$('la'),lb=$('lb'),lc=$('lc');
+  function drawIneq(){
+    var a=+la.value,b=+lb.value,c=+lc.value,u=15;
+    $('oa').textContent=a;$('ob').textContent=b;$('oc').textContent=c;
+    var x0=(460-c*u)/2,x1=x0+c*u,y=190;
+    var ok1=a+b>c,ok2=a+c>b,ok3=b+c>a,ok=ok1&&ok2&&ok3;
+    var s='<line x1="'+x0+'" y1="'+y+'" x2="'+x1+'" y2="'+y+'" stroke="var(--accent)" stroke-width="4" stroke-linecap="round"/>';
+    s+='<circle cx="'+x0+'" cy="'+y+'" r="'+a*u+'" fill="none" stroke="var(--c1)" stroke-width="2" stroke-dasharray="6 5"/>';
+    s+='<circle cx="'+x1+'" cy="'+y+'" r="'+b*u+'" fill="none" stroke="var(--c2)" stroke-width="2" stroke-dasharray="6 5"/>';
+    if(ok){
+      var px=(a*a-b*b+c*c)/(2*c),py=Math.sqrt(Math.max(0,a*a-px*px));
+      var X=x0+px*u,Y=y-py*u;
+      s+='<polygon points="'+x0+','+y+' '+x1+','+y+' '+X+','+Y+'" fill="var(--fill3)" stroke="var(--c3)" stroke-width="3" stroke-linejoin="round"/>';
+      s+='<circle cx="'+X+'" cy="'+Y+'" r="6" fill="var(--c3)"/>';
+    }
+    s+='<text x="'+(x0+x1)/2+'" y="'+(y+24)+'" font-size="15" text-anchor="middle">c = '+c+'</text>';
+    s+='<text x="'+(x0+6)+'" y="'+(y-8)+'" font-size="13" style="fill:var(--c1)">a = '+a+'</text>';
+    s+='<text x="'+(x1-6)+'" y="'+(y-8)+'" font-size="13" text-anchor="end" style="fill:var(--c2)">b = '+b+'</text>';
+    if(!ok)s+='<text x="230" y="40" font-size="16" text-anchor="middle" style="fill:var(--bad)">Las circunferencias no se cruzan</text>';
+    $('ineq').innerHTML=s;
+    var ch=function(v,t){return '<div><span class="'+(v?'ok':'no')+'">'+(v?'✓':'✗')+'</span> '+t+'</div>'};
+    var out=ch(ok1,a+' + '+b+' = '+(a+b)+(ok1?' > ':' ≤ ')+c)+ch(ok2,a+' + '+c+' = '+(a+c)+(ok2?' > ':' ≤ ')+b)+ch(ok3,b+' + '+c+' = '+(b+c)+(ok3?' > ':' ≤ ')+a);
+    if(ok){
+      var q=[a,b,c].sort(function(m,n){return m-n}),s2=q[0]*q[0]+q[1]*q[1],m2=q[2]*q[2];
+      var k=s2===m2?'rectángulo':(s2>m2?'acutángulo':'obtusángulo');
+      out+='<div style="margin-top:6px"><b>Sí cierra.</b> '+q[0]+'² + '+q[1]+'² = '+s2+' y '+q[2]+'² = '+m2+', así que es '+k+'.</div>';
+    }else out+='<div style="margin-top:6px"><b>No cierra.</b> Un lado es demasiado largo para los otros dos.</div>';
+    $('ineqRes').innerHTML=out;
+  }
+  /* c es el lado fijo de referencia: se ajusta con el mayor para mantener el ejemplo 5, 12, 13 */
+  lc.disabled=false;
+  [la,lb,lc].forEach(function(r){r.addEventListener('input',drawIneq)});
+  drawIneq();
+
+  /* ---------- Polígonos ---------- */
+  var pn=['','','','Triángulo','Cuadrilátero','Pentágono','Hexágono','Heptágono','Octágono','Eneágono','Decágono','Undecágono','Dodecágono'];
+  var mode='tri',nIn=$('n'),poly=$('poly');
+  var notes={
+    tri:'Desde un solo vértice trazas diagonales y el polígono queda cortado en triángulos. Cuenta los triángulos y multiplica por 180°.',
+    ext:'Cada ángulo externo se forma al prolongar un lado. Los externos de cualquier polígono convexo suman 360°.',
+    diag:'Desde el vértice marcado salen n − 3 diagonales. Las demás, en gris, completan el total.'
+  };
+  function drawPoly(){
+    var n=+nIn.value,cx=200,cy=135,R=100;
+    var V=[];for(var i=0;i<n;i++){var t=-Math.PI/2+2*Math.PI*i/n;V.push({x:cx+R*Math.cos(t),y:cy+R*Math.sin(t)})}
+    var fp=[fills[0],fills[1],fills[2]];
+    var s='';
+    if(mode==='tri'){
+      for(var k=1;k<n-1;k++){
+        s+='<polygon points="'+V[0].x+','+V[0].y+' '+V[k].x+','+V[k].y+' '+V[k+1].x+','+V[k+1].y+'" fill="'+fp[(k-1)%3]+'" stroke="var(--line)" stroke-width="1"/>';
+      }
+    }
+    if(mode==='diag'){
+      for(var a=0;a<n;a++)for(var b=a+2;b<n;b++){
+        if(a===0&&b===n-1)continue;
+        var fromTop=a===0;
+        s+='<line x1="'+V[a].x+'" y1="'+V[a].y+'" x2="'+V[b].x+'" y2="'+V[b].y+'" stroke="'+(fromTop?'var(--c2)':'var(--muted)')+'" stroke-width="'+(fromTop?3:1)+'" opacity="'+(fromTop?1:.55)+'"/>';
+      }
+    }
+    if(mode==='tri'){
+      for(var k2=2;k2<n-1;k2++)s+='<line x1="'+V[0].x+'" y1="'+V[0].y+'" x2="'+V[k2].x+'" y2="'+V[k2].y+'" stroke="var(--accent)" stroke-width="2"/>';
+    }
+    s+='<polygon points="'+V.map(function(p){return p.x+','+p.y}).join(' ')+'" fill="'+(mode==='tri'?'none':'var(--fill1)')+'" stroke="var(--accent)" stroke-width="3" stroke-linejoin="round"/>';
+    if(mode==='ext'){
+      var r=34;
+      for(var j=0;j<n;j++){
+        var p=V[(j+n-1)%n],v=V[j],q=V[(j+1)%n];
+        var d1x=v.x-p.x,d1y=v.y-p.y,l1=Math.hypot(d1x,d1y);d1x/=l1;d1y/=l1;
+        var d2x=q.x-v.x,d2y=q.y-v.y,l2=Math.hypot(d2x,d2y);d2x/=l2;d2y/=l2;
+        var e1={x:v.x+d1x*r,y:v.y+d1y*r},e2={x:v.x+d2x*r,y:v.y+d2y*r};
+        s+='<line x1="'+v.x+'" y1="'+v.y+'" x2="'+e1.x+'" y2="'+e1.y+'" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 3"/>';
+        s+='<path d="M'+v.x+' '+v.y+' L'+e1.x+' '+e1.y+' A'+r+' '+r+' 0 0 1 '+e2.x+' '+e2.y+' Z" fill="var(--fill2)" stroke="var(--c2)" stroke-width="1.5"/>';
+      }
+    }
+    for(var m=0;m<n;m++)s+='<circle cx="'+V[m].x+'" cy="'+V[m].y+'" r="'+(m===0&&mode!=='ext'?6:4)+'" fill="'+(m===0&&mode!=='ext'?'var(--c2)':'var(--accent)')+'"/>';
+    poly.innerHTML=s;
+    var sum=(n-2)*180,ent=sum/n,ext=360/n,dv=n-3,dt=n*(n-3)/2;
+    $('on').textContent=n;
+    $('polyName').textContent=pn[n]+' ('+n+' lados)';
+    var st=function(l,v){return '<div class="stat"><small>'+l+'</small><strong>'+v+'</strong></div>'};
+    $('polyStats').innerHTML=st('Triángulos',n-2)+st('Suma interna',sum+'°')+st('Cada interno',fmt(ent)+'°')+st('Cada externo',fmt(ext)+'°')+st('Diagonales por vértice',dv)+st('Diagonales en total',dt);
+    $('polyNote').textContent=notes[mode];
+  }
+  nIn.addEventListener('input',drawPoly);
+  Array.prototype.forEach.call(document.querySelectorAll('.seg button'),function(b){
+    b.addEventListener('click',function(){
+      mode=b.getAttribute('data-mode');
+      Array.prototype.forEach.call(document.querySelectorAll('.seg button'),function(o){o.setAttribute('aria-pressed',o===b?'true':'false')});
+      drawPoly();
+    });
+  });
+  drawPoly();
+
+  /* ---------- Ruta de decisión ---------- */
+  function full(n){
+    return 'Es un <b>'+(pn[n]||'polígono de '+n+' lados').toLowerCase()+'</b> (n = '+n+'). Suma interna '+(n-2)*180+'°, cada interno '+fmt((n-2)*180/n)+'°, cada externo '+fmt(360/n)+'°, '+(n*(n-3)/2)+' diagonales.';
+  }
+  function isN(n){return isFinite(n)&&n>=3&&Math.abs(n-Math.round(n))<1e-9}
+  function calc(){
+    var S=parseFloat($('cS').value),E=parseFloat($('cE').value),N=parseFloat($('cN').value);
+    var n1=S/180+2,n2=360/E;
+    $('rS').innerHTML=isNaN(S)?'Escribe un valor.':(isN(n1)?'(n − 2) · 180° = '+S+'° → n − 2 = '+fmt(S/180,2)+' → n = '+Math.round(n1)+'. '+full(Math.round(n1)):'<span class="no">Con esa suma no hay polígono:</span> n saldría '+fmt(n1,2)+'.');
+    $('rE').innerHTML=isNaN(E)?'Escribe un valor.':(isN(n2)?'n = 360° ÷ '+E+'° = '+Math.round(n2)+'. '+full(Math.round(n2)):'<span class="no">Con ese externo no hay polígono regular:</span> n saldría '+fmt(n2,2)+'.');
+    $('rN').innerHTML=isNaN(N)?'Escribe un valor.':(isN(N)?full(Math.round(N)):'<span class="no">n debe ser un entero de 3 o más.</span>');
+  }
+  ['cS','cE','cN'].forEach(function(id){$(id).addEventListener('input',calc)});
+  calc();
+})();
+</script>
+</body>
+</html>
