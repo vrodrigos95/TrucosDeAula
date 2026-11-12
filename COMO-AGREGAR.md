@@ -1,7 +1,7 @@
 # Cómo agregar contenido
 
 Todo sale de dos archivos; no toques `site/index.html` ni el `index.html` de `site/infografias/`, `site/proyectos/`, `site/juegos/`, `site/maestros/` y `site/tips/` (el deploy los regenera):
-- `site/data/proyectos.json` → proyectos · `site/data/contenido.json` → retos, juegos, infografías, tips y tienda de maestros.
+- `site/data/proyectos.json` → proyectos · `site/data/contenido.json` → retos, juegos, infografías, material, tips y tienda de maestros.
 - Páginas: inicio (reto de 10 segundos y manifiesto), `/infografias/`, `/proyectos/`, `/juegos/`, `/maestros/` y `/tips/`.
 
 Copia un elemento existente, cambia sus campos, haz commit y `git push` a `main`. GitHub Actions regenera la página, corre `npm run verificar` y sube por FTP. Si el verificador falla, no se publica nada: mira el log.
@@ -23,6 +23,10 @@ Copia un elemento existente, cambia sus campos, haz commit y `git push` a `main`
 - Miniatura desde el PDF: `pdftoppm -f 1 -l 1 -r 60 -png <slug>.pdf t && convert t-1.png -resize 480x -gravity north -crop 480x600+0+0 +repage -quality 72 miniaturas/<slug>.webp`.
 - El buscador encuentra por título, descripción, tema y slug, sin importar acentos.
 Sin `url` no aparece la tarjeta: sale en la línea "Próximamente: …".
+
+**Material** (`contenido.json` → `material`, sale en /infografias/ debajo de las infografías, en «Material para practicar»): páginas HTML interactivas. Mismos campos que una infografía menos `min`, más `tipo` (ej. "Interactivo").
+- La página va en `site/material/<slug>.html` y su miniatura en `site/material/miniaturas/<slug>.webp`; `url` e `img` apuntan ahí (`/material/…`).
+- Usa el mismo `tema` y `bg` que las infografías: comparte buscador y botones de tema.
 
 **Tienda de maestros** (`contenido.json` → `tienda`, se ve en /maestros/):
 - `productos`: cada app suelta con `id`, `nombre`, `precio` (número, en pesos), `periodo` (`"semestre"` o `"pago único"`), `estado`, `url` (la app) y `ligaCompra` (Gumroad). Sin `ligaCompra` el botón lleva a la app; con `estado: "proximamente"` sale «Próximamente».
