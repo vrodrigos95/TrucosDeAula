@@ -1,0 +1,7 @@
+# La clave del cuadernillo solo se entrega por api/clave.php después de resolver los retos.
+<IfModule mod_authz_core.c>
+  Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+  Deny from all
+</IfModule>

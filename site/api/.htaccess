@@ -1,9 +1,10 @@
 Options -Indexes
-<Files "_licencias.php">
+# Los archivos que empiezan con "_" son internos (funciones, configuración): nunca se sirven directo.
+<FilesMatch "^_">
   <IfModule mod_authz_core.c>
     Require all denied
   </IfModule>
   <IfModule !mod_authz_core.c>
     Deny from all
   </IfModule>
-</Files>
+</FilesMatch>

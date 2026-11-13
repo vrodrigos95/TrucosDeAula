@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Círculo unitario · TrucosDeAula</title>
+<meta name="description" content="Círculo unitario interactivo: mueve el ángulo y mira cómo cambian seno, coseno y tangente, sus signos y los valores exactos de los ángulos notables.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Mismo sistema visual que trucosdeaula.com: papel #FAF9F6, tinta #101012, azul #1B44E8, oro #C79A3E. */
+:root{
+  --bg:#FAF9F6; --surface:#FFFFFF; --ink:#101012; --muted:rgba(16,16,18,.62); --line:rgba(16,16,18,.16);
+  --accent:#1B44E8; --gold:#C79A3E; --good:#2E8B57; --bad:#E2574C;
+  --c1:#1B44E8; --c2:#C79A3E; --c3:#2E8B57;
+  --fill1:#DCE6F5; --fill2:#EFE6D9; --fill3:#DCE9E2;
+  --display:"Bricolage Grotesque",Helvetica,Arial,sans-serif;
+  --body:"Instrument Sans",Helvetica,Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--accent);text-decoration:none}
+a:hover{color:var(--gold)}
+::selection{background:var(--gold);color:var(--ink)}
+.top{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px clamp(16px,4vw,56px);background:rgba(250,249,246,.86);backdrop-filter:blur(14px);border-bottom:1px solid rgba(16,16,18,.09)}
+.brand{display:flex;align-items:center;gap:10px;color:var(--ink);font:700 19px/1 var(--display);letter-spacing:-.02em}
+.brand:hover{color:var(--ink)}
+.brand i{display:block;width:22px;height:22px;border-radius:999px;background:var(--accent)}
+.back{font-size:14px;color:var(--ink)}
+main{max-width:980px;margin:0 auto;padding:clamp(40px,7vw,96px) 16px 72px;display:flex;flex-direction:column;gap:clamp(20px,3vw,32px)}
+h1,h2,h3{font-family:var(--display);font-weight:500;text-wrap:balance;margin:0;line-height:1.02;letter-spacing:-.03em}
+h1{font-size:clamp(36px,7vw,80px);letter-spacing:-.035em}
+h1 span,h2 span{color:var(--gold)}
+h2{font-size:clamp(24px,3.6vw,38px)}
+h3{font-size:20px;letter-spacing:-.02em}
+p{margin:0}
+.lead{color:var(--muted);max-width:52ch;font-size:clamp(16px,1.35vw,19px)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:clamp(20px,3vw,32px);display:flex;flex-direction:column;gap:18px}
+.tag{font:500 11px/1.3 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.row{display:flex;gap:20px;flex-wrap:wrap}
+.row>*{flex:1 1 280px;min-width:0}
+svg{width:100%;height:auto;display:block;background:var(--bg);border:1px solid var(--line);border-radius:6px;touch-action:none;background-image:repeating-linear-gradient(135deg,rgba(16,16,18,.035) 0 1px,transparent 1px 9px)}
+.rule{border-left:3px solid var(--gold);padding:4px 0 4px 16px;display:flex;flex-direction:column;gap:6px}
+.rule p{color:var(--muted);font-size:15px}
+.big{font:500 clamp(20px,2.4vw,26px)/1.2 var(--display);letter-spacing:-.02em;color:var(--ink)}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:14px;background:var(--bg)}
+.pill b{color:var(--accent);font-weight:600}
+.ok{color:var(--good);font-weight:700}
+.no{color:var(--bad);font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.stat{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+.stat small{display:block;font:500 10px/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.stat strong{font:500 24px/1.2 var(--display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+label{font-weight:600;font-size:15px}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.slider{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
+.slider output{font:500 15px var(--mono);min-width:3ch;text-align:right;font-variant-numeric:tabular-nums}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+button,input[type=number]{font:600 14px var(--body);color:var(--ink)}
+.seg button{background:transparent;border:1px solid rgba(16,16,18,.22);border-radius:999px;padding:9px 16px;cursor:pointer;transition:background .25s ease,color .25s ease,border-color .25s ease}
+.seg button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.calc{display:grid;grid-template-columns:1fr;gap:10px}
+.calc .line{display:grid;grid-template-columns:minmax(0,1fr) 120px;gap:12px;align-items:center}
+.calc input{width:100%;padding:10px 14px;border:1px solid rgba(16,16,18,.22);border-radius:999px;background:var(--surface);font-family:var(--mono);font-weight:500;outline:none}
+.calc input:focus{border-color:var(--accent)}
+.res{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:12px 14px;min-height:3.2em;font-size:15px}
+.errs{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;color:var(--muted)}
+.trap{background:var(--bg);border:1px dashed rgba(16,16,18,.3);border-radius:6px;padding:14px 16px;font-size:15px}
+.trap b{color:var(--gold)}
+text{font-family:var(--body);font-weight:600;fill:var(--ink)}
+.vt{cursor:grab}
+.vt:active{cursor:grabbing}
+footer{padding:28px clamp(16px,4vw,56px);background:var(--ink);color:rgba(250,249,246,.7);display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center}
+footer b{font:500 24px var(--display);color:var(--bg);letter-spacing:-.03em}
+footer a{color:rgba(250,249,246,.7);font-size:14px}
+@media (max-width:420px){.calc .line{grid-template-columns:1fr}}
+</style>
+<style>
+.que{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 20px;display:grid;gap:6px;max-width:62ch}
+.que p{font-size:15px;color:var(--muted)}
+.que b{color:var(--ink)}
+.diag{position:relative}
+.stats.seis{grid-template-columns:repeat(3,minmax(0,1fr))}
+.exacto{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:12px 14px;font-size:15px;color:var(--muted)}
+.exacto.notable{border-color:var(--accent);background:#EEF2FE;color:var(--ink)}
+.exacto b{color:var(--ink)}
+.leyenda{display:flex;gap:18px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+.leyenda span{display:inline-flex;align-items:center;gap:7px}
+.leyenda i{width:10px;height:10px;border-radius:999px;display:inline-block}
+.seg button{font-family:var(--mono);font-weight:500}
+#pP{cursor:grab}
+@media (max-width:520px){.stats.seis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/"><i></i>TrucosDeAula</a>
+  <a class="back" href="/infografias/">← Infografías y material</a>
+</header>
+<main>
+  <div style="display:flex;flex-direction:column;gap:14px">
+    <span class="tag">Material interactivo · Trigonometría</span>
+    <h1>Círculo unitario<span>.</span></h1>
+    <div class="que">
+      <p><b>Qué es:</b> una circunferencia de radio 1 donde cada ángulo θ marca un punto P = (cos θ, sen θ).</p>
+      <p><b>Para qué sirve:</b> para ver de dónde salen el seno, el coseno y la tangente, sus signos en cada cuadrante y los valores exactos de los ángulos notables.</p>
+    </div>
+  </div>
+
+  <section class="card" aria-labelledby="c1">
+    <span class="tag">Paso 1 · Mueve el ángulo</span>
+    <h2 id="c1">P siempre está en (cos θ, sen θ)</h2>
+    <p>Arrastra el punto P, usa el deslizador o toca un ángulo notable. Como el radio mide 1, la coordenada x es el coseno y la y es el seno.</p>
+    <div class="row">
+      <svg id="circ" viewBox="0 0 400 400" role="img" aria-label="Círculo unitario con el punto P que se puede arrastrar">
+        <line x1="20" y1="200" x2="384" y2="200" stroke="var(--muted)" stroke-width="1"/>
+        <line x1="200" y1="380" x2="200" y2="16" stroke="var(--muted)" stroke-width="1"/>
+        <text x="388" y="205" font-size="13" style="fill:var(--muted)">x</text>
+        <text x="206" y="14" font-size="13" style="fill:var(--muted)">y</text>
+        <circle cx="200" cy="200" r="150" fill="none" stroke="var(--ink)" stroke-width="1.5" opacity=".45"/>
+        <text x="290" y="120" font-size="13" text-anchor="middle" style="fill:var(--muted)">I (+, +)</text>
+        <text x="110" y="120" font-size="13" text-anchor="middle" style="fill:var(--muted)">II (−, +)</text>
+        <text x="110" y="290" font-size="13" text-anchor="middle" style="fill:var(--muted)">III (−, −)</text>
+        <text x="290" y="290" font-size="13" text-anchor="middle" style="fill:var(--muted)">IV (+, −)</text>
+        <path id="arco" fill="var(--fill1)" stroke="var(--accent)" stroke-width="1.5"/>
+        <text id="thL" font-size="14" style="fill:var(--accent)">θ</text>
+        <line id="lCos" stroke="var(--c3)" stroke-width="3"/>
+        <line id="lSen" stroke="var(--c2)" stroke-width="3"/>
+        <line id="lRad" x1="200" y1="200" stroke="var(--accent)" stroke-width="3"/>
+        <circle cx="200" cy="200" r="3.5" style="fill:var(--ink)"/>
+        <circle id="pP" r="11" fill="var(--accent)" stroke="var(--surface)" stroke-width="3"/>
+        <text id="pL" font-size="15">P</text>
+      </svg>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="slider"><label for="ang">Ángulo θ</label><input id="ang" type="range" min="0" max="360" step="1" value="30"><output id="angO"></output></div>
+        <div class="seg" role="group" aria-label="Ángulos notables" id="notables"></div>
+        <div class="leyenda">
+          <span><i style="background:var(--accent)"></i>radio = 1</span>
+          <span><i style="background:var(--c3)"></i>cos θ (x)</span>
+          <span><i style="background:var(--c2)"></i>sen θ (y)</span>
+        </div>
+      </div>
+    </div>
+    <div class="stats seis">
+      <div class="stat"><small>sen θ (= y)</small><strong id="oSen" style="color:var(--c2)"></strong></div>
+      <div class="stat"><small>cos θ (= x)</small><strong id="oCos" style="color:var(--c3)"></strong></div>
+      <div class="stat"><small>tan θ (= y ÷ x)</small><strong id="oTan" style="color:var(--accent)"></strong></div>
+      <div class="stat"><small>Cuadrante</small><strong id="oCua"></strong></div>
+      <div class="stat"><small>Ángulo de referencia</small><strong id="oRef"></strong></div>
+      <div class="stat"><small>En radianes</small><strong id="oRad"></strong></div>
+    </div>
+    <div class="exacto" id="exacto" aria-live="polite"></div>
+  </section>
+
+  <section class="card" aria-labelledby="c2">
+    <span class="tag">Paso 2 · Quédate con la regla</span>
+    <h2 id="c2">Tres ideas que resuelven casi todo</h2>
+    <div class="row">
+      <div class="rule"><div class="big">sen² θ + cos² θ = 1</div><p>Es Pitágoras dentro del círculo: los catetos son cos θ y sen θ, y la hipotenusa es el radio, que mide 1.</p></div>
+      <div class="rule"><div class="big">Signos: «Todos, Seno, Tangente, Coseno»</div><p>En el cuadrante I todas son positivas; en el II solo el seno; en el III solo la tangente; en el IV solo el coseno.</p></div>
+      <div class="rule"><div class="big">Ángulo de referencia</div><p>Cualquier ángulo tiene los mismos valores que su ángulo de referencia (el que forma con el eje x); solo cambia el signo según el cuadrante.</p></div>
+    </div>
+  </section>
+</main>
+<footer>
+  <b>TrucosDeAula</b>
+  <span style="display:flex;flex-wrap:wrap;gap:22px"><a href="/infografias/">Infografías y material</a><a href="/juegos/">Juegos</a><a href="/tips/">Tips</a><a href="/maestros/">Para maestros</a></span>
+</footer>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var notable={
+    0:['0','1','0','0'],30:['1/2','√3/2','√3/3','π/6'],45:['√2/2','√2/2','1','π/4'],60:['√3/2','1/2','√3','π/3'],
+    90:['1','0','no existe','π/2'],120:['√3/2','−1/2','−√3','2π/3'],135:['√2/2','−√2/2','−1','3π/4'],150:['1/2','−√3/2','−√3/3','5π/6'],
+    180:['0','−1','0','π'],210:['−1/2','−√3/2','√3/3','7π/6'],225:['−√2/2','−√2/2','1','5π/4'],240:['−√3/2','−1/2','√3','4π/3'],
+    270:['−1','0','no existe','3π/2'],300:['−√3/2','1/2','−√3','5π/3'],315:['−√2/2','√2/2','−1','7π/4'],330:['−1/2','√3/2','−√3/3','11π/6'],
+    360:['0','1','0','2π']
+  };
+  var botones=[0,30,45,60,90,120,135,150,180,210,225,240,270,300,315,330];
+  var cx=200,cy=200,R=150,ra=34,svg=$('circ'),arr=false;
+  var f=function(v){var s=v.toFixed(3);return (s==='-0.000'?'0.000':s).replace('-','−')};
+  botones.forEach(function(a){
+    var b=document.createElement('button');b.type='button';b.textContent=a+'°';b.dataset.a=a;
+    b.addEventListener('click',function(){poner(a)});$('notables').appendChild(b);
+  });
+  function ref(d){d=((d%360)+360)%360;return d<=90?d:d<=180?180-d:d<=270?d-180:360-d}
+  function poner(deg){
+    deg=Math.round(Number(deg));var r=deg*Math.PI/180,c=Math.cos(r),s=Math.sin(r);
+    var x=cx+R*c,y=cy-R*s;
+    $('lRad').setAttribute('x2',x);$('lRad').setAttribute('y2',y);
+    $('pP').setAttribute('cx',x);$('pP').setAttribute('cy',y);
+    $('pL').setAttribute('x',x+(c>=0?14:-28));$('pL').setAttribute('y',y+(s>=0?-12:24));
+    ['x1','y1','x2','y2'].forEach(function(k,i){$('lCos').setAttribute(k,[cx,cy,x,cy][i]);$('lSen').setAttribute(k,[x,cy,x,y][i])});
+    var n=deg%360,arco='';
+    if(deg>0){
+      var ex=cx+ra*c,ey=cy-ra*s;
+      arco=deg>=360?'M'+(cx+ra)+' '+cy+' A'+ra+' '+ra+' 0 1 0 '+(cx-ra)+' '+cy+' A'+ra+' '+ra+' 0 1 0 '+(cx+ra)+' '+cy+' Z'
+        :'M'+cx+' '+cy+' L'+(cx+ra)+' '+cy+' A'+ra+' '+ra+' 0 '+(n>180?1:0)+' 0 '+ex+' '+ey+' Z';
+    }
+    $('arco').setAttribute('d',arco);
+    var h=r/2;$('thL').setAttribute('x',cx+(ra+14)*Math.cos(h)-4);$('thL').setAttribute('y',cy-(ra+14)*Math.sin(h)+5);
+    $('ang').value=deg;$('angO').textContent=deg+'°';
+    $('oSen').textContent=f(s);$('oCos').textContent=f(c);$('oTan').textContent=Math.abs(c)<1e-9?'no existe':f(s/c);
+    var q='Sobre un eje';
+    if(Math.abs(s)>1e-9&&Math.abs(c)>1e-9)q=s>0?(c>0?'I':'II'):(c<0?'III':'IV');
+    $('oCua').textContent=q;$('oRef').textContent=ref(deg)+'°';$('oRad').textContent=f(r);
+    var v=notable[deg],box=$('exacto');
+    if(v){box.className='exacto notable';box.innerHTML='<b>'+deg+'° es un ángulo notable.</b> Valores exactos: sen = <b>'+v[0]+'</b>, cos = <b>'+v[1]+'</b>, tan = <b>'+v[2]+'</b>; en radianes, <b>'+v[3]+'</b>.'}
+    else{box.className='exacto';box.textContent='Este ángulo no es notable. Toca uno de los botones para ver sus valores exactos con raíces y π.'}
+    Array.prototype.forEach.call(document.querySelectorAll('#notables button'),function(b){b.setAttribute('aria-pressed',String(+b.dataset.a===deg%360))});
+  }
+  function desdePuntero(e){
+    var b=svg.getBoundingClientRect(),vb=svg.viewBox.baseVal;
+    var x=(e.clientX-b.left)*vb.width/b.width-cx,y=cy-(e.clientY-b.top)*vb.height/b.height;
+    var d=Math.atan2(y,x)*180/Math.PI;if(d<0)d+=360;poner(Math.round(d));
+  }
+  svg.addEventListener('pointerdown',function(e){arr=true;try{svg.setPointerCapture(e.pointerId)}catch(_){}desdePuntero(e)});
+  svg.addEventListener('pointermove',function(e){if(arr)desdePuntero(e)});
+  svg.addEventListener('pointerup',function(){arr=false});svg.addEventListener('pointercancel',function(){arr=false});
+  $('ang').addEventListener('input',function(){poner(this.value)});
+  poner(30);
+})();
+</script>
+</body>
+</html>

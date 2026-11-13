@@ -80,6 +80,9 @@ text{font-family:var(--body);font-weight:600;fill:var(--ink)}
 footer{padding:28px clamp(16px,4vw,56px);background:var(--ink);color:rgba(250,249,246,.7);display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center}
 footer b{font:500 24px var(--display);color:var(--bg);letter-spacing:-.03em}
 footer a{color:rgba(250,249,246,.7);font-size:14px}
+.que{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 20px;display:grid;gap:6px;max-width:62ch}
+.que p{font-size:15px;color:var(--muted)}
+.que b{color:var(--ink)}
 @media (max-width:420px){.calc .line{grid-template-columns:1fr}}
 </style>
 </head>
@@ -92,7 +95,10 @@ footer a{color:rgba(250,249,246,.7);font-size:14px}
   <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:clamp(8px,2vw,24px)">
     <span class="tag">Material interactivo · Geometría</span>
     <h1>Triángulos y polígonos<span>.</span></h1>
-    <p class="lead">Mueve las figuras, mira cómo cambian los números y quédate con la regla que aparece debajo de cada una.</p>
+    <div class="que">
+      <p><b>Qué es:</b> figuras que puedes mover para ver las reglas de triángulos y polígonos en acción.</p>
+      <p><b>Para qué sirve:</b> para entender por qué los ángulos suman lo que suman, cuándo tres lados cierran un triángulo y cómo sacar ángulos y diagonales de un polígono.</p>
+    </div>
   </div>
 
   <!-- TRIÁNGULOS -->
