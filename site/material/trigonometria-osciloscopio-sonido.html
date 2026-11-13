@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Osciloscopio de sonido · TrucosDeAula</title>
+<meta name="description" content="Escucha una onda de seno y mírala al mismo tiempo: amplitud, frecuencia y periodo con sonido real, más gráficas de seno y coseno.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Mismo sistema visual que trucosdeaula.com: papel #FAF9F6, tinta #101012, azul #1B44E8, oro #C79A3E. */
+:root{
+  --bg:#FAF9F6; --surface:#FFFFFF; --ink:#101012; --muted:rgba(16,16,18,.62); --line:rgba(16,16,18,.16);
+  --accent:#1B44E8; --gold:#C79A3E; --good:#2E8B57; --bad:#E2574C; --trace:#5BBF7A;
+  --display:"Bricolage Grotesque",Helvetica,Arial,sans-serif;
+  --body:"Instrument Sans",Helvetica,Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--accent);text-decoration:none}
+a:hover{color:var(--gold)}
+::selection{background:var(--gold);color:var(--ink)}
+.top{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px clamp(16px,4vw,56px);background:rgba(250,249,246,.86);backdrop-filter:blur(14px);border-bottom:1px solid rgba(16,16,18,.09)}
+.brand{display:flex;align-items:center;gap:10px;color:var(--ink);font:700 19px/1 var(--display);letter-spacing:-.02em}
+.brand:hover{color:var(--ink)}
+.brand i{display:block;width:22px;height:22px;border-radius:999px;background:var(--accent)}
+.back{font-size:14px;color:var(--ink)}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px}
+.intro{padding:clamp(40px,7vw,96px) 0 clamp(20px,3vw,32px);display:flex;flex-direction:column;gap:14px}
+.tag{font:500 11px/1.3 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+h1,h2,h3{font-family:var(--display);font-weight:500;text-wrap:balance;margin:0;line-height:1.05;letter-spacing:-.03em}
+h1{font-size:clamp(36px,7vw,80px);letter-spacing:-.035em}
+h1 span{color:var(--gold)}
+.que{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 20px;display:grid;gap:6px;max-width:62ch}
+.que p{margin:0;font-size:15px;color:var(--muted)}
+.que b{color:var(--ink)}
+.guide{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 20px;max-width:62ch}
+.guide summary{cursor:pointer;font:500 17px var(--display);letter-spacing:-.01em}
+.guide ol{margin:8px 0 4px;padding-left:20px;color:var(--muted)}
+.guide li{margin:5px 0}
+.guide b{color:var(--ink)}
+main{padding:0 0 72px}
+
+/* ---------- pantalla del osciloscopio ---------- */
+.scope-card{background:var(--ink);border-radius:14px;padding:14px 14px 12px;position:relative;transition:box-shadow .25s}
+.scope-card.match{box-shadow:0 0 0 3px var(--trace),0 0 24px rgba(91,191,122,.45)}
+.scope-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;color:rgba(250,249,246,.7);font-size:14px;margin-bottom:10px}
+.scope-head strong{color:var(--bg);font:500 17px var(--display);letter-spacing:-.01em}
+.scope-head label{display:flex;align-items:center;gap:6px;cursor:pointer}
+canvas#scope{display:block;width:100%;aspect-ratio:2/1;min-height:210px;background:var(--ink);border:1px solid rgba(250,249,246,.12);border-radius:8px}
+.scope-foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-top:10px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;color:rgba(250,249,246,.7);font-size:13px}
+.legend i{display:inline-block;width:22px;height:0;border-top:3px solid;vertical-align:middle;margin-right:6px}
+.seg{display:flex;align-items:center;gap:6px;flex-wrap:wrap;color:rgba(250,249,246,.7);font-size:13px}
+.seg button{border:1px solid rgba(250,249,246,.25);background:transparent;color:var(--bg);border-radius:999px;padding:6px 12px;font:500 12px var(--mono);cursor:pointer;min-height:32px}
+.seg button[aria-pressed="true"]{background:var(--bg);border-color:var(--bg);color:var(--ink)}
+.seg.lt{color:var(--ink)}
+.seg.lt button{border-color:rgba(16,16,18,.22);color:var(--ink);font-family:var(--body);font-weight:600;font-size:13.5px}
+.seg.lt button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+
+/* ---------- lecturas ---------- */
+.readouts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}
+.rd{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+.rd span{display:block;font:500 10px/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.rd b{display:block;font:500 22px/1.25 var(--display);letter-spacing:-.02em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rd small{display:block;font-size:12.5px;color:var(--muted);line-height:1.35;margin-top:3px;white-space:normal}
+.formula{margin-top:12px;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:6px;padding:12px 16px}
+.formula .eq{font:500 clamp(18px,2.4vw,22px)/1.3 var(--display);letter-spacing:-.01em;font-variant-numeric:tabular-nums;word-break:break-word}
+.formula p{margin:6px 0 0;color:var(--muted);font-size:15px}
+
+/* ---------- pestañas ---------- */
+.tabs{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px;margin:28px 0 14px}
+.tabs button{padding:11px 10px;border-radius:999px;border:1px solid rgba(16,16,18,.22);background:transparent;color:var(--ink);font:600 14.5px/1.15 var(--body);cursor:pointer;min-height:44px;transition:background .25s,color .25s}
+.tabs button[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:clamp(18px,3vw,28px);margin-bottom:16px}
+.panel h2{margin:0 0 12px;font-size:clamp(22px,3vw,30px)}
+.hidden{display:none !important}
+
+.row{display:grid;grid-template-columns:1fr;gap:4px;margin:14px 0}
+.row .lab{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-weight:600;font-size:15px}
+.row .lab output{font:500 15px var(--mono);font-variant-numeric:tabular-nums;color:var(--accent)}
+input[type=range]{width:100%;height:32px;accent-color:var(--accent)}
+.nudge{display:flex;gap:6px;flex-wrap:wrap}
+.btn{border:1px solid var(--ink);background:transparent;color:var(--ink);border-radius:999px;padding:10px 18px;font:600 14.5px var(--body);cursor:pointer;min-height:42px;transition:background .2s,color .2s}
+.btn:hover{background:rgba(16,16,18,.05)}
+.btn.primary{background:var(--ink);color:var(--bg)}
+.btn.primary:hover{background:#2a2a2e}
+.btn.play[aria-pressed="true"]{background:var(--bad);border-color:var(--bad);color:#fff}
+.btn.small{padding:6px 12px;min-height:34px;font:500 13px var(--mono)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chips .btn{border-color:rgba(16,16,18,.22);font-size:13.5px;padding:8px 14px;min-height:38px}
+.chips .btn[aria-pressed="true"]{background:#EEF2FE;border-color:var(--accent);color:var(--accent)}
+.explora{background:#F6F1E8;border:1px solid rgba(199,154,62,.35);border-radius:6px;padding:12px 16px;margin-top:14px;font-size:15px}
+.explora ol{margin:6px 0 0;padding-left:20px}
+.note{color:var(--muted);font-size:14.5px;margin:10px 0 0}
+.helper{margin:0;color:var(--muted);font-size:14px}
+.msg{background:#FBEDEB;border:1px solid rgba(226,87,76,.4);color:#8A2A1A;border-radius:6px;padding:10px 14px;margin-top:10px;font-size:14.5px}
+.status{margin-top:12px;font-weight:600}
+.status.ok{color:var(--good)}
+.hintbox{margin-top:10px;background:#EEF2FE;border-radius:6px;padding:10px 14px;font-size:15px}
+.reto-nav{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.parts{margin-top:16px}
+.hlinfo{margin-top:12px;background:#EEF2FE;border-left:3px solid var(--accent);border-radius:6px;padding:10px 14px;font-size:15px;min-height:3.2em}
+.hlinfo b{color:var(--accent);font-variant-numeric:tabular-nums}
+.steps{margin:6px 0 0;padding-left:20px}
+.steps li{margin:4px 0}
+
+/* ---------- graficar con tabla ---------- */
+canvas#gcv{display:block;width:100%;aspect-ratio:2/1;min-height:200px;max-height:46vh;background:#fff;border:1px solid var(--line);border-radius:6px}
+.tbwrap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.tbt{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;align-self:start}
+.tbt th,.tbt td{border:1px solid var(--line);padding:0;text-align:center}
+.tbt th{background:var(--bg);font:500 11px/1.3 var(--mono);letter-spacing:.04em;padding:6px 3px}
+.tbt td.x{font:500 14px var(--mono);background:var(--bg);padding:0 4px}
+.tbt input{width:100%;border:0;background:transparent;font:500 15px var(--mono);text-align:center;padding:6px 2px;min-height:36px;color:var(--ink)}
+.tbt input:focus{outline:2px solid var(--accent);outline-offset:-2px;background:#fff}
+.tbt td.ok{background:#EAF4EE}
+.tbt td.mal{background:#F3D3CF}
+.tbt td.vacio{background:#EFEEEA}
+.tbt td.fuera{background:#F3E1D6}
+.guide2{margin-top:12px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 14px}
+.guide2 summary{cursor:pointer;font-weight:600}
+.chk{display:flex;gap:8px;align-items:center;cursor:pointer;font-weight:600;font-size:14.5px;margin:8px 0}
+
+/* ---------- plano: seno y coseno ---------- */
+.plbar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin:8px 0}
+.plsticky{position:sticky;top:58px;z-index:6;background:var(--surface);padding:6px 0;margin:0 -2px}
+.plwrap{position:relative}
+canvas#pcv{display:block;width:100%;aspect-ratio:4/3;min-height:240px;max-height:50vh;background:#fff;border:1px solid var(--line);border-radius:6px;touch-action:none;cursor:grab}
+canvas#pcv.drag{cursor:grabbing}
+.pltools{position:absolute;top:8px;right:8px;display:flex;flex-direction:column;gap:6px}
+.pltools button{width:38px;height:38px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.95);font:600 17px var(--body);color:var(--ink);cursor:pointer}
+.plread{margin-top:8px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 12px;font:500 13.5px/1.5 var(--mono);font-variant-numeric:tabular-nums;min-height:2.8em}
+.plread .cf{color:#9A7426;font-weight:700}
+.plread .cg{color:var(--good);font-weight:700}
+.plnote{margin:8px 0 0;font-weight:600;color:var(--good);min-height:1.3em}
+.fcard{border:1px solid var(--line);border-left:4px solid;border-radius:6px;padding:12px 16px;margin-top:14px}
+.fcard.f{border-left-color:var(--gold);background:#FBF7EF}
+.fcard.g{border-left-color:var(--good);background:#F1F8F3}
+.fcard h3{margin:0 0 4px;font-size:19px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.fcard .eq{font:500 17px var(--display);font-variant-numeric:tabular-nums;word-break:break-word}
+.fcard .props{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:10px}
+.fcard .props div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:5px 8px;font:500 10px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.fcard .props b{display:block;font:500 16px var(--display);letter-spacing:0;text-transform:none;color:var(--ink);font-variant-numeric:tabular-nums}
+.fcard .props small{color:var(--muted);font-size:11px;text-transform:none;letter-spacing:0}
+.fcard .row{margin:8px 0}
+
+footer.site{padding:28px clamp(16px,4vw,56px);background:var(--ink);color:rgba(250,249,246,.7);display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center}
+footer.site b{font:500 24px var(--display);color:var(--bg);letter-spacing:-.03em}
+footer.site a{color:rgba(250,249,246,.7);font-size:14px}
+
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+@media (max-width:560px){
+  .readouts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fcard .props{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (prefers-reduced-motion:reduce){.scope-card{transition:none}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="/"><i></i>TrucosDeAula</a>
+  <a class="back" href="/infografias/">← Infografías y material</a>
+</header>
+<div class="wrap intro">
+  <span class="tag">Material interactivo · Trigonometría · Ondas</span>
+  <h1>Osciloscopio de sonido<span>.</span></h1>
+  <div class="que">
+    <p><b>Qué es:</b> un generador de tonos que te deja escuchar una onda de seno y verla al mismo tiempo.</p>
+    <p><b>Para qué sirve:</b> para entender amplitud, frecuencia y periodo con sonido real, y practicar las gráficas de seno y coseno.</p>
+  </div>
+  <details class="guide">
+    <summary>Cómo usarlo</summary>
+    <ol>
+        <li>Pulsa <b>Sonar</b> (en la pestaña Generador) y escucha un tono. La pantalla muestra su onda.</li>
+        <li>Mueve <b>A</b> y <b>f</b>. Fíjate qué cambia en la gráfica y qué cambia en el sonido.</li>
+        <li>Toca los botones de <b>Partes de la gráfica</b> para ver dónde está cada cosa.</li>
+        <li>Cuando quieras más, usa el <b>Micrófono</b> con tu voz, prueba los <b>Retos</b>, aprende a dibujar la onda en <b>Graficar</b> o compara el seno y el coseno en <b>Seno y coseno</b>.</li>
+      </ol>
+  </details>
+</div>
+
+<main class="wrap">
+
+  <!-- Pantalla -->
+  <section class="scope-card only-sound" id="scopeCard" aria-label="Pantalla del osciloscopio">
+    <div class="scope-head">
+      <strong id="scopeTitle">Tu onda: y = A · sen(B · t)</strong>
+      <label><input type="checkbox" id="chkMarks" checked> Mostrar A y T</label>
+    </div>
+    <canvas id="scope" role="img" aria-label="Gráfica de la onda de sonido"></canvas>
+    <div class="scope-foot">
+      <div class="legend" id="legend"></div>
+      <div class="seg" role="group" aria-label="Ventana de tiempo">
+        <span>Ventana:</span>
+        <button data-win="5" aria-pressed="false">5 ms</button>
+        <button data-win="10" aria-pressed="true">10 ms</button>
+        <button data-win="20" aria-pressed="false">20 ms</button>
+        <button data-win="50" aria-pressed="false">50 ms</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel parts only-sound" aria-label="Partes de la gráfica">
+    <h2>Partes de la gráfica</h2>
+    <p class="note" style="margin-top:0">Toca un botón y esa parte se marca en azul en la pantalla. Vuelve a tocarlo para quitarla.</p>
+    <div class="chips" id="hlChips">
+      <button class="btn" data-hl="ejes" aria-pressed="false">Ejes</button>
+      <button class="btn" data-hl="cuad" aria-pressed="false">Cuadrantes</button>
+      <button class="btn" data-hl="eje" aria-pressed="false">Línea central</button>
+      <button class="btn" data-hl="cresta" aria-pressed="false">Cresta</button>
+      <button class="btn" data-hl="valle" aria-pressed="false">Valle</button>
+      <button class="btn" data-hl="A" aria-pressed="false">Amplitud A</button>
+      <button class="btn" data-hl="T" aria-pressed="false">Periodo T</button>
+      <button class="btn" data-hl="f" aria-pressed="false">Frecuencia f</button>
+    </div>
+    <div class="hlinfo" id="hlInfo"><span id="hlText"></span> <b id="hlExtra"></b></div>
+  </section>
+
+  <div class="readouts only-sound" aria-live="off">
+    <div class="rd"><span id="lbA">Amplitud A</span><b id="rdA">—</b><small id="smA">Qué tan alta es la onda. Se oye como volumen.</small></div>
+    <div class="rd"><span>Frecuencia f</span><b id="rdF">—</b><small>Ciclos por segundo (1 Hz = 1 ciclo por segundo). Se oye como qué tan agudo es.</small></div>
+    <div class="rd"><span>Periodo T = 1/f</span><b id="rdT">—</b><small>Lo que dura un ciclo completo.</small></div>
+    <div class="rd"><span>Nota más cercana</span><b id="rdN">—</b><small>La nota musical con esa frecuencia.</small></div>
+  </div>
+
+  <div class="formula only-sound">
+    <div class="eq" id="fmEq">—</div>
+    <p id="fmTxt"></p>
+  </div>
+
+  <!-- Pestañas -->
+  <div class="tabs" role="tablist">
+    <button role="tab" data-mode="gen" aria-selected="true">Generador</button>
+    <button role="tab" data-mode="mic" aria-selected="false">Micrófono</button>
+    <button role="tab" data-mode="retos" aria-selected="false">Retos</button>
+    <button role="tab" data-mode="graf" aria-selected="false">Graficar</button>
+    <button role="tab" data-mode="plano" aria-selected="false">Seno y coseno</button>
+  </div>
+
+  <!-- Controles del generador (Generador y Retos) -->
+  <section class="panel" id="panelCtl">
+    <h2 id="ctlTitle">Genera un tono</h2>
+    <button class="btn primary play" id="btnPlay" aria-pressed="false">Sonar</button>
+    <p class="note">Si no oyes nada, sube el volumen de tu dispositivo. El navegador solo activa el sonido después de que tocas un botón.</p>
+
+    <div class="row">
+      <div class="lab"><label for="sA">Amplitud A (altura de la onda)</label><output id="oA">0.50</output></div>
+      <input type="range" id="sA" min="0.05" max="1" step="0.05" value="0.5" title="Amplitud: qué tanto sube y baja la onda">
+      <p class="helper">Más A: la onda es más alta y el sonido es más fuerte.</p>
+    </div>
+    <div class="row">
+      <div class="lab"><label for="sF">Frecuencia f (ciclos por segundo)</label><output id="oF">440 Hz</output></div>
+      <input type="range" id="sF" min="50" max="1500" step="1" value="440" title="Frecuencia: cuántos ciclos ocurren en un segundo">
+      <p class="helper">Más f: los ciclos son más cortos y el sonido es más agudo. Los botones −1 y +1 ajustan de uno en uno.</p>
+      <div class="nudge">
+        <button class="btn small" data-df="-10">−10</button>
+        <button class="btn small" data-df="-1">−1</button>
+        <button class="btn small" data-df="1">+1</button>
+        <button class="btn small" data-df="10">+10</button>
+      </div>
+    </div>
+
+    <div id="genExtras">
+      <p class="note">Atajos de frecuencia</p>
+      <div class="chips">
+        <button class="btn" data-f="440">La 440 Hz (afinador)</button>
+        <button class="btn" data-f="880">La 880 Hz (octava arriba)</button>
+        <button class="btn" data-f="262">Do 262 Hz</button>
+        <button class="btn" data-f="60" data-win="50">60 Hz (enchufe de casa)</button>
+      </div>
+      <div class="actions">
+        <button class="btn" id="btnRef">Fijar onda de referencia</button>
+      </div>
+      <div class="explora">
+        Prueba esto:
+        <ol>
+          <li>Sube A. ¿Qué cambia en la curva y qué cambia en el sonido?</li>
+          <li>Sube f. ¿Qué le pasa a T? ¿Cuántos ciclos caben en la ventana?</li>
+          <li>Fija una referencia, duplica f y compara las dos curvas.</li>
+        </ol>
+      </div>
+      <p class="note">El tono de 60 Hz casi no se oye en las bocinas de un celular, pero su curva sí se ve. A = 1 es un volumen moderado, no el máximo del aparato.</p>
+    </div>
+  </section>
+
+  <!-- Micrófono -->
+  <section class="panel hidden" id="panelMic">
+    <h2>Mira tu propio sonido</h2>
+    <ol class="steps">
+      <li>Pulsa <b>Activar micrófono</b> y permite el acceso cuando el navegador lo pida.</li>
+      <li>Silba, canta una nota larga ("aaaa") o pon el afinador de un celular cerca.</li>
+      <li>Pulsa <b>Congelar</b> para detener la imagen y medir A y T sobre la cuadrícula.</li>
+    </ol>
+    <p class="note">Un silbido se parece mucho a un seno. La voz repite un patrón en cada periodo, pero con una forma más complicada. Si la onda se ve muy pequeña, sube la escala vertical.</p>
+    <div class="actions">
+      <button class="btn primary" id="btnMic">Activar micrófono</button>
+      <button class="btn" id="btnFreeze" disabled aria-pressed="false">Congelar</button>
+    </div>
+    <div class="row">
+      <div class="lab"><span>Escala vertical</span><output id="oGain">×5</output></div>
+      <div class="seg" role="group" aria-label="Escala vertical" id="gainSeg">
+        <button data-g="1" aria-pressed="false">×1</button>
+        <button data-g="2" aria-pressed="false">×2</button>
+        <button data-g="5" aria-pressed="true">×5</button>
+        <button data-g="10" aria-pressed="false">×10</button>
+        <button data-g="20" aria-pressed="false">×20</button>
+      </div>
+    </div>
+    <div class="msg hidden" id="micMsg"></div>
+    <p class="note" id="micState">Micrófono apagado.</p>
+  </section>
+
+  <!-- Retos -->
+  <section class="panel hidden" id="panelRetos">
+    <h2 id="retoTitle">Reto</h2>
+    <p id="retoText" style="margin:0"></p>
+    <div class="actions">
+      <button class="btn" id="btnListen">Escuchar la onda dorada</button>
+      <button class="btn" id="btnHint">Ver pista</button>
+      <button class="btn" id="btnReveal">Ver respuesta</button>
+    </div>
+    <div class="hintbox hidden" id="hintBox"></div>
+    <div class="hintbox hidden" id="revealBox"></div>
+    <div class="status" id="retoStatus">Todavía no coincide.</div>
+    <div class="reto-nav">
+      <button class="btn" id="btnPrev">Reto anterior</button>
+      <span class="note" id="retoCount" style="margin:0"></span>
+      <button class="btn" id="btnNext">Siguiente reto</button>
+    </div>
+  </section>
+
+  <!-- Graficar con tabla -->
+  <section class="panel hidden" id="panelGraf">
+    <h2>Grafica el seno y el coseno</h2>
+    <p class="note" style="margin-top:0">Escribe o cambia los valores de la tabla y mira cómo se forma la gráfica. Cada casilla es un punto del plano.</p>
+
+    <div class="plbar">
+      <div class="seg lt" role="group" aria-label="Función a graficar">
+        <span>Graficar:</span>
+        <button data-tbfn="sen" aria-pressed="true">Seno</button>
+        <button data-tbfn="cos" aria-pressed="false">Coseno</button>
+      </div>
+      <div class="seg lt" role="group" aria-label="Cómo unir los puntos">
+        <span>Unir con:</span>
+        <button data-tbu="suave" aria-pressed="true">Curva suave</button>
+        <button data-tbu="rectas" aria-pressed="false">Rectas</button>
+        <button data-tbu="no" aria-pressed="false">No unir</button>
+      </div>
+    </div>
+
+    <div class="plsticky">
+      <canvas id="gcv" role="img" aria-label="Plano cartesiano con los puntos de la tabla"></canvas>
+    </div>
+    <label class="chk"><input type="checkbox" id="tbRef" checked> Mostrar la curva correcta como guía (línea gris punteada)</label>
+
+    <div class="tbwrap">
+      <table class="tbt" id="tbA"></table>
+      <table class="tbt" id="tbB"></table>
+    </div>
+    <p class="note" id="tbAviso" style="margin-top:0"></p>
+    <div class="actions">
+      <button class="btn primary" id="tbCheck">Revisar mi tabla</button>
+      <button class="btn" id="tbClear">Vaciar tabla</button>
+      <button class="btn" id="tbReset">Poner los valores correctos</button>
+    </div>
+    <p class="status" id="tbResumen"></p>
+
+    <details class="guide2" open>
+      <summary>Cómo usarla</summary>
+      <ol class="steps">
+        <li>Elige <b>Seno</b> o <b>Coseno</b>. La tabla se llena con los valores de esa función.</li>
+        <li>Cambia cualquier casilla y mira cómo se mueve el punto y cómo cambia la curva. Al tocar una casilla se marca su punto en el plano.</li>
+        <li>Pulsa <b>Vaciar tabla</b> y llénala tú desde cero. Con <b>Revisar mi tabla</b> ves cuáles casillas están bien.</li>
+        <li>Prueba <b>Rectas</b> en lugar de <b>Curva suave</b> para ver por qué la onda no lleva picos.</li>
+      </ol>
+      <p class="note">Valores para recordar: sen 0° = 0, sen 90° = 1, sen 180° = 0, sen 270° = −1. cos 0° = 1, cos 90° = 0, cos 180° = −1, cos 270° = 0. El eje y va siempre de −1 a 1.</p>
+    </details>
+  </section>
+
+  <!-- Seno y coseno en el plano -->
+  <section class="panel hidden" id="panelPlano">
+    <h2>Seno y coseno en el plano cartesiano</h2>
+    <p class="note" style="margin-top:0">Dos funciones en un mismo plano. Mueve los deslizadores y mira cómo cambian. <b>Arrastra</b> la gráfica para moverla, usa la <b>rueda</b> del ratón o <b>pellizca</b> para acercar, y <b>toca o pasa el cursor</b> para leer valores. Con Mayús la rueda acerca solo el eje x, y con Alt solo el eje y.</p>
+
+    <div class="plbar">
+      <div class="seg lt" role="group" aria-label="Unidades del eje x">
+        <span>Eje x en:</span>
+        <button data-un="deg" aria-pressed="true">Grados</button>
+        <button data-un="rad" aria-pressed="false">Radianes</button>
+      </div>
+    </div>
+    <div class="chips" id="plChips" style="margin:0 0 10px">
+      <button class="btn" data-pm="zeros" aria-pressed="false">Ceros</button>
+      <button class="btn" data-pm="ext" aria-pressed="false">Máximos y mínimos</button>
+      <button class="btn" data-pm="yint" aria-pressed="false">Corte con el eje y</button>
+      <button class="btn" data-pm="inter" aria-pressed="false">Intersecciones f = g</button>
+      <button class="btn" data-pm="quad" aria-pressed="false">Cuadrantes</button>
+    </div>
+
+    <div class="plsticky">
+      <div class="plwrap">
+        <canvas id="pcv" role="img" aria-label="Plano cartesiano con las gráficas de f y g"></canvas>
+        <div class="pltools">
+          <button id="plZin" aria-label="Acercar" title="Acercar">+</button>
+          <button id="plZout" aria-label="Alejar" title="Alejar">−</button>
+          <button id="plHome" aria-label="Ajustar la vista" title="Ajustar la vista">⌂</button>
+        </div>
+      </div>
+      <div class="plread" id="plRead"></div>
+    </div>
+    <p class="plnote" id="plNote"></p>
+
+    <p class="note" style="margin-top:12px">Ejemplos para empezar</p>
+    <div class="chips" id="plPresets">
+      <button class="btn" data-pre="basico">Seno y coseno básicos</button>
+      <button class="btn" data-pre="amplitud">Cambiar la amplitud</button>
+      <button class="btn" data-pre="periodo">Cambiar el periodo</button>
+      <button class="btn" data-pre="desfase">El coseno es un seno desplazado</button>
+      <button class="btn" data-pre="eje">Subir y bajar el eje</button>
+    </div>
+
+    <div class="fcard f">
+      <h3><span>f(x): seno</span><label class="chk" style="margin:0"><input type="checkbox" id="onF" checked> Mostrar</label></h3>
+      <div class="eq" id="eqF"></div>
+      <div id="slF"></div>
+      <div class="props" id="prF"></div>
+    </div>
+    <div class="fcard g">
+      <h3><span>g(x): coseno</span><label class="chk" style="margin:0"><input type="checkbox" id="onG" checked> Mostrar</label></h3>
+      <div class="eq" id="eqG"></div>
+      <div id="slG"></div>
+      <div class="props" id="prG"></div>
+    </div>
+    <p class="note">Las dos funciones tienen la forma A · sen(B·x + C) + D y A · cos(B·x + C) + D. El desfase real es −C ÷ B: si es positivo, la onda se mueve a la derecha.</p>
+  </section>
+
+</main>
+
+<footer class="site">
+  <b>TrucosDeAula</b>
+  <span style="display:flex;flex-wrap:wrap;gap:22px"><a href="/infografias/">Infografías y material</a><a href="/juegos/">Juegos</a><a href="/tips/">Tips</a><a href="/maestros/">Para maestros</a></span>
+</footer>
+
+<script>
+'use strict';
+
+//<PURE>
+/* Funciones puras (sin DOM) para poder probarlas aparte */
+const F_LOW = 60, F_HIGH = 1600;
+const NOTAS = ['Do','Do♯','Re','Re♯','Mi','Fa','Fa♯','Sol','Sol♯','La','La♯','Si'];
+
+function notaDe(f){
+  if (!(f > 0)) return '—';
+  const exacto = 12 * Math.log2(f / 440) + 69;
+  const n = Math.round(exacto);
+  const nombre = NOTAS[((n % 12) + 12) % 12];
+  const oct = Math.floor(n / 12) - 1;
+  const cents = Math.round((exacto - n) * 100);
+  const signo = cents > 0 ? '+' : (cents < 0 ? '−' : '±');
+  return nombre + oct + ' (' + signo + Math.abs(cents) + ' ¢)';
+}
+
+function autoCorrelate(buf, sr){
+  const SIZE = buf.length;
+  let rms = 0, peak = 0;
+  for (let i = 0; i < SIZE; i++){ const v = buf[i]; rms += v * v; if (Math.abs(v) > peak) peak = Math.abs(v); }
+  rms = Math.sqrt(rms / SIZE);
+  if (rms < 0.006) return -1;
+  const thres = 0.2 * peak;
+  let r1 = 0, r2 = SIZE - 1;
+  for (let i = 0; i < SIZE / 2; i++){ if (Math.abs(buf[i]) < thres){ r1 = i; break; } }
+  for (let i = 1; i < SIZE / 2; i++){ if (Math.abs(buf[SIZE - i]) < thres){ r2 = SIZE - i; break; } }
+  if (r2 - r1 < 200) return -1;
+  const b = buf.slice(r1, r2);
+  const N = b.length;
+  const maxLag = Math.min(N - 2, Math.floor(sr / F_LOW) + 2);
+  const c = new Float32Array(maxLag + 1);
+  for (let lag = 0; lag <= maxLag; lag++){
+    let s = 0;
+    for (let j = 0; j < N - lag; j++) s += b[j] * b[j + lag];
+    c[lag] = s;
+  }
+  let d = 0;
+  while (d < maxLag - 1 && c[d] > c[d + 1]) d++;
+  let maxv = -Infinity, maxp = -1;
+  for (let i = d; i <= maxLag; i++){ if (c[i] > maxv){ maxv = c[i]; maxp = i; } }
+  if (maxp <= 0 || maxp >= maxLag) return -1;
+  if (c[maxp] < 0.3 * c[0]) return -1;
+  let T0 = maxp;
+  const x1 = c[T0 - 1], x2 = c[T0], x3 = c[T0 + 1];
+  const a = (x1 + x3 - 2 * x2) / 2, bb = (x3 - x1) / 2;
+  if (a) T0 = T0 - bb / (2 * a);
+  const f = sr / T0;
+  return (f >= F_LOW && f <= F_HIGH) ? f : -1;
+}
+
+function miles(n){ return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0'); }
+//</PURE>
+
+/* ================= Estado ================= */
+const $ = id => document.getElementById(id);
+const S = {
+  mode: 'gen', A: 0.5, f: 440, win: 10,
+  playing: false, ref: null, target: null,
+  retoIdx: 0, marks: true, hl: null
+};
+const GAIN_MAX = 0.35;
+const F_MIN = 50, F_MAX = 1500;
+
+/* ================= Audio ================= */
+let ctx = null, osc = null, gainNode = null;
+
+function ensureCtx(){
+  if (!ctx){
+    const AC = window.AudioContext || window.webkitAudioContext;
+    ctx = new AC();
+  }
+  if (ctx.state === 'suspended') ctx.resume();
+}
+
+function startTone(){
+  ensureCtx();
+  if (osc) return;
+  osc = ctx.createOscillator();
+  osc.type = 'sine';
+  osc.frequency.value = S.f;
+  gainNode = ctx.createGain();
+  gainNode.gain.value = 0;
+  osc.connect(gainNode);
+  gainNode.connect(ctx.destination);
+  osc.start();
+  gainNode.gain.setTargetAtTime(S.A * GAIN_MAX, ctx.currentTime, 0.02);
+  S.playing = true;
+  syncPlayBtn();
+}
+
+function stopTone(){
+  if (!osc) { S.playing = false; syncPlayBtn(); return; }
+  const o = osc, g = gainNode;
+  g.gain.setTargetAtTime(0, ctx.currentTime, 0.02);
+  try { o.stop(ctx.currentTime + 0.12); } catch(e){}
+  osc = null; gainNode = null;
+  S.playing = false;
+  syncPlayBtn();
+}
+
+function applyTone(){
+  if (!osc) return;
+  osc.frequency.setTargetAtTime(S.f, ctx.currentTime, 0.01);
+  gainNode.gain.setTargetAtTime(S.A * GAIN_MAX, ctx.currentTime, 0.02);
+}
+
+let listenTimer = null;
+function playTarget(){
+  if (!S.target) return;
+  stopTone();
+  ensureCtx();
+  const o = ctx.createOscillator(), g = ctx.createGain();
+  o.type = 'sine'; o.frequency.value = S.target.f;
+  g.gain.value = 0;
+  o.connect(g); g.connect(ctx.destination);
+  const t = ctx.currentTime;
+  g.gain.setTargetAtTime(S.target.A * GAIN_MAX, t, 0.02);
+  g.gain.setTargetAtTime(0, t + 1.3, 0.03);
+  o.start(t); o.stop(t + 1.6);
+}
+
+/* ---- Micrófono ---- */
+let micStream = null, micSrc = null, analyser = null, micBuf = null;
+let micRunning = false, micFrozen = false, micGain = 5;
+let micPeak = 0, micF = -1, pitchHist = [], frameN = 0;
+
+async function startMic(){
+  const msg = $('micMsg');
+  msg.classList.add('hidden');
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    showMicError('Este navegador no permite usar el micrófono desde esta página. Abre el archivo desde localhost o desde una dirección https.');
+    return;
+  }
+  try{
+    ensureCtx();
+    micStream = await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation:false, noiseSuppression:false, autoGainControl:false }
+    });
+    micSrc = ctx.createMediaStreamSource(micStream);
+    analyser = ctx.createAnalyser();
+    analyser.fftSize = 4096;
+    analyser.smoothingTimeConstant = 0;
+    micSrc.connect(analyser);           // no se conecta a la salida: evita retroalimentación
+    micBuf = new Float32Array(analyser.fftSize);
+    micRunning = true; micFrozen = false;
+    pitchHist = []; micF = -1; micPeak = 0;
+    $('btnMic').textContent = 'Apagar micrófono';
+    $('btnFreeze').disabled = false;
+    $('btnFreeze').setAttribute('aria-pressed','false');
+    $('btnFreeze').textContent = 'Congelar';
+    $('micState').textContent = 'Escuchando…';
+  }catch(e){
+    const nombre = e && e.name;
+    if (nombre === 'NotAllowedError' || nombre === 'SecurityError'){
+      showMicError('El navegador bloqueó el micrófono. Permite el acceso en el candado de la barra de direcciones. Si abriste el archivo directo desde el celular, prueba desde localhost o https.');
+    } else if (nombre === 'NotFoundError'){
+      showMicError('No se encontró ningún micrófono en este dispositivo.');
+    } else {
+      showMicError('No se pudo activar el micrófono (' + (nombre || 'error desconocido') + ').');
+    }
+  }
+}
+
+function showMicError(t){ const m = $('micMsg'); m.textContent = t; m.classList.remove('hidden'); }
+
+function stopMic(){
+  if (micStream){ micStream.getTracks().forEach(t => t.stop()); }
+  try { if (micSrc) micSrc.disconnect(); } catch(e){}
+  micStream = null; micSrc = null; analyser = null;
+  micRunning = false; micFrozen = false; micF = -1; micPeak = 0; pitchHist = [];
+  $('btnMic').textContent = 'Activar micrófono';
+  $('btnFreeze').disabled = true;
+  $('btnFreeze').textContent = 'Congelar';
+  $('btnFreeze').setAttribute('aria-pressed','false');
+  $('micState').textContent = 'Micrófono apagado.';
+}
+
+function updatePitch(){
+  const f = autoCorrelate(micBuf.subarray(0, 2048), ctx.sampleRate);
+  pitchHist.push(f);
+  if (pitchHist.length > 5) pitchHist.shift();
+  const buenas = pitchHist.filter(v => v > 0).sort((a,b) => a - b);
+  micF = buenas.length >= 2 ? buenas[Math.floor(buenas.length / 2)] : -1;
+}
+
+/* ================= Retos ================= */
+const RETOS = [
+  { titulo:'Reto 1 · Amplitud',
+    texto:'Tu onda tiene la misma frecuencia que la dorada, pero es más pequeña. Ajusta el parámetro correcto hasta encimarlas y escucha qué cambió.',
+    start:{A:0.2, f:440, win:10}, target:{A:0.6, f:440},
+    pista:'La amplitud A es lo que se separa la onda del eje, hacia arriba o hacia abajo. En el sonido, se relaciona con el volumen.' },
+  { titulo:'Reto 2 · Una octava arriba',
+    texto:'Antes de mover nada, predice y anota en tu cuaderno: si la frecuencia se duplica, ¿cuánto vale el periodo? Después iguala la onda dorada.',
+    start:{A:0.5, f:440, win:10}, target:{A:0.5, f:880},
+    pista:'T = 1/f. Si f se duplica, T se reduce a la mitad y caben el doble de ciclos en la misma ventana.' },
+  { titulo:'Reto 3 · El enchufe',
+    texto:'La corriente eléctrica de los enchufes en México oscila 60 veces por segundo. Encuentra su onda: ¿cuánto dura un ciclo? Cuenta cuántos caben en 50 ms.',
+    start:{A:0.5, f:440, win:50}, target:{A:0.8, f:60},
+    pista:'T = 1/60 s ≈ 16.7 ms. En 50 ms caben unos 3 ciclos.' },
+  { titulo:'Reto 4 · Nota misteriosa',
+    texto:'Esta vez no te digo la frecuencia. Mide el periodo T de la curva dorada con la cuadrícula (en ms) y calcula f = 1/T. Luego ajusta.',
+    start:{A:0.5, f:440, win:10}, target:{A:0.5, f:330}, oculto:true,
+    pista:'Mide cuántos ms hay entre dos crestas seguidas. Si T ≈ 3 ms, entonces f ≈ 1/0.003 ≈ 333 Hz.' }
+];
+
+function loadReto(i){
+  S.retoIdx = (i + RETOS.length) % RETOS.length;
+  const r = RETOS[S.retoIdx];
+  S.A = r.start.A; S.f = r.start.f; S.win = r.start.win;
+  S.target = { A:r.target.A, f:r.target.f };
+  $('retoTitle').textContent = r.titulo;
+  $('retoText').textContent = r.texto;
+  $('retoCount').textContent = (S.retoIdx + 1) + ' de ' + RETOS.length;
+  $('hintBox').classList.add('hidden');
+  $('revealBox').classList.add('hidden');
+  applyTone();
+  syncControls();
+  syncWinButtons();
+}
+
+function retoCoincide(){
+  const t = S.target;
+  if (!t) return false;
+  return Math.abs(S.A - t.A) <= 0.051 && Math.abs(S.f - t.f) <= Math.max(1, 0.015 * t.f);
+}
+
+/* ================= Interfaz ================= */
+function syncPlayBtn(){
+  const b = $('btnPlay');
+  b.setAttribute('aria-pressed', S.playing ? 'true' : 'false');
+  b.textContent = S.playing ? 'Detener' : 'Sonar';
+}
+function syncControls(){
+  $('sA').value = S.A; $('oA').textContent = S.A.toFixed(2);
+  $('sF').value = S.f; $('oF').textContent = S.f + ' Hz';
+}
+function syncWinButtons(){
+  document.querySelectorAll('[data-win]').forEach(b => {
+    if (b.closest('.seg')) b.setAttribute('aria-pressed', String(+b.dataset.win === S.win));
+  });
+}
+function syncRefBtn(){
+  $('btnRef').textContent = S.ref ? 'Quitar referencia' : 'Fijar onda de referencia';
+  updateLegend();
+}
+function updateLegend(){
+  let h = '';
+  if (S.mode === 'mic'){
+    h = '<span><i style="border-color:#5BBF7A"></i>Señal del micrófono</span>';
+  } else {
+    h = '<span><i style="border-color:#5BBF7A"></i>Tu onda</span>';
+    if (S.mode === 'gen' && S.ref) h += '<span><i style="border-color:rgba(250,249,246,.55);border-top-style:dashed"></i>Referencia</span>';
+    if (S.mode === 'retos') h += '<span><i style="border-color:#C79A3E;border-top-style:dashed"></i>Onda dorada</span>';
+  }
+  $('legend').innerHTML = h;
+}
+
+function setMode(m){
+  S.mode = m;
+  document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.mode === m)));
+  const veniaDeGraf = S.prevMode === 'graf' || S.prevMode === 'plano';
+  const solo = (m === 'graf' || m === 'plano');
+  S.prevMode = m;
+  if (m !== 'mic') stopMic();
+  if (m === 'mic' || solo) stopTone();
+  document.querySelectorAll('.only-sound').forEach(e => e.classList.toggle('hidden', solo));
+  $('panelPlano').classList.toggle('hidden', m !== 'plano');
+  if (m === 'plano') renderPlano();
+  $('panelGraf').classList.toggle('hidden', m !== 'graf');
+  if (m === 'graf') renderTabla();
+  if ((solo || veniaDeGraf) && document.querySelector('main')) document.querySelector('main').scrollIntoView({ behavior:'smooth', block:'start' });
+  $('panelCtl').classList.toggle('hidden', m === 'mic' || solo);
+  $('panelMic').classList.toggle('hidden', m !== 'mic');
+  $('panelRetos').classList.toggle('hidden', m !== 'retos');
+  $('genExtras').classList.toggle('hidden', m !== 'gen');
+  $('ctlTitle').textContent = m === 'retos' ? 'Tus controles' : 'Genera un tono';
+  $('scopeTitle').textContent =
+    m === 'gen' ? 'Tu onda: y = A · sen(B · t)' :
+    m === 'mic' ? 'Lo que escucha el micrófono' : 'Iguala la onda dorada';
+  $('lbA').textContent = m === 'mic' ? 'Amplitud A (nivel medido)' : 'Amplitud A';
+  $('smA').textContent = m === 'mic' ? 'Qué tan fuerte llega el sonido al micrófono (de 0 a 1).' : 'Qué tan alta es la onda. Se oye como volumen.';
+  if (m === 'retos') loadReto(S.retoIdx); else S.target = null;
+  $('scopeCard').classList.remove('match');
+  updateLegend();
+}
+
+/* ================= Dibujo ================= */
+const cv = $('scope'), g = cv.getContext('2d');
+let W = 0, H = 0;
+const PAD = { l:46, r:10, t:8, b:36 };
+const NEG_FRAC = 0.18;                 // parte de t negativo: pequeña, para dar prioridad al cuadrante I
+const tNeg = () => S.win * NEG_FRAC;
+const YMAX = 1.25;
+
+function resize(){
+  const dpr = window.devicePixelRatio || 1;
+  W = cv.clientWidth; H = cv.clientHeight;
+  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+  g.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+window.addEventListener('resize', resize);
+if (window.ResizeObserver) new ResizeObserver(resize).observe(cv);
+
+function plotBox(){
+  return { x0:PAD.l, x1:W - PAD.r, y0:PAD.t, y1:H - PAD.b };
+}
+function X(t, b){ return b.x0 + ((t + tNeg()) / (S.win + tNeg())) * (b.x1 - b.x0); }
+function Y(v, b){ const cy = (b.y0 + b.y1) / 2, h = (b.y1 - b.y0) / 2; return cy - (v / YMAX) * h; }
+
+function drawGrid(b){
+  g.fillStyle = '#101012'; g.fillRect(0, 0, W, H);
+  const tn = tNeg();
+  g.lineWidth = 1; g.font = '11px "Instrument Sans", system-ui, sans-serif';
+  const step = { 5:0.5, 10:1, 20:2, 50:5 }[S.win] || 1;
+
+  /* cuadrícula y marcas del eje t (incluye t negativo) */
+  g.textAlign = 'center'; g.textBaseline = 'top';
+  for (let k = Math.ceil(-tn / step - 1e-9); k * step <= S.win + 1e-9; k++){
+    if (k === 0) continue;
+    const t = k * step, x = Math.round(X(t, b)) + 0.5;
+    g.strokeStyle = 'rgba(250,249,246,.09)';
+    g.beginPath(); g.moveTo(x, b.y0); g.lineTo(x, b.y1); g.stroke();
+    g.fillStyle = 'rgba(250,249,246,.6)';
+    g.fillText(String(+t.toFixed(1)).replace('-', '−'), Math.min(Math.max(x, b.x0 + 8), b.x1 - 8), b.y1 + 5);
+  }
+  g.fillStyle = 'rgba(250,249,246,.85)';
+  g.fillText('0', X(0, b), b.y1 + 5);
+
+  g.textAlign = 'right'; g.textBaseline = 'middle';
+  [-1, -0.5, 0, 0.5, 1].forEach(v => {
+    const y = Math.round(Y(v, b)) + 0.5;
+    if (v !== 0){
+      g.strokeStyle = 'rgba(250,249,246,.09)';
+      g.beginPath(); g.moveTo(b.x0, y); g.lineTo(b.x1, y); g.stroke();
+    }
+    g.fillStyle = 'rgba(250,249,246,.6)';
+    g.fillText(String(v).replace('-', '−'), b.x0 - 5, y);
+  });
+
+  /* ejes cartesianos con punta de flecha */
+  const xo = Math.round(X(0, b)) + 0.5, yo = Math.round(Y(0, b)) + 0.5;
+  g.strokeStyle = 'rgba(250,249,246,.75)'; g.fillStyle = 'rgba(250,249,246,.75)'; g.lineWidth = 1.6;
+  g.beginPath(); g.moveTo(b.x0, yo); g.lineTo(b.x1 - 2, yo); g.stroke();
+  g.beginPath(); g.moveTo(xo, b.y1); g.lineTo(xo, b.y0 + 2); g.stroke();
+  g.beginPath(); g.moveTo(b.x1, yo); g.lineTo(b.x1 - 8, yo - 4); g.lineTo(b.x1 - 8, yo + 4); g.closePath(); g.fill();
+  g.beginPath(); g.moveTo(xo, b.y0); g.lineTo(xo - 4, b.y0 + 8); g.lineTo(xo + 4, b.y0 + 8); g.closePath(); g.fill();
+
+  /* números de los cuadrantes, discretos, en las esquinas */
+  g.font = '700 15px "Instrument Sans", system-ui, sans-serif'; g.fillStyle = 'rgba(250,249,246,.18)';
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.fillText('I',   b.x1 - 18, b.y0 + 15);
+  g.fillText('II',  xo - 18,   b.y0 + 15);
+  g.fillText('III', xo - 22,   b.y1 - 14);
+  g.fillText('IV',  b.x1 - 20, b.y1 - 14);
+
+  /* títulos de los ejes */
+  g.font = '11px "Instrument Sans", system-ui, sans-serif'; g.fillStyle = 'rgba(250,249,246,.55)';
+  g.textAlign = 'right'; g.textBaseline = 'top';
+  g.fillText('tiempo t (ms)', b.x1, b.y1 + 19);
+  g.save(); g.translate(11, (b.y0 + b.y1) / 2); g.rotate(-Math.PI / 2);
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.fillText(S.mode === 'mic' ? 'nivel de la señal ×' + micGain : 'altura de la onda', 0, 0);
+  g.restore();
+}
+
+function curve(fn, b, color, width, dash, glow){
+  g.save();
+  g.beginPath(); g.rect(b.x0, b.y0, b.x1 - b.x0, b.y1 - b.y0); g.clip();
+  g.strokeStyle = color; g.lineWidth = width; g.lineJoin = 'round';
+  g.setLineDash(dash || []);
+  if (glow){ g.shadowColor = color; g.shadowBlur = 8; }
+  g.beginPath();
+  const t0 = -tNeg(), t1 = S.win;
+  const n = Math.max(2, Math.floor(b.x1 - b.x0));
+  let pen = false;
+  for (let i = 0; i <= n; i++){
+    const t = t0 + (t1 - t0) * i / n;
+    const v = fn(t);
+    if (!isFinite(v)){ pen = false; continue; }
+    const x = b.x0 + (i / n) * (b.x1 - b.x0), y = Y(v, b);
+    if (!pen){ g.moveTo(x, y); pen = true; } else g.lineTo(x, y);
+  }
+  g.stroke();
+  g.restore();
+}
+
+function drawMarks(b, A, fHz){
+  if (!S.marks) return;
+  g.save();
+  g.strokeStyle = '#C79A3E'; g.fillStyle = '#C79A3E'; g.lineWidth = 1.5;
+  g.font = '600 12px "Instrument Sans", system-ui, sans-serif';
+  if (A > 0 && A <= YMAX){
+    g.setLineDash([5, 4]);
+    [A, -A].forEach(v => { const y = Y(v, b); g.beginPath(); g.moveTo(b.x0, y); g.lineTo(b.x1, y); g.stroke(); });
+    g.setLineDash([]);
+    g.textAlign = 'right'; g.textBaseline = 'bottom';
+    g.fillText('A', b.x1 - 4, Y(A, b) - 2);
+  }
+  if (fHz > 0){
+    const Tms = 1000 / fHz;
+    if (Tms <= S.win * 0.98){
+      const y = Y(-YMAX * 0.9, b), xa = X(0, b), xb = X(Tms, b);
+      g.beginPath();
+      g.moveTo(xa, y); g.lineTo(xb, y);
+      g.moveTo(xa, y - 5); g.lineTo(xa, y + 5);
+      g.moveTo(xb, y - 5); g.lineTo(xb, y + 5);
+      g.stroke();
+      g.textAlign = 'center'; g.textBaseline = 'bottom';
+      g.fillText('T', (xa + xb) / 2, y - 3);
+    }
+  }
+  g.restore();
+}
+
+const HL_COL = '#8FA8FF';
+const HL_INFO = {
+  none:'Toca un botón para ver esa parte marcada en la pantalla.',
+  ejes:'Los ejes: el horizontal es el tiempo (en milisegundos) y el vertical es la altura de la onda. Cada punto de la curva dice qué tan alta está la onda en ese instante.',
+  cuad:'El plano tiene 4 cuadrantes, numerados I, II, III y IV en sentido contrario a las manecillas del reloj. El sonido ocurre en t ≥ 0, o sea en los cuadrantes I (onda arriba) y IV (onda abajo), y por eso tienen más espacio. La parte de t negativo solo completa el plano.',
+  eje:'La línea central (y = 0) es el nivel de reposo, cuando no hay sonido. La onda sube y baja alrededor de ella.',
+  cresta:'La cresta es el punto más alto de la onda. Está a una distancia A por encima de la línea central.',
+  valle:'El valle es el punto más bajo de la onda. Está a una distancia A por debajo de la línea central.',
+  A:'La amplitud (A) es qué tanto se separa la onda de la línea central, medida hasta la cresta. Más A significa un sonido más fuerte.',
+  T:'El periodo (T) es lo que dura un ciclo completo, por ejemplo de una cresta a la siguiente. Se mide sobre el eje horizontal.',
+  f:'La frecuencia (f) es cuántos ciclos ocurren en un segundo. 1 Hz es un ciclo por segundo. Más f significa ciclos más cortos y un sonido más agudo. Cada franja numerada es un ciclo.'
+};
+let hlExtraNow = '';
+
+function hlArrow(x1, y1, x2, y2, dbl){
+  g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke();
+  const a = Math.atan2(y2 - y1, x2 - x1), s = 8;
+  const head = (x, y, ang) => {
+    g.beginPath(); g.moveTo(x, y);
+    g.lineTo(x - s * Math.cos(ang - 0.4), y - s * Math.sin(ang - 0.4));
+    g.lineTo(x - s * Math.cos(ang + 0.4), y - s * Math.sin(ang + 0.4));
+    g.closePath(); g.fill();
+  };
+  head(x2, y2, a);
+  if (dbl) head(x1, y1, a + Math.PI);
+}
+function hlLabel(txt, x, y, align, base){
+  g.save();
+  g.font = '700 13px "Instrument Sans", system-ui, sans-serif';
+  const w = g.measureText(txt).width + 10, h = 19;
+  const x0 = align === 'right' ? x - w + 5 : (align === 'left' ? x - 5 : x - w / 2);
+  const y0 = base === 'top' ? y - 2 : (base === 'middle' ? y - h / 2 : y - h + 3);
+  g.fillStyle = 'rgba(16,16,18,.9)';
+  g.fillRect(x0, y0, w, h);
+  g.fillStyle = HL_COL; g.textAlign = align || 'center'; g.textBaseline = base || 'bottom';
+  g.fillText(txt, x, y);
+  g.restore();
+}
+
+/* Marca en la pantalla la parte elegida. A y f describen la onda que se ve. */
+function applyHighlight(b, A, fHz, Areal){
+  if (!S.hl) return;
+  g.save();
+  g.strokeStyle = HL_COL; g.fillStyle = HL_COL; g.lineWidth = 2.5; g.lineJoin = 'round';
+  g.beginPath(); g.rect(b.x0 - 40, b.y0 - 2, (b.x1 - b.x0) + 46, (b.y1 - b.y0) + 24); g.clip();
+  const cx = (b.x0 + b.x1) / 2;
+  const nota = t => {
+    g.save(); g.font = '700 13px "Instrument Sans", system-ui, sans-serif';
+    const maxW = (b.x1 - b.x0) - 24, palabras = t.split(' '), lineas = [''];
+    palabras.forEach(w => {
+      const prueba = lineas[lineas.length - 1] ? lineas[lineas.length - 1] + ' ' + w : w;
+      if (g.measureText(prueba).width > maxW && lineas[lineas.length - 1]) lineas.push(w);
+      else lineas[lineas.length - 1] = prueba;
+    });
+    g.restore();
+    lineas.forEach((l, i) => hlLabel(l, cx, b.y0 + 20 + i * 21, 'center', 'bottom'));
+  };
+
+  if (S.hl === 'ejes'){
+    const xo = X(0, b), yo = Y(0, b);
+    g.lineWidth = 3.5;
+    hlArrow(b.x0 + 2, yo, b.x1 - 4, yo, false);
+    hlArrow(xo, b.y1 - 2, xo, b.y0 + 4, false);
+    hlLabel('eje horizontal: tiempo', (xo + b.x1) / 2, yo - 8, 'center', 'bottom');
+    g.save(); g.translate(xo - 13, (b.y0 + b.y1) / 2); g.rotate(-Math.PI / 2);
+    hlLabel('eje vertical: altura', 0, 0, 'center', 'middle'); g.restore();
+    g.restore(); return;
+  }
+  if (S.hl === 'cuad'){
+    const xo = X(0, b), yo = Y(0, b);
+    const reg = [
+      ['cuadrante I',  xo, b.y0, b.x1, yo, 0.22],
+      ['II',           b.x0, b.y0, xo, yo, 0.08],
+      ['III',          b.x0, yo, xo, b.y1, 0.08],
+      ['IV',           xo, yo, b.x1, b.y1, 0.14]
+    ];
+    reg.forEach(r => {
+      g.save(); g.globalAlpha = r[5]; g.fillRect(r[1], r[2], r[3] - r[1], r[4] - r[2]); g.restore();
+    });
+    g.lineWidth = 2.5;
+    g.beginPath(); g.moveTo(b.x0, yo); g.lineTo(b.x1, yo); g.moveTo(xo, b.y0); g.lineTo(xo, b.y1); g.stroke();
+    hlLabel('cuadrante I',  (xo + b.x1) / 2, b.y0 + 24, 'center', 'bottom');
+    hlLabel('II',  (b.x0 + xo) / 2, b.y0 + 24, 'center', 'bottom');
+    hlLabel('III', (b.x0 + xo) / 2, b.y1 - 8, 'center', 'bottom');
+    hlLabel('IV',  (xo + b.x1) / 2, b.y1 - 8, 'center', 'bottom');
+    g.restore(); return;
+  }
+  if (S.hl === 'eje'){
+    const y = Y(0, b);
+    g.lineWidth = 4;
+    g.beginPath(); g.moveTo(b.x0, y); g.lineTo(b.x1, y); g.stroke();
+    hlLabel('línea central (y = 0)', b.x0 + 8, y - 5, 'left', 'bottom');
+    g.restore(); return;
+  }
+  const T = fHz > 0 ? 1000 / fHz : 0;
+  if (!(T > 0) || !(A > 0)){ nota('Necesito una onda para señalar esto'); g.restore(); return; }
+  const Ah = Math.min(A, YMAX - 0.06);
+  const crestas = [], valles = [];
+  for (let k = 0; k < 200; k++){ const t = T / 4 + k * T; if (t > S.win + 1e-9) break; crestas.push(t); }
+  for (let k = 0; k < 200; k++){ const t = 3 * T / 4 + k * T; if (t > S.win + 1e-9) break; valles.push(t); }
+
+  if (S.hl === 'cresta'){
+    if (!crestas.length){ nota('Aún no aparece una cresta. Amplía la ventana.'); }
+    else {
+      crestas.forEach(t => { g.beginPath(); g.arc(X(t, b), Y(Ah, b), 5.5, 0, 7); g.fill(); });
+      hlLabel('cresta', X(crestas[0], b), Y(Ah, b) - 9, 'center', 'bottom');
+    }
+  } else if (S.hl === 'valle'){
+    if (!valles.length){ nota('Aún no aparece un valle. Amplía la ventana.'); }
+    else {
+      valles.forEach(t => { g.beginPath(); g.arc(X(t, b), Y(-Ah, b), 5.5, 0, 7); g.fill(); });
+      hlLabel('valle', X(valles[0], b), Y(-Ah, b) + 9, 'center', 'top');
+    }
+  } else if (S.hl === 'A'){
+    if (!crestas.length){ nota('Aún no aparece una cresta. Amplía la ventana.'); }
+    else {
+      const x = X(crestas[0], b);
+      hlArrow(x, Y(0, b), x, Y(Ah, b), true);
+      hlLabel('A', x + 12, (Y(0, b) + Y(Ah, b)) / 2, 'left', 'middle');
+      hlExtraNow = 'Aquí A = ' + Areal.toFixed(2) + '.';
+    }
+  } else if (S.hl === 'T'){
+    hlExtraNow = 'Aquí T = ' + T.toFixed(2) + ' ms.';
+    if (crestas.length && crestas[0] + T <= S.win + 1e-9){
+      const x1 = X(crestas[0], b), x2 = X(crestas[0] + T, b);
+      const yb = Y(Math.min(Ah + 0.2, YMAX - 0.05), b);
+      g.beginPath(); g.arc(x1, Y(Ah, b), 4.5, 0, 7); g.fill();
+      g.beginPath(); g.arc(x2, Y(Ah, b), 4.5, 0, 7); g.fill();
+      g.setLineDash([3, 3]);
+      g.beginPath(); g.moveTo(x1, yb); g.lineTo(x1, Y(Ah, b)); g.moveTo(x2, yb); g.lineTo(x2, Y(Ah, b)); g.stroke();
+      g.setLineDash([]);
+      hlArrow(x1, yb, x2, yb, true);
+      hlLabel('T = ' + T.toFixed(2) + ' ms', (x1 + x2) / 2, yb + 5, 'center', 'top');
+    } else {
+      nota('Un ciclo dura ' + T.toFixed(1) + ' ms. Amplía la ventana para verlo completo.');
+    }
+  } else if (S.hl === 'f'){
+    const n = Math.floor(S.win / T + 1e-9);
+    hlExtraNow = 'En ' + S.win + ' ms caben ' + (S.win / T).toFixed(1) + ' ciclos, así que en 1 segundo caben ' + Math.round(fHz) + '.';
+    if (n < 1){ nota('Un ciclo dura ' + T.toFixed(1) + ' ms. Amplía la ventana para verlo completo.'); }
+    else {
+      for (let k = 0; k < n; k++){
+        const xa = X(k * T, b), xb = X((k + 1) * T, b);
+        if (k % 2 === 0){ g.save(); g.globalAlpha = 0.16; g.fillRect(xa, b.y0, xb - xa, b.y1 - b.y0); g.restore(); }
+        g.save(); g.setLineDash([3, 4]); g.lineWidth = 1.5;
+        g.beginPath(); g.moveTo(xb, b.y0); g.lineTo(xb, b.y1); g.stroke(); g.restore();
+        if (xb - xa >= 16) hlLabel(String(k + 1), (xa + xb) / 2, b.y0 + 20, 'center', 'bottom');
+      }
+    }
+  }
+  g.restore();
+}
+
+function drawMic(b){
+  if (!micRunning || !micBuf){
+    g.fillStyle = 'rgba(250,249,246,.6)'; g.font = '14px "Instrument Sans", system-ui, sans-serif';
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText('Activa el micrófono para ver tu sonido', (b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2);
+    return;
+  }
+  const sr = ctx.sampleRate, n = micBuf.length, mps = sr / 1000;   // muestras por ms
+  const nneg = Math.ceil(tNeg() * mps);
+  const ws = Math.max(20, Math.min(n - 2 - nneg, Math.floor(S.win * mps)));
+  let mean = 0;
+  for (let i = 0; i < n; i++) mean += micBuf[i];
+  mean /= n;
+  let start = nneg;
+  const lim = n - ws - 1;
+  for (let i = Math.max(1, nneg); i < lim; i++){
+    if (micBuf[i - 1] - mean < 0 && micBuf[i] - mean >= 0){ start = i; break; }
+  }
+  let pk = 0;
+  for (let i = 0; i < ws; i++){ const v = Math.abs(micBuf[start + i] - mean); if (v > pk) pk = v; }
+  micPeak = micPeak * 0.8 + pk * 0.2;
+  const fn = t => {
+    const idx = start + t * mps;
+    if (idx < 0 || idx > n - 2) return NaN;
+    const i0 = Math.floor(idx), fr = idx - i0;
+    const a = micBuf[i0] - mean, c = micBuf[i0 + 1] - mean;
+    return (a + (c - a) * fr) * micGain;
+  };
+  curve(fn, b, '#5BBF7A', 2, null, true);
+  drawMarks(b, micPeak * micGain, micF);
+  applyHighlight(b, micPeak * micGain, micF, micPeak);
+}
+
+function draw(){
+  if (!W) resize();
+  hlExtraNow = '';
+  const b = plotBox();
+  drawGrid(b);
+
+  if (S.mode === 'mic'){
+    if (micRunning && !micFrozen){
+      analyser.getFloatTimeDomainData(micBuf);
+      frameN++;
+      if (frameN % 6 === 0) updatePitch();
+    }
+    drawMic(b);
+  } else {
+    if (S.mode === 'gen' && S.ref){
+      const r = S.ref;
+      curve(t => r.A * Math.sin(2 * Math.PI * r.f * t / 1000), b, 'rgba(250,249,246,.55)', 2, [6, 5]);
+    }
+    if (S.mode === 'retos' && S.target){
+      const r = S.target;
+      curve(t => r.A * Math.sin(2 * Math.PI * r.f * t / 1000), b, '#C79A3E', 2.5, [7, 5]);
+    }
+    curve(t => S.A * Math.sin(2 * Math.PI * S.f * t / 1000), b, '#5BBF7A', 2.5, null, true);
+    if (S.mode === 'gen') drawMarks(b, S.A, S.f);
+    applyHighlight(b, S.A, S.f, S.A);
+    if (S.mode === 'retos'){
+      const ok = retoCoincide();
+      $('scopeCard').classList.toggle('match', ok);
+      const st = $('retoStatus');
+      const txt = ok ? 'Coincide. Mira y escucha qué cambió.' : 'Todavía no coincide.';
+      if (st.textContent !== txt){ st.textContent = txt; st.classList.toggle('ok', ok); }
+    }
+  }
+  setTxt('hlExtra', hlExtraNow);
+  updateReadouts();
+}
+
+let last = {};
+function setTxt(id, v){ if (last[id] !== v){ last[id] = v; $(id).textContent = v; } }
+
+function updateReadouts(){
+  let A, f;
+  if (S.mode === 'mic'){
+    A = micRunning ? micPeak : null;
+    f = micF > 0 ? micF : null;
+    setTxt('rdA', A !== null ? A.toFixed(2) : '—');
+    setTxt('rdF', f ? f.toFixed(0) + ' Hz' : '—');
+    setTxt('rdT', f ? (1000 / f).toFixed(2) + ' ms' : '—');
+    setTxt('rdN', f ? notaDe(f) : '—');
+    if (f){
+      setTxt('fmEq', 'f ≈ ' + f.toFixed(0) + ' Hz  →  T = 1/f ≈ ' + (1000 / f).toFixed(2) + ' ms');
+      setTxt('fmTxt', 'Es la frecuencia que detecta el micrófono: los ciclos que se repiten cada segundo.');
+    } else {
+      setTxt('fmEq', micRunning ? 'Esperando un sonido con altura definida…' : 'Micrófono apagado');
+      setTxt('fmTxt', 'Prueba con un silbido o una nota sostenida. El ruido no tiene un periodo claro.');
+    }
+  } else {
+    setTxt('rdA', S.A.toFixed(2));
+    setTxt('rdF', S.f + ' Hz');
+    setTxt('rdT', (1000 / S.f).toFixed(2) + ' ms');
+    setTxt('rdN', notaDe(S.f));
+    const B = 360 * S.f;
+    setTxt('fmEq', 'y = ' + S.A.toFixed(2) + ' · sen(' + miles(B) + '° · t)');
+    setTxt('fmTxt', 'En palabras: la onda sube y baja ' + S.f + ' veces por segundo, y cada ciclo dura ' + (1000 / S.f).toFixed(2) + ' ms. Los ' + miles(B) + '° salen de B = 360° · f = 360° · ' + S.f + ' (con t en segundos).');
+  }
+}
+
+/* ================= Plano: seno y coseno ================= */
+const rad = Math.PI / 180;
+const PL = {
+  units:'deg', dirty:true, cursor:null, msg:'',
+  marks:{ zeros:false, ext:false, yint:false, inter:false, quad:false },
+  f:{ on:true, A:1, B:1, C:0, D:0 },
+  g:{ on:true, A:1, B:1, C:0, D:0 },
+  v:{ xmin:-180, xmax:540, ymin:-2.4, ymax:2.4 }
+};
+const PARAMS = [
+  { k:'A', label:'A (altura de la onda)',           min:-3,   max:3, step:0.25 },
+  { k:'B', label:'B (ciclos que caben en 360°)',    min:0.25, max:4, step:0.25 },
+  { k:'C', label:'C (mueve la onda, en grados)',    min:-360, max:360, step:15 },
+  { k:'D', label:'D (sube o baja toda la onda)',    min:-2,   max:2, step:0.25 }
+];
+const PRESETS = {
+  basico:   { f:{A:1,B:1,C:0,D:0},  g:{A:1,B:1,C:0,D:0}, msg:'El seno y el coseno básicos tienen la misma forma. El seno arranca en 0 y el coseno arranca en su punto más alto.' },
+  amplitud: { f:{A:2,B:1,C:0,D:0},  g:{A:1,B:1,C:0,D:0}, msg:'A = 2 estira la onda al doble de altura. El periodo no cambia.' },
+  periodo:  { f:{A:1,B:2,C:0,D:0},  g:{A:1,B:1,C:0,D:0}, msg:'B = 2 comprime la onda: un ciclo ahora dura 180° en lugar de 360°.' },
+  desfase:  { f:{A:1,B:1,C:90,D:0}, g:{A:1,B:1,C:0,D:0}, msg:'El seno adelantado 90° es el coseno: sen(x + 90°) = cos(x).' },
+  eje:      { f:{A:1,B:1,C:0,D:1},  g:{A:1,B:1,C:0,D:-1}, msg:'D sube o baja toda la onda. El eje central de f queda en y = 1 y el de g en y = −1.' }
+};
+const KIND = { f:'sen', g:'cos' };
+
+const pcv = $('pcv'), pc = pcv.getContext('2d');
+let PW = 0, PH = 0;
+function pResize(){
+  const dpr = window.devicePixelRatio || 1;
+  PW = pcv.clientWidth; PH = pcv.clientHeight;
+  pcv.width = Math.round(PW * dpr); pcv.height = Math.round(PH * dpr);
+  pc.setTransform(dpr, 0, 0, dpr, 0, 0);
+  PL.dirty = true;
+}
+window.addEventListener('resize', pResize);
+if (window.ResizeObserver) new ResizeObserver(pResize).observe(pcv);
+
+function evalP(p, kind, x){
+  const th = (p.B * x + p.C) * rad;
+  return p.D + p.A * (kind === 'sen' ? Math.sin(th) : Math.cos(th));
+}
+function gd(v){ return String(+v.toFixed(1)).replace('-', '−'); }
+function radStr(deg){
+  if (Math.abs(deg) < 1e-9) return '0';
+  const r = deg / 180;
+  for (let q = 1; q <= 12; q++){
+    const n = r * q;
+    if (Math.abs(n - Math.round(n)) < 1e-6){
+      const N = Math.round(n), sg = N < 0 ? '−' : '', a = Math.abs(N);
+      return sg + (a === 1 ? 'π' : a + 'π') + (q === 1 ? '' : '/' + q);
+    }
+  }
+  return gfmt(r) + 'π';
+}
+function xLabel(deg){ return PL.units === 'rad' ? radStr(deg) : gd(deg) + '°'; }
+
+function eqText(p, name, fn){
+  if (p.A === 0) return name + '(x) = ' + gfmt(p.D);
+  const a = p.A === 1 ? '' : (p.A === -1 ? '−' : gfmt(p.A) + '·');
+  let inner = p.B === 1 ? 'x' : gfmt(p.B) + 'x';
+  if (p.C !== 0) inner += (p.C > 0 ? ' + ' : ' − ') + Math.abs(p.C) + '°';
+  let s = name + '(x) = ' + a + fn + '(' + inner + ')';
+  if (p.D !== 0) s += (p.D > 0 ? ' + ' : ' − ') + gfmt(Math.abs(p.D));
+  return s;
+}
+function propsHtml(p){
+  const A = Math.abs(p.A), per = 360 / p.B, ph = -p.C / p.B;
+  const dir = Math.abs(ph) < 1e-9 ? 'sin desplazamiento' : (ph > 0 ? 'a la derecha' : 'a la izquierda');
+  return '<div>Amplitud<b>' + gfmt(A) + '</b></div>' +
+    '<div>Periodo<b>' + gd(per) + '°</b><small>' + radStr(per) + ' rad</small></div>' +
+    '<div>Desfase<b>' + gd(Math.abs(ph)) + '°</b><small>' + dir + '</small></div>' +
+    '<div>Eje central<b>y = ' + gfmt(p.D) + '</b></div>' +
+    '<div>Máximo<b>' + gfmt(p.D + A) + '</b></div>' +
+    '<div>Mínimo<b>' + gfmt(p.D - A) + '</b></div>';
+}
+
+function buildSliders(key){
+  const K = key.toUpperCase();
+  $('sl' + K).innerHTML = PARAMS.map(q =>
+    '<div class="row"><div class="lab"><label for="p' + key + '_' + q.k + '">' + q.label + '</label><output id="o' + key + '_' + q.k + '"></output></div>' +
+    '<input type="range" id="p' + key + '_' + q.k + '" min="' + q.min + '" max="' + q.max + '" step="' + q.step + '"></div>').join('');
+  PARAMS.forEach(q => {
+    $('p' + key + '_' + q.k).addEventListener('input', e => { PL[key][q.k] = +e.target.value; PL.msg = ''; syncPl(); });
+  });
+}
+function syncPl(){
+  ['f', 'g'].forEach(key => {
+    const p = PL[key];
+    PARAMS.forEach(q => {
+      const el = $('p' + key + '_' + q.k);
+      if (+el.value !== p[q.k]) el.value = p[q.k];
+      $('o' + key + '_' + q.k).textContent = gfmt(p[q.k]) + (q.k === 'C' ? '°' : '');
+    });
+    $('eq' + key.toUpperCase()).textContent = eqText(p, key, KIND[key]);
+    $('pr' + key.toUpperCase()).innerHTML = propsHtml(p);
+  });
+  PL.dirty = true;
+}
+function plResetView(){
+  const lo = [0], hi = [0];
+  ['f', 'g'].forEach(k => { const p = PL[k]; if (p.on){ lo.push(p.D - Math.abs(p.A)); hi.push(p.D + Math.abs(p.A)); } });
+  let ymin = Math.min.apply(null, lo), ymax = Math.max.apply(null, hi);
+  if (ymax - ymin < 2){ const c = (ymax + ymin) / 2; ymin = c - 1; ymax = c + 1; }
+  const pad = (ymax - ymin) * 0.2;
+  PL.v = { xmin:-180, xmax:540, ymin:ymin - pad, ymax:ymax + pad };
+  PL.dirty = true;
+}
+function renderPlano(){
+  if (!$('slF').firstChild){ buildSliders('f'); buildSliders('g'); }
+  syncPl(); pResize(); PL.dirty = true;
+}
+
+/* ---- marcas: ceros, máximos y mínimos, cortes, intersecciones ---- */
+function plMarks(){
+  const v = PL.v, out = { zeros:[], ext:[], yint:[], inter:[], same:false };
+  ['f', 'g'].forEach(key => {
+    const p = PL[key], kind = KIND[key];
+    if (!p.on) return;
+    if (PL.marks.zeros && p.A !== 0){
+      const s = -p.D / p.A;
+      if (Math.abs(s) <= 1 + 1e-12){
+        const sc = Math.max(-1, Math.min(1, s));
+        const a = (kind === 'sen' ? Math.asin(sc) : Math.acos(sc)) / rad;
+        const bases = kind === 'sen' ? [a, 180 - a] : [a, -a];
+        const seen = {};
+        bases.forEach(t0 => {
+          const kmin = Math.ceil((p.B * v.xmin + p.C - t0) / 360 - 1e-9), kmax = Math.floor((p.B * v.xmax + p.C - t0) / 360 + 1e-9);
+          for (let k = kmin; k <= kmax && k - kmin < 400; k++){
+            const x = (t0 + 360 * k - p.C) / p.B, id = Math.round(x * 1e6);
+            if (!seen[id]){ seen[id] = 1; out.zeros.push({ x:x, y:0, key:key }); }
+          }
+        });
+      }
+    }
+    if (PL.marks.ext && p.A !== 0){
+      const off = kind === 'sen' ? 90 : 0;
+      const kmin = Math.ceil((p.B * v.xmin + p.C - off) / 180 - 1e-9), kmax = Math.floor((p.B * v.xmax + p.C - off) / 180 + 1e-9);
+      for (let k = kmin; k <= kmax && k - kmin < 400; k++){
+        const sg = (((k % 2) + 2) % 2 === 0) ? 1 : -1;
+        out.ext.push({ x:(off + 180 * k - p.C) / p.B, y:p.D + p.A * sg, key:key });
+      }
+    }
+    if (PL.marks.yint && v.xmin <= 0 && v.xmax >= 0) out.yint.push({ x:0, y:evalP(p, kind, 0), key:key });
+  });
+  if (PL.f.on && PL.g.on){
+    const h = x => evalP(PL.f, 'sen', x) - evalP(PL.g, 'cos', x);
+    const N = 900;
+    let xp = v.xmin, prev = h(xp), maxAbs = Math.abs(prev);
+    for (let i = 1; i <= N; i++){
+      const x = v.xmin + (v.xmax - v.xmin) * i / N, cur = h(x);
+      maxAbs = Math.max(maxAbs, Math.abs(cur));
+      if (PL.marks.inter && out.inter.length < 300 && ((prev < 0 && cur >= 0) || (prev > 0 && cur <= 0))){
+        let a = xp, b = x, fa = prev;
+        for (let it = 0; it < 40; it++){
+          const m = (a + b) / 2, fm = h(m);
+          if ((fa < 0 && fm >= 0) || (fa > 0 && fm <= 0)) b = m; else { a = m; fa = fm; }
+        }
+        const xr = (a + b) / 2;
+        out.inter.push({ x:xr, y:evalP(PL.f, 'sen', xr), key:'i' });
+      }
+      prev = cur; xp = x;
+    }
+    out.same = maxAbs < 1e-6;
+    if (out.same) out.inter = [];
+  }
+  return out;
+}
+
+let plLast = {};
+function plSet(id, html){ if (plLast[id] !== html){ plLast[id] = html; $(id).innerHTML = html; } }
+
+function drawPlano(){
+  if (!PW) pResize();
+  if (!PW) return;
+  const v = PL.v, c = pc;
+  const px = x => (x - v.xmin) / (v.xmax - v.xmin) * PW;
+  const py = y => PH - (y - v.ymin) / (v.ymax - v.ymin) * PH;
+  const ppx = PW / (v.xmax - v.xmin), ppy = PH / (v.ymax - v.ymin);
+  const pick = (list, ppu, minPx) => { for (let i = 0; i < list.length; i++) if (list[i] * ppu >= minPx) return list[i]; return list[list.length - 1]; };
+  const xs = pick(PL.units === 'rad' ? [15, 30, 45, 90, 180, 360, 720, 1440, 2880, 5760] : [1, 2, 5, 10, 15, 30, 45, 90, 180, 360, 720, 1440, 2880, 5760], ppx, 54);
+  const ys = pick([0.05, 0.1, 0.2, 0.25, 0.5, 1, 2, 5, 10, 20, 50, 100], ppy, 34);
+  const ink = '#101012';
+
+  c.fillStyle = '#fff'; c.fillRect(0, 0, PW, PH);
+
+  /* cuadrantes (opcional) */
+  const ox = px(0), oy = py(0);
+  if (PL.marks.quad){
+    const xa = Math.max(0, Math.min(PW, ox)), ya = Math.max(0, Math.min(PH, oy));
+    const reg = [['I', xa, 0, PW, ya, 'rgba(27,68,232,.09)'], ['II', 0, 0, xa, ya, 'rgba(27,68,232,.03)'],
+                 ['III', 0, ya, xa, PH, 'rgba(27,68,232,.03)'], ['IV', xa, ya, PW, PH, 'rgba(27,68,232,.05)']];
+    c.font = '700 22px "Instrument Sans", system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    reg.forEach(r => {
+      c.fillStyle = r[5]; c.fillRect(r[1], r[2], r[3] - r[1], r[4] - r[2]);
+      if (r[3] - r[1] > 50 && r[4] - r[2] > 40){ c.fillStyle = 'rgba(27,68,232,.28)'; c.fillText(r[0], (r[1] + r[3]) / 2, (r[2] + r[4]) / 2); }
+    });
+  }
+
+  /* cuadrícula */
+  c.lineWidth = 1; c.strokeStyle = 'rgba(16,16,18,.08)';
+  for (let k = Math.ceil(v.xmin / xs); k * xs <= v.xmax; k++){
+    const x = Math.round(px(k * xs)) + 0.5;
+    c.beginPath(); c.moveTo(x, 0); c.lineTo(x, PH); c.stroke();
+  }
+  for (let k = Math.ceil(v.ymin / ys); k * ys <= v.ymax; k++){
+    const y = Math.round(py(k * ys)) + 0.5;
+    c.beginPath(); c.moveTo(0, y); c.lineTo(PW, y); c.stroke();
+  }
+
+  /* ejes */
+  c.strokeStyle = ink; c.fillStyle = ink; c.lineWidth = 1.8;
+  if (oy >= 0 && oy <= PH){
+    c.beginPath(); c.moveTo(0, oy); c.lineTo(PW - 2, oy); c.stroke();
+    c.beginPath(); c.moveTo(PW, oy); c.lineTo(PW - 9, oy - 4); c.lineTo(PW - 9, oy + 4); c.closePath(); c.fill();
+  }
+  if (ox >= 0 && ox <= PW){
+    c.beginPath(); c.moveTo(ox, PH); c.lineTo(ox, 2); c.stroke();
+    c.beginPath(); c.moveTo(ox, 0); c.lineTo(ox - 4, 9); c.lineTo(ox + 4, 9); c.closePath(); c.fill();
+  }
+
+  /* números de los ejes */
+  const halo = (t, x, y) => { c.lineWidth = 3; c.strokeStyle = '#fff'; c.strokeText(t, x, y); c.fillStyle = ink; c.fillText(t, x, y); };
+  c.font = '12px "Instrument Sans", system-ui, sans-serif';
+  const ly = Math.max(15, Math.min(PH - 6, oy + 15));
+  c.textAlign = 'center'; c.textBaseline = 'alphabetic';
+  for (let k = Math.ceil(v.xmin / xs); k * xs <= v.xmax; k++){
+    if (k === 0) continue;
+    const x = px(k * xs);
+    if (x > 14 && x < PW - 14) halo(xLabel(k * xs), x, ly);
+  }
+  const lx = Math.max(34, Math.min(PW - 4, ox - 6));
+  c.textAlign = 'right';
+  for (let k = Math.ceil(v.ymin / ys); k * ys <= v.ymax; k++){
+    if (k === 0) continue;
+    const y = py(k * ys);
+    if (y > 10 && y < PH - 6) halo(gfmt(k * ys), lx, y + 4);
+  }
+  if (ox > 0 && ox < PW && oy > 0 && oy < PH) halo('0', ox - 6, oy + 15);
+  c.textAlign = 'left'; c.font = '600 12px "Instrument Sans", system-ui, sans-serif';
+  halo('x', PW - 14, Math.max(14, Math.min(PH - 22, oy - 8)));
+  halo('y', Math.max(8, Math.min(PW - 16, ox + 8)), 16);
+
+  /* curvas: g (coseno) y encima f (seno, más gruesa por debajo para ver si coinciden) */
+  const trazo = (p, kind, color, w) => {
+    c.save(); c.beginPath(); c.rect(0, 0, PW, PH); c.clip();
+    c.strokeStyle = color; c.lineWidth = w; c.lineJoin = 'round'; c.beginPath();
+    const n = Math.ceil(PW);
+    for (let i = 0; i <= n; i++){
+      const x = v.xmin + (v.xmax - v.xmin) * i / n, y = py(evalP(p, kind, x));
+      if (i === 0) c.moveTo(i, y); else c.lineTo(i, y);
+    }
+    c.stroke(); c.restore();
+  };
+  if (PL.f.on) trazo(PL.f, 'sen', 'rgba(199,154,62,.9)', 5);
+  if (PL.g.on) trazo(PL.g, 'cos', '#2E8B57', 2.6);
+
+  /* marcas */
+  const M = plMarks();
+  const colorDe = k => k === 'f' ? '#C79A3E' : (k === 'g' ? '#2E8B57' : '#1B44E8');
+  const etiqueta = (pt) => {
+    c.font = '600 11px "Instrument Sans", system-ui, sans-serif'; c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+    const t = '(' + xLabel(pt.x) + ', ' + gfmt(pt.y) + ')';
+    const x = px(pt.x) + 8, y = py(pt.y) - 8;
+    c.lineWidth = 3; c.strokeStyle = '#fff'; c.strokeText(t, x, y); c.fillStyle = ink; c.fillText(t, x, y);
+  };
+  const dibujar = (lista, forma) => {
+    const visibles = lista.filter(pt => px(pt.x) >= -6 && px(pt.x) <= PW + 6 && py(pt.y) >= -6 && py(pt.y) <= PH + 6);
+    visibles.forEach(pt => {
+      const x = px(pt.x), y = py(pt.y);
+      c.beginPath();
+      if (forma === 'rombo'){ c.moveTo(x, y - 7); c.lineTo(x + 7, y); c.lineTo(x, y + 7); c.lineTo(x - 7, y); c.closePath(); }
+      else c.arc(x, y, forma === 'anillo' ? 5.5 : 6, 0, 7);
+      if (forma === 'anillo'){ c.fillStyle = '#fff'; c.fill(); c.lineWidth = 2.5; c.strokeStyle = colorDe(pt.key); c.stroke(); }
+      else { c.fillStyle = colorDe(pt.key); c.fill(); c.lineWidth = 2; c.strokeStyle = '#fff'; c.stroke(); }
+    });
+    if (visibles.length <= 8) visibles.forEach(etiqueta);
+  };
+  dibujar(M.zeros, 'punto'); dibujar(M.ext, 'rombo'); dibujar(M.yint, 'anillo'); dibujar(M.inter, 'punto');
+
+  /* cursor */
+  let leer = 'Toca o pasa el cursor sobre la gráfica para leer los valores.';
+  if (PL.cursor){
+    const x = PL.cursor.x, X0 = px(x);
+    c.save(); c.strokeStyle = 'rgba(16,16,18,.45)'; c.lineWidth = 1.5; c.setLineDash([4, 4]);
+    c.beginPath(); c.moveTo(X0, 0); c.lineTo(X0, PH); c.stroke(); c.restore();
+    const partes = [];
+    partes.push(PL.units === 'rad' ? 'x = ' + radStr(x) + ' rad (' + gd(x) + '°)' : 'x = ' + gd(x) + '° (' + radStr(x) + ' rad)');
+    [['f', 'sen', '#C79A3E', 'cf'], ['g', 'cos', '#2E8B57', 'cg']].forEach(q => {
+      const p = PL[q[0]];
+      if (!p.on) return;
+      const y = evalP(p, q[1], x);
+      c.beginPath(); c.arc(X0, py(y), 6, 0, 7); c.fillStyle = q[2]; c.fill(); c.lineWidth = 2; c.strokeStyle = '#fff'; c.stroke();
+      partes.push('<span class="' + q[3] + '">' + q[0] + '(x) = ' + gfmt(y) + '</span>');
+    });
+    leer = partes.join(' &nbsp;·&nbsp; ');
+  }
+  plSet('plRead', leer);
+
+  /* leyenda */
+  const filas = [];
+  if (PL.f.on) filas.push(['#C79A3E', eqText(PL.f, 'f', 'sen')]);
+  if (PL.g.on) filas.push(['#2E8B57', eqText(PL.g, 'g', 'cos')]);
+  if (filas.length){
+    c.font = '600 12px "Instrument Sans", system-ui, sans-serif';
+    const w = Math.min(PW - 60, Math.max.apply(null, filas.map(f => c.measureText(f[1]).width)) + 36);
+    c.fillStyle = 'rgba(255,255,255,.92)'; c.strokeStyle = 'rgba(16,16,18,.16)'; c.lineWidth = 1;
+    c.beginPath(); c.rect(8.5, 8.5, w, 10 + filas.length * 20); c.fill(); c.stroke();
+    filas.forEach((f, i) => {
+      c.strokeStyle = f[0]; c.lineWidth = 3; c.beginPath(); c.moveTo(16, 26 + i * 20); c.lineTo(30, 26 + i * 20); c.stroke();
+      c.fillStyle = ink; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(f[1], 36, 26 + i * 20);
+    });
+  }
+
+  /* mensaje */
+  let nota = PL.msg;
+  if (M.same) nota = 'Las dos gráficas coinciden: son exactamente la misma curva.' + (PL.msg ? ' ' + PL.msg : '');
+  plSet('plNote', nota);
+}
+
+/* ---- interacción: mover, acercar, tocar ---- */
+const ptrs = new Map();
+let plMoved = false, plPinch = null;
+const plX = e => e.clientX - pcv.getBoundingClientRect().left;
+const plY = e => e.clientY - pcv.getBoundingClientRect().top;
+const wxOf = px_ => PL.v.xmin + px_ / PW * (PL.v.xmax - PL.v.xmin);
+const wyOf = py_ => PL.v.ymax - py_ / PH * (PL.v.ymax - PL.v.ymin);
+function zoomAt(px_, py_, fx, fy){
+  const v = PL.v, wx0 = wxOf(px_), wy0 = wyOf(py_);
+  const n = { xmin:wx0 - (wx0 - v.xmin) * fx, xmax:wx0 + (v.xmax - wx0) * fx, ymin:wy0 - (wy0 - v.ymin) * fy, ymax:wy0 + (v.ymax - wy0) * fy };
+  const sx = n.xmax - n.xmin, sy = n.ymax - n.ymin;
+  if (sx < 8 || sx > 30000) { n.xmin = v.xmin; n.xmax = v.xmax; }
+  if (sy < 0.05 || sy > 500) { n.ymin = v.ymin; n.ymax = v.ymax; }
+  PL.v = n; PL.dirty = true;
+}
+function panBy(dx, dy){
+  const v = PL.v, sx = v.xmax - v.xmin, sy = v.ymax - v.ymin;
+  v.xmin -= dx / PW * sx; v.xmax -= dx / PW * sx;
+  v.ymin += dy / PH * sy; v.ymax += dy / PH * sy;
+  PL.dirty = true;
+}
+pcv.addEventListener('pointerdown', e => {
+  pcv.setPointerCapture(e.pointerId);
+  ptrs.set(e.pointerId, { x:plX(e), y:plY(e) });
+  plMoved = false;
+  if (ptrs.size === 2){
+    const a = Array.from(ptrs.values());
+    plPinch = { d:Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y), mx:(a[0].x + a[1].x) / 2, my:(a[0].y + a[1].y) / 2 };
+  }
+  pcv.classList.add('drag');
+});
+pcv.addEventListener('pointermove', e => {
+  const x = plX(e), y = plY(e);
+  if (ptrs.has(e.pointerId)){
+    const prev = ptrs.get(e.pointerId);
+    ptrs.set(e.pointerId, { x:x, y:y });
+    if (ptrs.size === 1){
+      if (Math.hypot(x - prev.x, y - prev.y) > 0) { if (Math.hypot(x - prev.x, y - prev.y) > 1.5) plMoved = true; panBy(x - prev.x, y - prev.y); }
+    } else if (ptrs.size === 2 && plPinch){
+      const a = Array.from(ptrs.values());
+      const d = Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y), mx = (a[0].x + a[1].x) / 2, my = (a[0].y + a[1].y) / 2;
+      if (d > 10){ const f = plPinch.d / d; zoomAt(mx, my, f, f); }
+      panBy(mx - plPinch.mx, my - plPinch.my);
+      plPinch = { d:d, mx:mx, my:my }; plMoved = true;
+    }
+  } else if (e.pointerType === 'mouse'){
+    PL.cursor = { x:wxOf(x) }; PL.dirty = true;
+  }
+});
+const plUp = e => {
+  if (ptrs.size === 1 && !plMoved && ptrs.has(e.pointerId)){ PL.cursor = { x:wxOf(plX(e)) }; PL.dirty = true; }
+  ptrs.delete(e.pointerId);
+  if (ptrs.size < 2) plPinch = null;
+  if (ptrs.size === 0) pcv.classList.remove('drag');
+};
+pcv.addEventListener('pointerup', plUp);
+pcv.addEventListener('pointercancel', plUp);
+pcv.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && ptrs.size === 0){ PL.cursor = null; PL.dirty = true; } });
+pcv.addEventListener('wheel', e => {
+  e.preventDefault();
+  const f = Math.pow(1.0018, e.deltaY);
+  zoomAt(plX(e), plY(e), e.altKey ? 1 : f, e.shiftKey ? 1 : f);
+}, { passive:false });
+
+$('plZin').addEventListener('click', () => zoomAt(PW / 2, PH / 2, 0.8, 0.8));
+$('plZout').addEventListener('click', () => zoomAt(PW / 2, PH / 2, 1.25, 1.25));
+$('plHome').addEventListener('click', plResetView);
+
+document.querySelectorAll('[data-un]').forEach(b => b.addEventListener('click', () => {
+  PL.units = b.dataset.un;
+  document.querySelectorAll('[data-un]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  PL.dirty = true;
+}));
+document.querySelectorAll('[data-pm]').forEach(b => b.addEventListener('click', () => {
+  const k = b.dataset.pm; PL.marks[k] = !PL.marks[k];
+  b.setAttribute('aria-pressed', String(PL.marks[k])); PL.dirty = true;
+}));
+document.querySelectorAll('[data-pre]').forEach(b => b.addEventListener('click', () => {
+  const s = PRESETS[b.dataset.pre];
+  Object.assign(PL.f, s.f, { on:true }); Object.assign(PL.g, s.g, { on:true });
+  $('onF').checked = true; $('onG').checked = true;
+  PL.msg = s.msg; PL.cursor = null;
+  syncPl(); plResetView();
+}));
+$('onF').addEventListener('change', e => { PL.f.on = e.target.checked; PL.dirty = true; });
+$('onG').addEventListener('change', e => { PL.g.on = e.target.checked; PL.dirty = true; });
+
+/* ================= Graficar con tabla ================= */
+const gfmt = n => String(+n.toFixed(2)).replace('-', '−');
+const TB_X = [];
+for (let x = -60; x <= 360; x += 30) TB_X.push(x);
+const TB = { fn:'sen', unir:'suave', ref:true, vals:{}, check:null, sel:null, dirty:true, built:false };
+const TB_XMIN = -60, TB_XMAX = 390, TB_YMAX = 1.2;
+
+const gcv = $('gcv'), gg = gcv.getContext('2d');
+let GW = 0, GH = 0;
+function gResize(){
+  const dpr = window.devicePixelRatio || 1;
+  GW = gcv.clientWidth; GH = gcv.clientHeight;
+  gcv.width = Math.round(GW * dpr); gcv.height = Math.round(GH * dpr);
+  gg.setTransform(dpr, 0, 0, dpr, 0, 0);
+  TB.dirty = true;
+}
+window.addEventListener('resize', gResize);
+if (window.ResizeObserver) new ResizeObserver(gResize).observe(gcv);
+
+const tbRef = (fn, x) => fn === 'sen' ? Math.sin(x * Math.PI / 180) : Math.cos(x * Math.PI / 180);
+function tbFill(){
+  TB.vals = {};
+  TB_X.forEach(x => { let v = +tbRef(TB.fn, x).toFixed(2); if (v === 0) v = 0; TB.vals[x] = v; });
+  TB.check = null;
+}
+function tbBuild(){
+  const mk = (id, xs) => {
+    $(id).innerHTML = '<thead><tr><th>Ángulo x</th><th class="tbh">y = sen(x)</th></tr></thead><tbody>' +
+      xs.map(x => '<tr><td class="x">' + String(x).replace('-', '−') + '°</td><td data-x="' + x + '"><input type="number" step="0.01" inputmode="decimal" data-x="' + x + '" aria-label="Valor de y para x = ' + x + ' grados"></td></tr>').join('') + '</tbody>';
+  };
+  mk('tbA', TB_X.slice(0, 8)); mk('tbB', TB_X.slice(8));
+  document.querySelectorAll('.tbt input').forEach(el => {
+    const x = +el.dataset.x;
+    el.addEventListener('input', () => {
+      const n = parseFloat(el.value.replace(',', '.'));
+      TB.vals[x] = isFinite(n) ? n : null;
+      if (TB.check){ delete TB.check[x]; }
+      tbPaint(); TB.dirty = true;
+    });
+    el.addEventListener('focus', () => { TB.sel = x; TB.dirty = true; });
+    el.addEventListener('blur', () => { TB.sel = null; TB.dirty = true; });
+  });
+  TB.built = true;
+}
+function tbSyncInputs(){
+  document.querySelectorAll('.tbt input').forEach(el => {
+    const v = TB.vals[+el.dataset.x];
+    el.value = (v === null || v === undefined) ? '' : String(v);
+  });
+  document.querySelectorAll('.tbh').forEach(t => { t.textContent = 'y = ' + (TB.fn === 'sen' ? 'sen' : 'cos') + '(x)'; });
+}
+function tbPaint(){
+  let fuera = 0;
+  document.querySelectorAll('.tbt td[data-x]').forEach(td => {
+    const x = +td.dataset.x, v = TB.vals[x];
+    let c = '';
+    if (TB.check && TB.check[x]) c = TB.check[x];
+    else if (v !== null && v !== undefined && Math.abs(v) > 1) c = 'fuera';
+    if (v !== null && v !== undefined && Math.abs(v) > 1) fuera++;
+    td.className = c;
+  });
+  $('tbAviso').textContent = fuera ? 'Hay valores fuera de la escala (de −1 a 1). Su punto se dibuja en el borde de la gráfica.' : '';
+  if (!TB.check) $('tbResumen').textContent = '';
+}
+function renderTabla(){
+  if (!TB.built){ tbFill(); tbBuild(); }
+  tbSyncInputs(); tbPaint(); gResize();
+}
+
+function drawTabla(){
+  if (!GW) gResize();
+  if (!GW) return;
+  const c = gg, ink = '#101012';
+  const pl = 38, pr = 14, pt = 12;
+  const pw = GW - pl - pr;
+  const escalonar = (pw / (TB_XMAX - TB_XMIN)) * 30 < 34;      // pantalla angosta: los números del eje x van en dos filas
+  const pb = escalonar ? 48 : 34;
+  const ph = GH - pt - pb, cy = pt + ph / 2;
+  const X = x => pl + (x - TB_XMIN) / (TB_XMAX - TB_XMIN) * pw;
+  const Y = y => cy - (y / TB_YMAX) * (ph / 2);
+  const color = TB.fn === 'sen' ? '#C79A3E' : '#2E8B57';
+
+  c.fillStyle = '#fff'; c.fillRect(0, 0, GW, GH);
+
+  /* cuadrícula: x cada 30°, y cada 0.5 */
+  c.lineWidth = 1;
+  for (let x = TB_XMIN; x <= TB_XMAX; x += 30){
+    const px = Math.round(X(x)) + 0.5;
+    c.strokeStyle = (x % 90 === 0) ? 'rgba(16,16,18,.2)' : 'rgba(16,16,18,.08)';
+    c.beginPath(); c.moveTo(px, pt); c.lineTo(px, pt + ph); c.stroke();
+  }
+  [-1, -0.5, 0.5, 1].forEach(v => {
+    const py = Math.round(Y(v)) + 0.5;
+    c.strokeStyle = Math.abs(v) === 1 ? 'rgba(16,16,18,.2)' : 'rgba(16,16,18,.08)';
+    c.beginPath(); c.moveTo(pl, py); c.lineTo(pl + pw, py); c.stroke();
+  });
+
+  /* números de los cuadrantes */
+  const ox = X(0), oy = Y(0);
+  c.font = '700 16px "Instrument Sans", system-ui, sans-serif'; c.fillStyle = 'rgba(27,68,232,.20)';
+  c.textAlign = 'center'; c.textBaseline = 'middle';
+  c.fillText('I',   pl + pw - 16, pt + 16);
+  c.fillText('II',  ox - 16,      pt + 16);
+  c.fillText('III', ox - 18,      pt + ph - 16);
+  c.fillText('IV',  pl + pw - 18, pt + ph - 16);
+
+  /* ejes con flecha */
+  c.strokeStyle = ink; c.fillStyle = ink; c.lineWidth = 1.8;
+  c.beginPath(); c.moveTo(pl, oy); c.lineTo(pl + pw - 2, oy); c.stroke();
+  c.beginPath(); c.moveTo(ox, pt + ph); c.lineTo(ox, pt + 2); c.stroke();
+  c.beginPath(); c.moveTo(pl + pw + 6, oy); c.lineTo(pl + pw - 4, oy - 4); c.lineTo(pl + pw - 4, oy + 4); c.closePath(); c.fill();
+  c.beginPath(); c.moveTo(ox, pt - 4); c.lineTo(ox - 4, pt + 6); c.lineTo(ox + 4, pt + 6); c.closePath(); c.fill();
+
+  /* números del eje x (cada 30°) y del eje y (−1, −0.5, 0, 0.5, 1) */
+  const sep = X(30) - X(0);
+  c.font = (sep >= 40 ? '11.5px' : '10px') + ' "Instrument Sans", system-ui, sans-serif';
+  c.fillStyle = ink; c.textAlign = 'center'; c.textBaseline = 'top';
+  for (let x = TB_XMIN, k = 0; x <= TB_XMAX; x += 30, k++){
+    if (x === 0) continue;
+    const t = String(x).replace('-', '−') + (sep >= 40 ? '°' : '');
+    c.fillText(t, X(x), pt + ph + 5 + (escalonar && k % 2 ? 13 : 0));
+  }
+  c.textAlign = 'right'; c.textBaseline = 'middle'; c.font = '11.5px "Instrument Sans", system-ui, sans-serif';
+  [-1, -0.5, 0, 0.5, 1].forEach(v => c.fillText(String(v).replace('-', '−'), pl - 6, Y(v)));
+  c.textAlign = 'right'; c.textBaseline = 'alphabetic'; c.font = '600 11.5px "Instrument Sans", system-ui, sans-serif';
+  c.fillText('x (grados)', pl + pw, GH - 4);
+  c.save(); c.translate(11, cy); c.rotate(-Math.PI / 2); c.textAlign = 'center'; c.textBaseline = 'middle';
+  c.fillText('y', 0, 0); c.restore();
+
+  const recorte = () => { c.beginPath(); c.rect(pl - 1, pt - 1, pw + 2, ph + 2); c.clip(); };
+
+  /* curva correcta como guía */
+  if (TB.ref){
+    c.save(); recorte();
+    c.strokeStyle = 'rgba(16,16,18,.35)'; c.lineWidth = 2; c.setLineDash([6, 5]); c.beginPath();
+    const n = Math.ceil(pw);
+    for (let i = 0; i <= n; i++){
+      const x = TB_XMIN + (TB_XMAX - TB_XMIN) * i / n, y = Y(tbRef(TB.fn, x));
+      if (i === 0) c.moveTo(pl + i, y); else c.lineTo(pl + i, y);
+    }
+    c.stroke(); c.restore();
+  }
+
+  /* puntos de la tabla */
+  const pts = [];
+  TB_X.forEach((x, i) => {
+    const v = TB.vals[x];
+    if (v !== null && v !== undefined && isFinite(v)) pts.push({ i:i, x:x, y:v });
+  });
+
+  /* unir: tramos de puntos consecutivos */
+  if (TB.unir !== 'no'){
+    const tramos = []; let cur = [];
+    pts.forEach(p => {
+      if (cur.length && p.i !== cur[cur.length - 1].i + 1){ tramos.push(cur); cur = []; }
+      cur.push(p);
+    });
+    if (cur.length) tramos.push(cur);
+    c.save(); recorte();
+    c.strokeStyle = color; c.lineWidth = 3.2; c.lineJoin = 'round'; c.lineCap = 'round';
+    tramos.forEach(tr => {
+      if (tr.length < 2) return;
+      c.beginPath(); c.moveTo(X(tr[0].x), Y(tr[0].y));
+      if (TB.unir === 'rectas' || tr.length === 2){
+        tr.slice(1).forEach(p => c.lineTo(X(p.x), Y(p.y)));
+      } else {
+        const n = tr.length, h30 = 30, m = [];
+        for (let k = 0; k < n; k++){
+          if (k === 0) m.push(n >= 3 ? (-3 * tr[0].y + 4 * tr[1].y - tr[2].y) / (2 * h30) : (tr[1].y - tr[0].y) / h30);
+          else if (k === n - 1) m.push(n >= 3 ? (3 * tr[n - 1].y - 4 * tr[n - 2].y + tr[n - 3].y) / (2 * h30) : (tr[n - 1].y - tr[n - 2].y) / h30);
+          else m.push((tr[k + 1].y - tr[k - 1].y) / (2 * h30));
+        }
+        for (let k = 0; k < n - 1; k++){
+          const y0 = tr[k].y, y1 = tr[k + 1].y, m0 = m[k], m1 = m[k + 1];
+          for (let s = 1; s <= 24; s++){
+            const t = s / 24, t2 = t * t, t3 = t2 * t;
+            const yy = (2 * t3 - 3 * t2 + 1) * y0 + (t3 - 2 * t2 + t) * h30 * m0 + (-2 * t3 + 3 * t2) * y1 + (t3 - t2) * h30 * m1;
+            c.lineTo(X(tr[k].x + h30 * t), Y(yy));
+          }
+        }
+      }
+      c.stroke();
+    });
+    c.restore();
+  }
+
+  /* marcador de la casilla seleccionada */
+  if (TB.sel !== null){
+    const px = X(TB.sel);
+    c.save(); c.strokeStyle = 'rgba(16,16,18,.45)'; c.lineWidth = 1.5; c.setLineDash([4, 4]);
+    c.beginPath(); c.moveTo(px, pt); c.lineTo(px, pt + ph); c.stroke(); c.restore();
+  }
+
+  /* puntos */
+  const limite = v => Math.max(-TB_YMAX + 0.05, Math.min(TB_YMAX - 0.05, v));
+  pts.forEach(p => {
+    const px = X(p.x), py = Y(limite(p.y)), fuera = Math.abs(p.y) > 1;
+    c.beginPath(); c.arc(px, py, 5.5, 0, 7);
+    c.fillStyle = fuera ? '#E2574C' : '#1B44E8'; c.fill();
+    c.lineWidth = 2; c.strokeStyle = '#fff'; c.stroke();
+    if (TB.sel === p.x){
+      c.beginPath(); c.arc(px, py, 11, 0, 7); c.strokeStyle = fuera ? '#E2574C' : '#1B44E8'; c.lineWidth = 2; c.stroke();
+      const t = '(' + String(p.x).replace('-', '−') + '°, ' + gfmt(p.y) + ')';
+      c.font = '700 12px "Instrument Sans", system-ui, sans-serif'; c.textAlign = px > GW * 0.7 ? 'right' : 'left'; c.textBaseline = 'bottom';
+      const tx = px + (px > GW * 0.7 ? -14 : 14), ty = py - 8 < pt + 14 ? py + 26 : py - 8;
+      c.lineWidth = 3; c.strokeStyle = '#fff'; c.strokeText(t, tx, ty); c.fillStyle = '#101012'; c.fillText(t, tx, ty);
+    }
+  });
+}
+
+document.querySelectorAll('[data-tbfn]').forEach(b => b.addEventListener('click', () => {
+  TB.fn = b.dataset.tbfn;
+  document.querySelectorAll('[data-tbfn]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  tbFill(); tbSyncInputs(); tbPaint(); TB.dirty = true;
+}));
+document.querySelectorAll('[data-tbu]').forEach(b => b.addEventListener('click', () => {
+  TB.unir = b.dataset.tbu;
+  document.querySelectorAll('[data-tbu]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  TB.dirty = true;
+}));
+$('tbRef').addEventListener('change', e => { TB.ref = e.target.checked; TB.dirty = true; });
+$('tbReset').addEventListener('click', () => { tbFill(); tbSyncInputs(); tbPaint(); TB.dirty = true; });
+$('tbClear').addEventListener('click', () => {
+  TB.vals = {}; TB_X.forEach(x => { TB.vals[x] = null; }); TB.check = null;
+  tbSyncInputs(); tbPaint(); TB.dirty = true;
+});
+$('tbCheck').addEventListener('click', () => {
+  TB.check = {}; let ok = 0;
+  TB_X.forEach(x => {
+    const v = TB.vals[x];
+    if (v === null || v === undefined || !isFinite(v)) TB.check[x] = 'vacio';
+    else if (Math.abs(v - tbRef(TB.fn, x)) <= 0.011){ TB.check[x] = 'ok'; ok++; }
+    else TB.check[x] = 'mal';
+  });
+  tbPaint();
+  const r = $('tbResumen');
+  r.textContent = ok === TB_X.length
+    ? 'Todo correcto: ' + ok + ' de ' + TB_X.length + '.'
+    : 'Correctos: ' + ok + ' de ' + TB_X.length + '. Verde está bien, rojo está mal y gris está vacío.';
+  r.classList.toggle('ok', ok === TB_X.length);
+});
+
+/* ================= Eventos ================= */
+$('btnPlay').addEventListener('click', () => { S.playing ? stopTone() : startTone(); });
+
+$('sA').addEventListener('input', e => { S.A = +e.target.value; $('oA').textContent = S.A.toFixed(2); applyTone(); });
+$('sF').addEventListener('input', e => { S.f = +e.target.value; $('oF').textContent = S.f + ' Hz'; applyTone(); });
+
+document.querySelectorAll('[data-df]').forEach(b => b.addEventListener('click', () => {
+  S.f = Math.min(F_MAX, Math.max(F_MIN, S.f + (+b.dataset.df)));
+  syncControls(); applyTone();
+}));
+
+document.querySelectorAll('.chips [data-f]').forEach(b => b.addEventListener('click', () => {
+  S.f = +b.dataset.f;
+  if (b.dataset.win){ S.win = +b.dataset.win; syncWinButtons(); }
+  syncControls(); applyTone();
+}));
+
+document.querySelectorAll('.scope-foot [data-win]').forEach(b => b.addEventListener('click', () => {
+  S.win = +b.dataset.win; syncWinButtons();
+}));
+
+$('btnRef').addEventListener('click', () => {
+  S.ref = S.ref ? null : { A:S.A, f:S.f };
+  syncRefBtn();
+});
+
+$('chkMarks').addEventListener('change', e => { S.marks = e.target.checked; });
+
+document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+
+$('btnMic').addEventListener('click', () => { micRunning ? stopMic() : startMic(); });
+$('btnFreeze').addEventListener('click', () => {
+  if (!micRunning) return;
+  micFrozen = !micFrozen;
+  $('btnFreeze').setAttribute('aria-pressed', String(micFrozen));
+  $('btnFreeze').textContent = micFrozen ? 'Seguir escuchando' : 'Congelar';
+  $('micState').textContent = micFrozen ? 'Congelado: mide A y T sobre la cuadrícula.' : 'Escuchando…';
+});
+$('gainSeg').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+  micGain = +b.dataset.g;
+  $('oGain').textContent = '×' + micGain;
+  $('gainSeg').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+}));
+
+$('btnListen').addEventListener('click', playTarget);
+$('btnHint').addEventListener('click', () => {
+  const h = $('hintBox');
+  h.textContent = RETOS[S.retoIdx].pista;
+  h.classList.toggle('hidden');
+});
+$('btnReveal').addEventListener('click', () => {
+  const t = RETOS[S.retoIdx].target, r = $('revealBox');
+  r.textContent = 'Respuesta: A = ' + t.A.toFixed(2) + ', f = ' + t.f + ' Hz, T = ' + (1000 / t.f).toFixed(2) + ' ms.';
+  r.classList.toggle('hidden');
+});
+$('btnPrev').addEventListener('click', () => loadReto(S.retoIdx - 1));
+$('btnNext').addEventListener('click', () => loadReto(S.retoIdx + 1));
+
+function syncHl(){
+  document.querySelectorAll('[data-hl]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.hl === S.hl)));
+  $('hlText').textContent = HL_INFO[S.hl || 'none'];
+}
+document.querySelectorAll('[data-hl]').forEach(b => b.addEventListener('click', () => {
+  S.hl = (S.hl === b.dataset.hl) ? null : b.dataset.hl;
+  syncHl();
+  const r = $('scopeCard').getBoundingClientRect();
+  if (r.top < 0) $('scopeCard').scrollIntoView({ behavior:'smooth', block:'start' });
+}));
+
+document.addEventListener('visibilitychange', () => { if (document.hidden) stopTone(); });
+
+/* ================= Arranque ================= */
+syncControls(); syncWinButtons(); syncPlayBtn(); updateLegend(); syncHl();
+(function loop(){
+  if (S.mode === 'graf'){ if (TB.dirty){ TB.dirty = false; drawTabla(); } }
+  else if (S.mode === 'plano'){ if (PL.dirty){ PL.dirty = false; drawPlano(); } }
+  else draw();
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
