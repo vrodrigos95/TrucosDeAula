@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Desbloquea la clave · TrucosDeAula</title>
+<meta name="description" content="Resuelve un reto de cada tema del cuadernillo de repaso para desbloquear la clave de respuestas.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Mismo sistema visual que trucosdeaula.com: papel #FAF9F6, tinta #101012, azul #1B44E8, oro #C79A3E. */
+:root{
+  --bg:#FAF9F6; --surface:#FFFFFF; --ink:#101012; --muted:rgba(16,16,18,.62); --line:rgba(16,16,18,.16);
+  --accent:#1B44E8; --gold:#C79A3E; --good:#2E8B57; --bad:#E2574C;
+  --c1:#1B44E8; --c2:#C79A3E; --c3:#2E8B57;
+  --fill1:#DCE6F5; --fill2:#EFE6D9; --fill3:#DCE9E2;
+  --display:"Bricolage Grotesque",Helvetica,Arial,sans-serif;
+  --body:"Instrument Sans",Helvetica,Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--accent);text-decoration:none}
+a:hover{color:var(--gold)}
+::selection{background:var(--gold);color:var(--ink)}
+.top{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px clamp(16px,4vw,56px);background:rgba(250,249,246,.86);backdrop-filter:blur(14px);border-bottom:1px solid rgba(16,16,18,.09)}
+.brand{display:flex;align-items:center;gap:10px;color:var(--ink);font:700 19px/1 var(--display);letter-spacing:-.02em}
+.brand:hover{color:var(--ink)}
+.brand i{display:block;width:22px;height:22px;border-radius:999px;background:var(--accent)}
+.back{font-size:14px;color:var(--ink)}
+main{max-width:980px;margin:0 auto;padding:clamp(40px,7vw,96px) 16px 72px;display:flex;flex-direction:column;gap:clamp(20px,3vw,32px)}
+h1,h2,h3{font-family:var(--display);font-weight:500;text-wrap:balance;margin:0;line-height:1.02;letter-spacing:-.03em}
+h1{font-size:clamp(36px,7vw,80px);letter-spacing:-.035em}
+h1 span,h2 span{color:var(--gold)}
+h2{font-size:clamp(24px,3.6vw,38px)}
+h3{font-size:20px;letter-spacing:-.02em}
+p{margin:0}
+.lead{color:var(--muted);max-width:52ch;font-size:clamp(16px,1.35vw,19px)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:clamp(20px,3vw,32px);display:flex;flex-direction:column;gap:18px}
+.tag{font:500 11px/1.3 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.row{display:flex;gap:20px;flex-wrap:wrap}
+.row>*{flex:1 1 280px;min-width:0}
+svg{width:100%;height:auto;display:block;background:var(--bg);border:1px solid var(--line);border-radius:6px;touch-action:none;background-image:repeating-linear-gradient(135deg,rgba(16,16,18,.035) 0 1px,transparent 1px 9px)}
+.rule{border-left:3px solid var(--gold);padding:4px 0 4px 16px;display:flex;flex-direction:column;gap:6px}
+.rule p{color:var(--muted);font-size:15px}
+.big{font:500 clamp(20px,2.4vw,26px)/1.2 var(--display);letter-spacing:-.02em;color:var(--ink)}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:14px;background:var(--bg)}
+.pill b{color:var(--accent);font-weight:600}
+.ok{color:var(--good);font-weight:700}
+.no{color:var(--bad);font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.stat{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+.stat small{display:block;font:500 10px/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.stat strong{font:500 24px/1.2 var(--display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+label{font-weight:600;font-size:15px}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.slider{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
+.slider output{font:500 15px var(--mono);min-width:3ch;text-align:right;font-variant-numeric:tabular-nums}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+button,input[type=number]{font:600 14px var(--body);color:var(--ink)}
+.seg button{background:transparent;border:1px solid rgba(16,16,18,.22);border-radius:999px;padding:9px 16px;cursor:pointer;transition:background .25s ease,color .25s ease,border-color .25s ease}
+.seg button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.calc{display:grid;grid-template-columns:1fr;gap:10px}
+.calc .line{display:grid;grid-template-columns:minmax(0,1fr) 120px;gap:12px;align-items:center}
+.calc input{width:100%;padding:10px 14px;border:1px solid rgba(16,16,18,.22);border-radius:999px;background:var(--surface);font-family:var(--mono);font-weight:500;outline:none}
+.calc input:focus{border-color:var(--accent)}
+.res{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:12px 14px;min-height:3.2em;font-size:15px}
+.errs{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;color:var(--muted)}
+.trap{background:var(--bg);border:1px dashed rgba(16,16,18,.3);border-radius:6px;padding:14px 16px;font-size:15px}
+.trap b{color:var(--gold)}
+text{font-family:var(--body);font-weight:600;fill:var(--ink)}
+.vt{cursor:grab}
+.vt:active{cursor:grabbing}
+footer{padding:28px clamp(16px,4vw,56px);background:var(--ink);color:rgba(250,249,246,.7);display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center}
+footer b{font:500 24px var(--display);color:var(--bg);letter-spacing:-.03em}
+footer a{color:rgba(250,249,246,.7);font-size:14px}
+@media (max-width:420px){.calc .line{grid-template-columns:1fr}}
+</style>
+<style>
+[hidden]{display:none!important}
+.que{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 20px;display:grid;gap:6px;max-width:62ch}
+.que p{font-size:15px;color:var(--muted)}
+.que b{color:var(--ink)}
+.reglas{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;color:var(--muted)}
+.reglas b{color:var(--ink)}
+canvas.enun{display:block;width:100%;background:var(--bg);border:1px solid var(--line);border-radius:6px;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.campos{display:grid;gap:10px}
+.campo{display:grid;grid-template-columns:minmax(0,1fr) 150px;gap:12px;align-items:center}
+.campo span{font-size:15px;font-weight:600}
+.campo input,.campo select{width:100%;padding:10px 14px;border:1px solid rgba(16,16,18,.22);border-radius:999px;background:var(--surface);font:500 15px var(--mono);color:var(--ink);outline:none}
+.campo select{font-family:var(--body);font-weight:600}
+.campo input:focus,.campo select:focus{border-color:var(--accent)}
+.estado{font:500 12px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.card.bien{border-color:var(--good)}
+.card.mal{border-color:var(--bad)}
+.barra{position:sticky;bottom:0;z-index:30;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:14px clamp(16px,3vw,24px);background:rgba(250,249,246,.94);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:14px}
+.btn{cursor:pointer;border:0;padding:13px 24px;border-radius:999px;background:var(--ink);color:var(--bg);font:600 15px var(--body)}
+.btn:disabled{opacity:.45;cursor:wait}
+.btn.azul{background:var(--accent);color:#fff;display:inline-block}
+.btn.azul:hover{color:#fff;background:#1536b8}
+#msg{margin:0;font-size:15px;max-width:52ch}
+.listo{border:1px solid var(--good);background:#EAF4EE}
+@media (max-width:480px){.campo{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/"><i></i>TrucosDeAula</a>
+  <a class="back" href="/infografias/">← Infografías y material</a>
+</header>
+<main>
+  <div style="display:flex;flex-direction:column;gap:14px">
+    <span class="tag">Clave de respuestas · Cuadernillo de repaso</span>
+    <h1>Desbloquea la clave<span>.</span></h1>
+    <div class="que">
+      <p><b>Qué es:</b> ocho retos, uno por tema del cuadernillo de repaso, con números distintos para cada quien.</p>
+      <p><b>Para qué sirve:</b> para comprobar que ya dominas los temas; si resuelves los ocho, se abre la clave de respuestas del cuadernillo.</p>
+    </div>
+  </div>
+
+  <section class="card" aria-labelledby="reglas">
+    <h2 id="reglas" style="font-size:22px">Cómo funciona</h2>
+    <ul class="reglas">
+      <li><b>Los números son tuyos.</b> Cada persona recibe retos distintos, así que no sirve copiar las respuestas de alguien más.</li>
+      <li><b>Se pide el procedimiento.</b> Además del resultado, escribes los pasos intermedios. Resuélvelos en tu cuaderno.</li>
+      <li><b>Tienes 3 intentos.</b> Si se acaban, los números cambian y empiezas de nuevo.</li>
+      <li><b>Sin atajos.</b> El texto de los retos no se puede copiar ni pegar, y no se aceptan respuestas enviadas en menos de 2 minutos.</li>
+    </ul>
+  </section>
+
+  <section class="card listo" id="listo" hidden>
+    <span class="tag" style="color:var(--good)">Lo lograste</span>
+    <h2>Ya puedes ver la clave<span>.</span></h2>
+    <p>La liga funciona durante 2 horas en este navegador.</p>
+    <p><a class="btn azul" href="/api/clave.php?accion=pdf" target="_blank" rel="noopener">Abrir la clave (PDF)</a></p>
+  </section>
+
+  <div id="retos" style="display:flex;flex-direction:column;gap:clamp(20px,3vw,32px)"></div>
+
+  <div class="barra" id="barra" hidden>
+    <p id="msg" aria-live="polite"></p>
+    <button class="btn" id="revisar" type="button">Revisar mis respuestas</button>
+  </div>
+  <p id="error" class="no" hidden></p>
+</main>
+<footer>
+  <b>TrucosDeAula</b>
+  <span style="display:flex;flex-wrap:wrap;gap:22px"><a href="/infografias/">Infografías y material</a><a href="/juegos/">Juegos</a><a href="/tips/">Tips</a><a href="/maestros/">Para maestros</a></span>
+</footer>
+
+<script>
+(function(){
+  var API='/api/clave.php', retos=[], ocupado=false;
+  var $=function(id){return document.getElementById(id)};
+  var css=getComputedStyle(document.documentElement);
+  var tinta=css.getPropertyValue('--ink').trim()||'#101012';
+  var CUERPO='"Instrument Sans",Helvetica,Arial,sans-serif';
+
+  function pedir(datos){
+    return fetch(API,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(datos)})
+      .then(function(r){if(!r.ok)throw new Error('http '+r.status);return r.json()});
+  }
+
+  /* El enunciado se dibuja en un canvas: no se puede seleccionar, copiar ni pegar en otro lado. */
+  function partir(ctx,txt,ancho){
+    var palabras=txt.split(' '),lineas=[],l='';
+    palabras.forEach(function(p){var prueba=l?l+' '+p:p;if(ctx.measureText(prueba).width>ancho&&l){lineas.push(l);l=p}else l=prueba});
+    if(l)lineas.push(l);return lineas;
+  }
+  function dibujar(canvas,enunciado){
+    var W=canvas.clientWidth||600,pad=16,dpr=window.devicePixelRatio||1,ctx=canvas.getContext('2d');
+    var plan=[],y=pad,ancho=W-2*pad;
+    ctx.font='400 16px '+CUERPO;
+    enunciado.forEach(function(e){
+      if(e.t!=null){partir(ctx,e.t,ancho).forEach(function(l){plan.push({k:'t',txt:l,y:y+17});y+=25});y+=4}
+      else if(e.big!=null){plan.push({k:'big',txt:e.big,y:y+26});y+=40}
+      else if(e.sys){plan.push({k:'sys',l:e.sys,y:y});y+=64}
+      else if(e.frac){plan.push({k:'frac',f:e.frac,y:y});y+=58}
+      else if(e.raiz){plan.push({k:'raiz',f:e.raiz,y:y});y+=62}
+    });
+    var H=y+pad-4;
+    canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);canvas.style.height=H+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);
+    ctx.fillStyle=tinta;ctx.strokeStyle=tinta;ctx.textBaseline='alphabetic';
+    plan.forEach(function(p){
+      if(p.k==='t'){ctx.font='400 16px '+CUERPO;ctx.fillText(p.txt,pad,p.y)}
+      if(p.k==='big'){ctx.font='600 22px '+CUERPO;ctx.fillText(p.txt,pad+4,p.y)}
+      if(p.k==='sys'){
+        ctx.font='600 19px '+CUERPO;ctx.lineWidth=2;
+        ctx.beginPath();ctx.moveTo(pad+6,p.y+6);ctx.lineTo(pad+6,p.y+58);ctx.stroke();
+        ctx.fillText(p.l[0],pad+18,p.y+26);ctx.fillText(p.l[1],pad+18,p.y+52);
+      }
+      if(p.k==='frac'||p.k==='raiz'){
+        var f=p.f,x=pad+4,mid=p.y+30;ctx.font='600 19px '+CUERPO;
+        ctx.fillText(f.pre,x,mid+6);x+=ctx.measureText(f.pre).width+4;
+        var x0=x;
+        if(p.k==='raiz'){x+=20}
+        var wn=ctx.measureText(f.num).width,wd=ctx.measureText(f.den).width,w=Math.max(wn,wd)+12;
+        ctx.fillText(f.num,x+(w-wn)/2,mid-6);ctx.fillText(f.den,x+(w-wd)/2,mid+22);
+        ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(x,mid);ctx.lineTo(x+w,mid);ctx.stroke();
+        if(p.k==='raiz'){
+          ctx.beginPath();ctx.moveTo(x0,mid+2);ctx.lineTo(x0+5,mid-1);ctx.lineTo(x0+11,mid+26);ctx.lineTo(x0+17,mid-27);ctx.lineTo(x+w+2,mid-27);ctx.stroke();
+        }
+        if(f.post)ctx.fillText(f.post,x+w+6,mid+6);
+      }
+    });
+  }
+
+  function pintar(){
+    var cont=$('retos');cont.innerHTML='';
+    retos.forEach(function(r,i){
+      var card=document.createElement('section');card.className='card';card.id='reto'+i;
+      var cab=document.createElement('div');cab.style.cssText='display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap';
+      cab.innerHTML='<span class="tag">Reto '+(i+1)+' de '+retos.length+'</span><span class="estado" id="est'+i+'"></span>';
+      var h=document.createElement('h2');h.style.fontSize='24px';h.textContent=r.tema;
+      var cv=document.createElement('canvas');cv.className='enun';cv.setAttribute('role','img');cv.setAttribute('aria-label','Enunciado del reto '+(i+1)+': '+r.tema);
+      cv.addEventListener('contextmenu',function(e){e.preventDefault()});
+      var campos=document.createElement('div');campos.className='campos';
+      r.campos.forEach(function(c){
+        var lab=document.createElement('label');lab.className='campo';
+        var s=document.createElement('span');s.textContent=c.etiqueta;lab.appendChild(s);
+        var el;
+        if(c.opciones){
+          el=document.createElement('select');
+          el.innerHTML='<option value="">Elige…</option>'+c.opciones.map(function(o){return '<option value="'+o[0]+'">'+o[1]+'</option>'}).join('');
+        }else{
+          el=document.createElement('input');el.type='text';el.inputMode='decimal';el.autocomplete='off';el.spellcheck=false;
+          el.addEventListener('paste',function(e){e.preventDefault()});el.addEventListener('drop',function(e){e.preventDefault()});
+        }
+        el.dataset.reto=i;el.dataset.campo=c.id;lab.appendChild(el);campos.appendChild(lab);
+      });
+      card.appendChild(cab);card.appendChild(h);card.appendChild(cv);card.appendChild(campos);cont.appendChild(card);
+      dibujar(cv,r.enunciado);
+    });
+    $('barra').hidden=false;
+  }
+  function redibujar(){retos.forEach(function(r,i){var cv=document.querySelector('#reto'+i+' canvas');if(cv)dibujar(cv,r.enunciado)})}
+  var t;window.addEventListener('resize',function(){clearTimeout(t);t=setTimeout(redibujar,150)});
+
+  function msg(txt){$('msg').textContent=txt}
+  function intentos(n){return n===1?'Te queda 1 intento.':'Te quedan '+n+' intentos.'}
+  function desbloquear(){$('listo').hidden=false;$('retos').innerHTML='';$('barra').hidden=true;$('listo').scrollIntoView({behavior:'smooth',block:'start'})}
+
+  function cargar(){
+    pedir({accion:'retos'}).then(function(d){
+      if(d.desbloqueado){desbloquear();return}
+      retos=d.retos;pintar();msg(intentos(d.intentosRestantes));
+    }).catch(function(){$('error').hidden=false;$('error').textContent='No pude cargar los retos. Revisa tu conexión y recarga la página.'});
+  }
+
+  $('revisar').addEventListener('click',function(){
+    if(ocupado)return;
+    var resp={};
+    document.querySelectorAll('[data-reto]').forEach(function(el){var i=el.dataset.reto;(resp[i]=resp[i]||{})[el.dataset.campo]=el.value});
+    var vacios=Array.prototype.filter.call(document.querySelectorAll('[data-reto]'),function(el){return !el.value.trim()});
+    if(vacios.length){msg('Te faltan '+vacios.length+(vacios.length===1?' campo':' campos')+' por llenar. No se gastó ningún intento.');vacios[0].focus();return}
+    ocupado=true;$('revisar').disabled=true;
+    pedir({accion:'revisar',respuestas:resp}).then(function(d){
+      if(d.ok){desbloquear();return}
+      if(d.motivo==='muy_rapido'){msg('Muy rápido. Resuélvelos con calma en tu cuaderno; podrás revisar en '+Math.ceil(d.espera/60)+' min.');return}
+      if(d.motivo==='sin_retos'||d.motivo==='cambiaron'){
+        retos=d.retos;pintar();window.scrollTo({top:$('retos').offsetTop-80,behavior:'smooth'});
+        msg(d.motivo==='cambiaron'?'Se acabaron los intentos: estos son retos nuevos. '+intentos(d.intentosRestantes):'Tus retos vencieron: estos son nuevos.');
+        return;
+      }
+      var malos=0;
+      (d.resultados||[]).forEach(function(ok,i){
+        var c=$('reto'+i),e=$('est'+i);if(!c)return;
+        c.classList.toggle('bien',ok);c.classList.toggle('mal',!ok);
+        e.textContent=ok?'✓ Bien':'✗ Revisa';e.style.color=ok?'var(--good)':'var(--bad)';
+        if(!ok)malos++;
+      });
+      msg((malos===1?'1 reto tiene':malos+' retos tienen')+' algún error. '+intentos(d.intentosRestantes));
+    }).catch(function(){msg('No pude revisar. Intenta de nuevo.')}).then(function(){ocupado=false;$('revisar').disabled=false});
+  });
+
+  (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(cargar);
+})();
+</script>
+</body>
+</html>
