@@ -68,6 +68,14 @@
     { "n": "22", "title": "La propina del 15%: el 10% más su mitad", "body": "Para una cuenta de $480, el 10% es $48 (corre el punto decimal) y la mitad de eso es $24. Súmalos: $72 es el 15%. Para el 20%, solo duplica el 10%." }
   ],
   "tienda": {
+    "apertura": {
+      "activa": true,
+      "etiqueta": "Precio de apertura",
+      "hasta": "",
+      "titulo": "Precios de apertura, por tiempo limitado",
+      "texto": "Son los precios de lanzamiento de TrucosDeAula y no se van a quedar así: cuando cierre la apertura, suben. Si lo vas a usar este semestre, este es el momento más barato para entrar.",
+      "gancho": "Cuando cierre la apertura, suben."
+    },
     "productos": [
       { "id": "pupitre", "nombre": "Pupitre Pro", "precio": 249, "periodo": "semestre", "estado": "disponible", "url": "https://pupitre.rsrapps.com", "ligaCompra": "https://rodrigos5.gumroad.com/l/pupitre" },
       { "id": "calificaya", "nombre": "CalificaYa", "precio": 129, "periodo": "semestre", "estado": "disponible", "url": "", "ligaCompra": "https://rodrigos5.gumroad.com/l/calificaya" },
@@ -89,6 +97,7 @@
       }
     ],
     "preguntas": [
+      { "p": "¿Por qué dice «precio de apertura»?", "r": "Porque TrucosDeAula está arrancando y los primeros maestros entran pagando menos. Es por tiempo limitado: cuando cierre la apertura, los precios suben. Si ya sabes que lo vas a usar, conviene entrar ahora." },
       { "p": "¿Qué pasa si cancelo?", "r": "Nada se pierde de golpe: todo te sigue funcionando hasta el final del semestre que ya pagaste. En Pupitre tus grupos y listas se quedan; vuelves al plan gratis y recuperas todo al renovar." },
       { "p": "¿En cuántos dispositivos lo uso?", "r": "Hasta 3 por clave, por ejemplo tu computadora, tu celular y la del salón. Si cambias de equipo, liberas uno y activas el nuevo." },
       { "p": "¿Mis datos y los de mis alumnos se usan para algo más?", "r": "No. Solo para que uses la app. No hay publicidad ni venta de datos." },
