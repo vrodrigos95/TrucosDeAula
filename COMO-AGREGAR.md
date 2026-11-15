@@ -33,6 +33,7 @@ Sin `url` no aparece la tarjeta: sale en la línea "Próximamente: …".
 - `paquetes`: `nombre`, `sub`, `lema`, `precio`, `incluye` (lista de `id` de productos), `extras` y `ligaCompra`. El precio tachado, el ahorro y el «≈ al mes» se calculan solos con los precios de `productos`. `destacado: true` + `sello` marca el recomendado (en celular sale primero).
 - Sin `ligaCompra` el botón del paquete dice «Avísame cuando salga».
 - `preguntas`: `p` (pregunta) y `r` (respuesta) del bloque de preguntas frecuentes.
+- `apertura`: aviso de «precio de apertura por tiempo limitado» en el hero, en cada precio, en los paquetes, en las compras sueltas y en la nota de precios. `activa: false` lo quita de todos lados. `hasta` (opcional, ej. `"30 de noviembre"`) cambia «por tiempo limitado» por «hasta el 30 de noviembre». `titulo` y `texto` van en la franja sobre los paquetes; `gancho` va en el aviso del hero después de «Pases desde $X por semestre.». Al apagarlo, quita también la pregunta «¿Por qué dice precio de apertura?» y ajusta la descripción de maestros en `scripts/prerender.mjs`.
 
 Nunca dejes ligas con `PLACEHOLDER`: déjalas en `""` hasta tenerlas.
 Para revisar en tu compu antes de subir: `node scripts/prerender.mjs && npm run verificar`.
