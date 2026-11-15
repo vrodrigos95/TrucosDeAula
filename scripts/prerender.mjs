@@ -136,7 +136,7 @@ const pagina = (vista) => {
 const SECCIONES = {
   infografias: { titulo: "Infografías y material", descripcion: "Infografías de álgebra, geometría, trigonometría y probabilidad para descargar e imprimir, y material interactivo para practicar en clase." },
   proyectos: { titulo: "Proyectos", descripcion: "Apps, juegos y ebooks de TrucosDeAula para llevar las matemáticas más allá del salón." },
-  juegos: { titulo: "Juegos", descripcion: "Juegos de matemáticas para jugar en el navegador o proyectar en clase: Casa de Apuestas, Cuadra y Parejo." },
+  juegos: { titulo: "Juegos", descripcion: "Juegos de matemáticas para jugar en el navegador o proyectar en clase: Quizá, Cuadra, Parejo y Tajo." },
   maestros: { titulo: "Para maestros", descripcion: "Pupitre y CalificaYa: pasa lista, califica y cierra el semestre sin pelearte con Excel. Pases desde $149 por semestre a precio de apertura, por tiempo limitado." },
   tips: { titulo: "Tips y datos curiosos", descripcion: "Trucos y datos curiosos para usar las matemáticas en el día a día." }
 };

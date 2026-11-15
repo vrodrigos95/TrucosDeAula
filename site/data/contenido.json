@@ -28,7 +28,7 @@
     { "num": "M5", "tema": "Trigonometría", "tipo": "Interactivo", "pie": "Interactivo · con sonido, usa audífonos o bocinas", "slug": "trigonometria-osciloscopio-sonido", "title": "Osciloscopio de sonido", "que": "Un generador de tonos para escuchar una onda de seno y verla al mismo tiempo.", "sirve": "Entender amplitud, frecuencia y periodo con sonido real, y practicar las gráficas de seno y coseno.", "bg": "#DCE6F5", "url": "/material/trigonometria-osciloscopio-sonido.html", "img": "/material/miniaturas/trigonometria-osciloscopio-sonido.webp" }
   ],
   "juegos": [
-    { "sym": "∑", "chip": "#EFE6D9", "title": "Casa de Apuestas Matemática", "desc": "Repaso de probabilidad y conteo para proyectar en clase.", "etiqueta": "De pago · Gumroad", "url": "https://rodrigos5.gumroad.com/l/ccfmxp" },
+    { "sym": "∑", "chip": "#EFE6D9", "title": "Quizá", "desc": "¿Qué tan probable es? Repaso de probabilidad y conteo: resuelve el caso, gana fichas y apuéstalas contra la Banca.", "etiqueta": "Partida Corta gratis · en el navegador", "url": "https://quiza.trucosdeaula.com" },
     { "sym": "▦", "chip": "#E4DEF0", "title": "Cuadra", "desc": "Productos notables y factorización: del binomio al trinomio y de regreso, con fichas y retos por equipos.", "etiqueta": "Incluido en el Pase Maestro", "url": "https://cuadra.trucosdeaula.com" },
     { "sym": "=", "chip": "#DCE6F5", "title": "Parejo", "desc": "Ecuaciones en equilibrio: despeja con una balanza y resuelve sistemas 2×2.", "etiqueta": "Gratis · en el navegador", "url": "https://parejo.trucosdeaula.com" },
     { "sym": "◠", "chip": "#F3E1D6", "title": "Tajo", "desc": "Secciones cónicas: corta un cono con un plano y saca la ecuación de la circunferencia, la parábola, la elipse y la hipérbola paso a paso.", "etiqueta": "Cono 3D gratis · en el navegador", "url": "https://tajo.trucosdeaula.com" }
@@ -80,7 +80,7 @@
       { "id": "pupitre", "nombre": "Pupitre Pro", "precio": 249, "periodo": "semestre", "estado": "disponible", "url": "https://pupitre.rsrapps.com", "ligaCompra": "https://rodrigos5.gumroad.com/l/pupitre" },
       { "id": "calificaya", "nombre": "CalificaYa", "precio": 129, "periodo": "semestre", "estado": "disponible", "url": "", "ligaCompra": "https://rodrigos5.gumroad.com/l/calificaya" },
       { "id": "cuadra", "nombre": "Cuadra", "precio": 99, "periodo": "semestre", "estado": "disponible", "url": "https://cuadra.trucosdeaula.com", "ligaCompra": "" },
-      { "id": "casa", "nombre": "Casa de Apuestas Matemática", "precio": 99, "periodo": "pago único", "estado": "disponible", "url": "", "ligaCompra": "https://rodrigos5.gumroad.com/l/ccfmxp" }
+      { "id": "casa", "nombre": "Quizá", "precio": 99, "periodo": "pago único", "estado": "disponible", "url": "https://quiza.trucosdeaula.com", "ligaCompra": "https://rodrigos5.gumroad.com/l/ccfmxp" }
     ],
     "paquetes": [
       {
