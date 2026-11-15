@@ -34,13 +34,13 @@
     "imagen": ""
   },
   {
-    "nombre": "Casa de Apuestas Matemática",
-    "descripcion": "Juego de repaso de probabilidad y conteo para proyectar en clase.",
+    "nombre": "Quizá",
+    "descripcion": "¿Qué tan probable es? Repaso de probabilidad y conteo: resuelve cada caso en 3 pasos, gana fichas y apuéstalas contra la Banca. Partida Corta gratis.",
     "categoria": "Juegos",
     "paraQuien": "Maestros y alumnos",
     "estado": "disponible",
-    "ligaPrincipal": "https://rodrigos5.gumroad.com/l/ccfmxp",
-    "ligaCompra": "",
+    "ligaPrincipal": "https://quiza.trucosdeaula.com",
+    "ligaCompra": "https://rodrigos5.gumroad.com/l/ccfmxp",
     "precio": "",
     "imagen": ""
   },
