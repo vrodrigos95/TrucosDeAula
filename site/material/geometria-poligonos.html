@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polígonos y sus ángulos · TrucosDeAula</title>
+<meta name="description" content="Material interactivo de geometría: diagonales, ángulos internos y externos y clasificación de polígonos.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+/* Sistema TrucosDeAula: fondo crema, tinta casi negra, azul eléctrico para el énfasis, dorado para los detalles. Cabecera con logo, franja negra de operaciones, tarjetas blancas de borde fino. */
+:root{
+  --bg:#FAF9F6;
+  --panel:#FFFFFF;
+  --ink:#101012;
+  --muted:#5f5f66;
+  --line:rgba(16,16,18,.16);
+  --navy:#101012;
+  --accent:#1B44E8;
+  --gold:#C79A3E;
+  --teal:#2E8B7A;
+  --coral:#D9503A;
+  --plum:#7B4FD0;
+  --blue:#1B44E8;
+  --grey:#8a8a90;
+  --wash:#EFE6D9;
+  --sky:#DCE6F5;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"Instrument Sans",Helvetica,Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 24px;border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:9px;font-family:var(--body);font-weight:700;font-size:17px;text-decoration:none;color:var(--ink)}
+.logo i{width:15px;height:15px;border-radius:50%;background:var(--accent);display:block}
+.top small{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.wrap{max-width:1040px;margin:0 auto;padding:44px 20px 56px}
+header+*{}
+.eyebrow{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.eyebrow:before{content:"";width:26px;height:1px;background:var(--gold)}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(40px,7.4vw,92px);line-height:.98;letter-spacing:-.035em;margin:14px 0 0;text-wrap:balance}
+h1 em{color:var(--accent);font-style:italic}
+h1 .dot{color:var(--ink)}
+.lead{max-width:560px;color:var(--muted);margin:20px 0 0}
+h2{font-family:var(--display);font-weight:600;font-size:28px;letter-spacing:-.02em;line-height:1.1;margin:0 0 8px;text-wrap:balance}
+h2 .q{color:var(--gold)}
+p{margin:0 0 10px}
+.strip{background:var(--ink);color:var(--bg);overflow:hidden;white-space:nowrap;padding:12px 0}
+.strip .track{display:inline-block;animation:slide 38s linear infinite;font-family:var(--display);font-size:24px;letter-spacing:-.01em}
+.strip span{margin:0 18px}
+.strip b{color:var(--gold);font-weight:400;margin:0 6px}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion: reduce){.strip .track{animation:none}}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 22px}
+nav button,.chip,.btn{font:inherit;font-size:15px;font-weight:600;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:9px 16px;border-radius:999px;cursor:pointer}
+nav button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px}
+.stage{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:820px){.stage{grid-template-columns:1fr}}
+svg{display:block;width:100%;height:auto}
+.board{background:var(--wash);border-radius:8px;touch-action:none}
+.big{font-family:var(--display);font-weight:400;font-size:64px;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.tag{display:inline-block;font-weight:600;padding:4px 14px;border-radius:999px;color:#fff;font-size:15px}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.slider{display:flex;align-items:center;gap:12px;margin:16px 0}
+.slider label{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.slider input{flex:1;accent-color:var(--accent);min-width:0}
+.slider output{font-weight:600;min-width:58px;text-align:right;font-variant-numeric:tabular-nums}
+.note{background:var(--wash);border-radius:10px;padding:16px 20px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:6px}
+.card svg{background:var(--wash);border-radius:8px}
+.card h3{font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:-.02em;margin:6px 0 0}
+.card .life{color:var(--muted);font-size:15.5px}
+.eq{font-variant-numeric:tabular-nums;font-weight:600}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:16px}
+td,th{border-bottom:1px solid var(--line);padding:8px 8px;text-align:left}
+th{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.pill{display:inline-block;min-width:28px;text-align:center;font-weight:600;border-radius:999px;padding:1px 9px;background:var(--wash)}
+.kicker{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.q{font-family:var(--display);font-weight:400;font-size:30px;letter-spacing:-.02em;line-height:1.15;margin:8px 0 14px}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.opts button{font:inherit;font-weight:600;font-size:19px;padding:16px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+.opts button.ok{border-color:var(--teal);background:color-mix(in srgb,var(--teal) 18%,var(--panel))}
+.opts button.bad{border-color:var(--coral);background:color-mix(in srgb,var(--coral) 18%,var(--panel))}
+.hide{display:none}
+.band{background:var(--sky);border-radius:10px;padding:20px 22px;margin-top:14px}
+footer{border-top:1px solid var(--line);margin-top:36px;padding-top:18px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;color:var(--muted);font-size:15px}
+text{font-family:var(--body);font-weight:600;fill:var(--ink)}
+.axis{stroke:var(--ink);stroke-width:2.5;stroke-linecap:round}
+.thin{stroke:var(--muted);stroke-width:1.5}
+
+input[type=number]{min-width:0}
+.bar{display:flex;align-items:center;gap:10px;margin:6px 0;font-variant-numeric:tabular-nums}
+.bar .lab{width:92px;font-size:15px;color:var(--muted)}
+.bar .fill{height:26px;border-radius:6px;min-width:3px}
+.bar .val{font-weight:600;font-size:15px}
+.seg{display:flex;height:38px;border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+.seg div{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:14px;white-space:nowrap}
+.lines p{margin:0 0 6px}
+.ok-t{color:var(--teal);font-weight:600}
+.bad-t{color:var(--coral);font-weight:600}
+
+.row{align-items:center}
+.pill{line-height:1.5}
+
+</style>
+</head>
+<body>
+<div class="top"><a class="logo" href="/"><i></i>TrucosDeAula</a><a href="/infografias/" style="text-decoration:none"><small>← Infografías y material</small></a></div>
+<div class="wrap">
+<header>
+  <div class="eyebrow">Geometría · Polígonos</div>
+  <h1>Los polígonos ya los usas <em>en un panal de abejas</em><span class="dot">.</span></h1>
+  <p class="lead">Cambia el número de lados y mira diagonales, ángulos internos y externos al instante.</p>
+</header>
+</div>
+<div class="strip" aria-hidden="true"><div class="track"><span>panales</span><b>+</b><span>señales</span><b>×</b><span>balones</span><b>÷</b><span>mosaicos</span><b>√</b><span>tuercas</span><b>∑</b><span>ventanas</span><b>π</b><span>panales</span><b>+</b><span>señales</span><b>×</b><span>balones</span><b>÷</b><span>mosaicos</span><b>√</b><span>tuercas</span><b>∑</b><span>ventanas</span><b>π</b></div></div>
+<div class="wrap" style="padding-top:0">
+<nav role="tablist" aria-label="Temas">
+  <button role="tab" data-tab="explorador" aria-selected="true">1. Explorador de polígonos</button>
+  <button role="tab" data-tab="clasificacion" aria-selected="false">2. Cómo se clasifican</button>
+  <button role="tab" data-tab="reto" aria-selected="false">3. Reto rápido</button>
+  
+</nav>
+<section id="tab-explorador">
+  <div class="stage">
+    <div class="panel">
+      <svg id="svgPoly" class="board" viewBox="0 0 400 300" role="img" aria-label="Polígono regular con el número de lados que elijas"></svg>
+      <div class="slider"><label for="rngN">Lados</label><input id="rngN" type="range" min="3" max="20" step="1" value="6"><output id="outN">6</output></div>
+      <div class="row" id="modesPoly"></div>
+    </div>
+    <div class="panel">
+      <div class="big" id="namePoly" style="font-size:44px">Hexágono</div>
+      <p id="lifePoly" style="color:var(--muted);margin-top:10px"></p>
+      <table>
+        <tr><th>Lados y vértices</th><td class="eq" id="vN"></td></tr>
+        <tr><th>Diagonales</th><td class="eq" id="vDiag"></td></tr>
+        <tr><th>Suma de ángulos internos</th><td class="eq" id="vSum"></td></tr>
+        <tr><th>Cada ángulo interno</th><td class="eq" id="vInt"></td></tr>
+        <tr><th>Cada ángulo externo</th><td class="eq" id="vExt"></td></tr>
+      </table>
+      <p style="color:var(--muted);font-size:15px;margin-top:10px">Los ángulos externos de cualquier polígono convexo siempre suman 360°.</p>
+    </div>
+  </div>
+</section>
+
+<section id="tab-clasificacion" class="hide">
+  <div class="cards">
+    <div class="card"><svg id="ps1" viewBox="0 0 200 120" aria-hidden="true"></svg><h3>Regular</h3><div>Todos sus lados y todos sus ángulos son iguales.</div><div class="life">Una tuerca, el panal de las abejas.</div></div>
+    <div class="card"><svg id="ps2" viewBox="0 0 200 120" aria-hidden="true"></svg><h3>Irregular</h3><div>Sus lados o sus ángulos no son todos iguales.</div><div class="life">Un terreno, la silueta de un lote.</div></div>
+    <div class="card"><svg id="ps3" viewBox="0 0 200 120" aria-hidden="true"></svg><h3>Convexo</h3><div>Todos sus ángulos internos son menores de 180°. Cualquier diagonal queda adentro.</div><div class="life">Un cuaderno, una pantalla.</div></div>
+    <div class="card"><svg id="ps4" viewBox="0 0 200 120" aria-hidden="true"></svg><h3>Cóncavo</h3><div>Tiene al menos un ángulo interno mayor de 180°, como una “mordida” hacia adentro.</div><div class="life">La punta de una flecha, una estrella.</div></div>
+  </div>
+  <div class="panel" style="margin-top:14px;overflow-x:auto">
+    <h2>Se nombran por su número de lados</h2>
+    <table id="tblNames"></table>
+  </div>
+</section>
+
+<section id="tab-reto" class="hide">
+  <div class="stage">
+    <div class="panel">
+      <div class="kicker" id="retoInfo">Pregunta 1</div>
+      <div class="q" id="retoQ"></div>
+      <svg id="svgReto" class="board" viewBox="0 0 360 240" role="img" aria-label="Figura de la pregunta"></svg>
+    </div>
+    <div class="panel">
+      <div id="retoOpts"></div>
+      <p id="retoMsg" style="margin-top:14px;min-height:50px"></p>
+      <div class="row"><button class="btn" id="retoNext">Siguiente</button><span class="pill" id="retoScore">0 de 0</span></div>
+    </div>
+  </div>
+</section>
+
+<footer><span class="logo"><i></i>TrucosDeAula</span><span>Divulgación matemática, sin bata de laboratorio.</span></footer>
+</div>
+<script>
+(function(){
+var $ = function(s){return document.querySelector(s);};
+var rad = function(d){return d*Math.PI/180;};
+function pt(cx,cy,r,deg){return [cx+r*Math.cos(rad(deg)), cy-r*Math.sin(rad(deg))];}
+function wedge(cx,cy,r,a0,a1){
+  var span=a1-a0;
+  if(span>=359.99){return 'M '+(cx-r)+' '+cy+' A '+r+' '+r+' 0 1 0 '+(cx+r)+' '+cy+' A '+r+' '+r+' 0 1 0 '+(cx-r)+' '+cy+' Z';}
+  var s=pt(cx,cy,r,a0), e=pt(cx,cy,r,a1);
+  return 'M '+cx+' '+cy+' L '+s[0].toFixed(2)+' '+s[1].toFixed(2)+' A '+r+' '+r+' 0 '+(span>180?1:0)+' 0 '+e[0].toFixed(2)+' '+e[1].toFixed(2)+' Z';
+}
+function rnd(n){return Math.floor(Math.random()*n);}
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=rnd(i+1);var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function uniq(a){return a.filter(function(v,i){return a.indexOf(v)===i;});}
+function pick(a){return a[rnd(a.length)];}
+function r2(v){return Math.round(v*100)/100;}
+function fmt(v){var x=r2(v);return (x%1===0)?String(x):String(x);}
+function numOpts(ans,cands,f){
+  var list=uniq([ans].concat(cands).filter(function(v){return v>0;}));
+  var rest=list.slice(1);
+  var k=1;
+  while(rest.length<3){var c=ans+k*Math.max(1,Math.round(ans*0.1)); if(rest.indexOf(c)<0&&c!==ans&&c>0) rest.push(c); k++; if(k>40) break;}
+  var out=[ans].concat(shuffle(rest).slice(0,3));
+  return shuffle(out).map(f);
+}
+
+/* pestañas con hash */
+function initTabs(names){
+  function show(name){
+    if(names.indexOf(name)<0) name=names[0];
+    names.forEach(function(t){
+      $('#tab-'+t).classList.toggle('hide', t!==name);
+      document.querySelector('[data-tab="'+t+'"]').setAttribute('aria-selected', t===name?'true':'false');
+    });
+  }
+  document.querySelectorAll('[data-tab]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var n=b.getAttribute('data-tab'); show(n);
+      try{ location.hash=n; }catch(e){}
+    });
+  });
+  window.addEventListener('hashchange',function(){show(location.hash.replace('#',''));});
+  show(location.hash.replace('#',''));
+}
+
+/* reto: opción múltiple o respuesta numérica */
+function Quiz(gen){
+  var score=0,total=0,qn=0,answered=false;
+  function finish(good,msg){
+    if(answered) return; answered=true; total++; if(good) score++;
+    $('#retoScore').textContent=score+' de '+total;
+    $('#retoMsg').textContent=msg;
+  }
+  function next(){
+    answered=false; qn++;
+    var q=gen();
+    $('#retoInfo').textContent='Pregunta '+qn;
+    $('#retoQ').textContent=q.text;
+    var sv=$('#svgReto'); sv.innerHTML=q.svg||''; sv.style.display=q.svg?'block':'none';
+    var box=$('#retoOpts'); box.innerHTML=''; $('#retoMsg').textContent='';
+    if(q.opts){
+      box.className='opts';
+      q.opts.forEach(function(o){
+        var b=document.createElement('button'); b.textContent=o;
+        b.addEventListener('click',function(){
+          if(answered) return;
+          var good=(o===q.ans);
+          b.classList.add(good?'ok':'bad');
+          box.querySelectorAll('button').forEach(function(x){ if(x.textContent===q.ans) x.classList.add('ok'); });
+          finish(good,(good?'Correcto. ':'La respuesta es '+q.ans+'. ')+(q.why||''));
+        });
+        box.appendChild(b);
+      });
+    } else {
+      box.className='';
+      box.innerHTML='<div class="slider" style="margin-top:0"><input id="numIn" type="number" step="any" inputmode="decimal" aria-label="Tu respuesta" style="flex:1;font:inherit;font-size:20px;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink)"><span class="pill">'+(q.unit||'')+'</span></div><button class="btn" id="numGo">Comprobar</button>';
+      var go=function(){
+        if(answered) return;
+        var v=parseFloat($('#numIn').value);
+        if(isNaN(v)){ $('#retoMsg').textContent='Escribe un número.'; return; }
+        var good=Math.abs(v-q.ans)<=(q.tol||0.01);
+        finish(good,(good?'Correcto. ':'La respuesta es '+fmt(q.ans)+(q.unit?' '+q.unit:'')+'. ')+(q.why||''));
+      };
+      $('#numGo').addEventListener('click',go);
+      $('#numIn').addEventListener('keydown',function(e){ if(e.key==='Enter') go(); });
+    }
+  }
+  $('#retoNext').addEventListener('click',next);
+  next();
+}
+
+var NAMES={3:'Triángulo',4:'Cuadrilátero',5:'Pentágono',6:'Hexágono',7:'Heptágono',8:'Octágono',9:'Eneágono',10:'Decágono',11:'Endecágono',12:'Dodecágono'};
+function pname(n){return NAMES[n]||(n+' lados');}
+var LIFEP={
+  3:'La señal de “ceda el paso”.',
+  4:'Una hoja, una pantalla o un mosaico.',
+  5:'El home de un campo de béisbol.',
+  6:'El panal de las abejas o una tuerca.',
+  7:'Se ve poco en la calle. El truco es contar los lados.',
+  8:'La señal de “alto”.',
+  9:'Se ve poco en la calle. El truco es contar los lados.'
+};
+function lifeP(n){return LIFEP[n]||'Con tantos lados ya casi parece un círculo.';}
+function f2(v){return (Math.abs(v-Math.round(v))<1e-9)?String(Math.round(v)):v.toFixed(2);}
+function dirTo(v,u){var d=Math.atan2(-(u[1]-v[1]),u[0]-v[0])*180/Math.PI; return d<0?d+360:d;}
+
+var modeP='ninguno';
+function drawPoly(n){
+  var cx=200, cy=168, R=108, V=[], k;
+  for(k=0;k<n;k++) V.push(pt(cx,cy,R,90+360*k/n));
+  var s='<polygon points="'+V.map(function(p){return p[0].toFixed(1)+','+p[1].toFixed(1);}).join(' ')+'" fill="var(--accent)" fill-opacity=".12" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>';
+  var i,j;
+  if(modeP==='diagV'){
+    for(j=2;j<=n-2;j++) s+='<line x1="'+V[0][0]+'" y1="'+V[0][1]+'" x2="'+V[j][0]+'" y2="'+V[j][1]+'" stroke="var(--gold)" stroke-width="2.5" stroke-dasharray="6 4"/>';
+  }
+  if(modeP==='diagAll'){
+    for(i=0;i<n;i++) for(j=i+2;j<n;j++){ if(i===0&&j===n-1) continue;
+      s+='<line x1="'+V[i][0]+'" y1="'+V[i][1]+'" x2="'+V[j][0]+'" y2="'+V[j][1]+'" stroke="var(--gold)" stroke-width="1.5" stroke-opacity=".8"/>'; }
+  }
+  if(modeP==='int'||modeP==='ext'){
+    var v=V[0], a0=dirTo(v,V[1]), a1=dirTo(v,V[n-1]);
+    if(a1<a0) a1+=360;
+    if(modeP==='int'){
+      var m=pt(v[0],v[1],58,(a0+a1)/2);
+      s+='<path d="'+wedge(v[0],v[1],40,a0,a1)+'" fill="var(--teal)" fill-opacity=".45" stroke="var(--teal)" stroke-width="2"/>';
+      s+='<text x="'+m[0].toFixed(1)+'" y="'+(m[1]+5).toFixed(1)+'" text-anchor="middle" font-size="16">'+f2((n-2)*180/n)+'°</text>';
+    } else {
+      var e=(a1+180)%360, en=a0; if(en<e) en+=360;
+      var ex=pt(v[0],v[1],80,e), m2=pt(v[0],v[1],62,(e+en)/2);
+      s+='<line x1="'+v[0]+'" y1="'+v[1]+'" x2="'+ex[0].toFixed(1)+'" y2="'+ex[1].toFixed(1)+'" stroke="var(--coral)" stroke-width="3" stroke-linecap="round"/>';
+      s+='<path d="'+wedge(v[0],v[1],44,e,en)+'" fill="var(--coral)" fill-opacity=".45" stroke="var(--coral)" stroke-width="2"/>';
+      s+='<text x="'+(m2[0]-6).toFixed(1)+'" y="'+(m2[1]-6).toFixed(1)+'" text-anchor="middle" font-size="16">'+f2(360/n)+'°</text>';
+    }
+  }
+  V.forEach(function(p){ s+='<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="4.5" fill="var(--ink)"/>'; });
+  $('#svgPoly').innerHTML=s;
+  $('#outN').textContent=n;
+  $('#namePoly').textContent=pname(n);
+  $('#lifePoly').textContent='En la vida diaria: '+lifeP(n).charAt(0).toLowerCase()+lifeP(n).slice(1);
+  $('#vN').textContent=n+' lados, '+n+' vértices';
+  $('#vDiag').textContent='n(n − 3) ÷ 2 = '+n+'('+(n-3)+') ÷ 2 = '+(n*(n-3)/2);
+  $('#vSum').textContent='(n − 2) · 180° = '+(n-2)+' · 180° = '+((n-2)*180)+'°';
+  $('#vInt').textContent=((n-2)*180)+'° ÷ '+n+' = '+f2((n-2)*180/n)+'°';
+  $('#vExt').textContent='360° ÷ '+n+' = '+f2(360/n)+'°';
+}
+var rngN=$('#rngN');
+rngN.addEventListener('input',function(){drawPoly(parseInt(rngN.value,10));});
+var MODES=[['ninguno','Solo la figura'],['diagV','Diagonales desde un vértice'],['diagAll','Todas las diagonales'],['int','Un ángulo interno'],['ext','Un ángulo externo']];
+MODES.forEach(function(m){
+  var b=document.createElement('button'); b.className='chip'; b.textContent=m[1]; b.setAttribute('data-m',m[0]);
+  b.addEventListener('click',function(){ modeP=m[0]; paint(); drawPoly(parseInt(rngN.value,10)); });
+  $('#modesPoly').appendChild(b);
+});
+function paint(){
+  document.querySelectorAll('[data-m]').forEach(function(b){
+    var on=b.getAttribute('data-m')===modeP;
+    b.style.background=on?'var(--ink)':'var(--panel)'; b.style.color=on?'var(--bg)':'var(--ink)'; b.style.borderColor=on?'var(--ink)':'var(--line)';
+  });
+}
+paint(); drawPoly(6);
+
+/* clasificación: dibujos fijos */
+function poly(id,pts,col,extra){
+  $('#'+id).innerHTML='<rect width="200" height="120" fill="none"/><polygon points="'+pts+'" fill="'+col+'" fill-opacity=".25" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/>'+(extra||'');
+}
+var hx=[]; for(var q=0;q<6;q++){var p=pt(100,60,46,60*q); hx.push(p[0].toFixed(1)+','+p[1].toFixed(1));}
+poly('ps1',hx.join(' '),'var(--accent)');
+poly('ps2','40,95 70,25 130,20 165,60 140,100','var(--plum)');
+poly('ps3','45,92 60,30 150,25 165,85','var(--teal)','<line x1="60" y1="30" x2="165" y2="85" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="5 4"/>');
+poly('ps4','40,95 55,22 100,66 150,22 165,95','var(--coral)','<circle cx="100" cy="66" r="4.5" fill="var(--ink)"/>');
+var th='<tr><th>Lados</th><th>Nombre</th><th>Lados</th><th>Nombre</th></tr>';
+for(var t=3;t<=7;t++) th+='<tr><td>'+t+'</td><td>'+NAMES[t]+'</td><td>'+(t+5)+'</td><td>'+NAMES[t+5]+'</td></tr>';
+$('#tblNames').innerHTML=th;
+
+/* reto */
+Quiz(function(){
+  var k=rnd(4), q={}, n, ans;
+  if(k===0){
+    n=pick([5,6,7,8,9,10,12]); ans=(n-2)*180;
+    q={text:'¿Cuánto suman los ángulos internos de un '+pname(n).toLowerCase()+'?',ans:ans+'°',opts:numOpts(ans,[ans+180,ans-180,n*180],function(v){return v+'°';}),why:'(n − 2) · 180° = '+(n-2)+' · 180° = '+ans+'°.'};
+  } else if(k===1){
+    n=pick([3,4,5,6,8,9,10,12]); ans=360/n;
+    var ff=function(v){return f2(v)+'°';};
+    q={text:'¿Cuánto vale cada ángulo externo de un '+pname(n).toLowerCase()+' regular?',ans:ff(ans),opts:numOpts(ans,[(n-2)*180/n,180/n,360/(n+2),360/(n-1)],ff),why:'360° ÷ '+n+' = '+f2(ans)+'°.'};
+  } else if(k===2){
+    n=pick([5,6,7,8,9,10]); ans=n*(n-3)/2;
+    q={text:'¿Cuántas diagonales tiene un '+pname(n).toLowerCase()+'?',ans:String(ans),opts:numOpts(ans,[n*(n-3),n-3,n*(n-1)/2],String),why:'n(n − 3) ÷ 2 = '+n+'('+(n-3)+') ÷ 2 = '+ans+'.'};
+  } else {
+    n=pick([5,6,7,8,9,10,12]); var S=(n-2)*180;
+    var others=shuffle([3,4,5,6,7,8,9,10,11,12].filter(function(x){return x!==n;})).slice(0,3);
+    q={text:'¿Cómo se llama el polígono cuya suma de ángulos internos vale '+S+'°?',ans:pname(n),opts:shuffle([n].concat(others).map(pname)),why:'(n − 2) · 180° = '+S+'°, entonces n − 2 = '+(n-2)+' y n = '+n+'.'};
+  }
+  return q;
+});
+initTabs(['explorador','clasificacion','reto']);
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Triángulos, tipos y propiedades · TrucosDeAula</title>
+<meta name="description" content="Material interactivo de geometría: tipos de triángulo por lados y por ángulos, suma de ángulos y desigualdad triangular.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+/* Sistema TrucosDeAula: fondo crema, tinta casi negra, azul eléctrico para el énfasis, dorado para los detalles. Cabecera con logo, franja negra de operaciones, tarjetas blancas de borde fino. */
+:root{
+  --bg:#FAF9F6;
+  --panel:#FFFFFF;
+  --ink:#101012;
+  --muted:#5f5f66;
+  --line:rgba(16,16,18,.16);
+  --navy:#101012;
+  --accent:#1B44E8;
+  --gold:#C79A3E;
+  --teal:#2E8B7A;
+  --coral:#D9503A;
+  --plum:#7B4FD0;
+  --blue:#1B44E8;
+  --grey:#8a8a90;
+  --wash:#EFE6D9;
+  --sky:#DCE6F5;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"Instrument Sans",Helvetica,Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 24px;border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:9px;font-family:var(--body);font-weight:700;font-size:17px;text-decoration:none;color:var(--ink)}
+.logo i{width:15px;height:15px;border-radius:50%;background:var(--accent);display:block}
+.top small{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.wrap{max-width:1040px;margin:0 auto;padding:44px 20px 56px}
+header+*{}
+.eyebrow{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.eyebrow:before{content:"";width:26px;height:1px;background:var(--gold)}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(40px,7.4vw,92px);line-height:.98;letter-spacing:-.035em;margin:14px 0 0;text-wrap:balance}
+h1 em{color:var(--accent);font-style:italic}
+h1 .dot{color:var(--ink)}
+.lead{max-width:560px;color:var(--muted);margin:20px 0 0}
+h2{font-family:var(--display);font-weight:600;font-size:28px;letter-spacing:-.02em;line-height:1.1;margin:0 0 8px;text-wrap:balance}
+h2 .q{color:var(--gold)}
+p{margin:0 0 10px}
+.strip{background:var(--ink);color:var(--bg);overflow:hidden;white-space:nowrap;padding:12px 0}
+.strip .track{display:inline-block;animation:slide 38s linear infinite;font-family:var(--display);font-size:24px;letter-spacing:-.01em}
+.strip span{margin:0 18px}
+.strip b{color:var(--gold);font-weight:400;margin:0 6px}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion: reduce){.strip .track{animation:none}}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 22px}
+nav button,.chip,.btn{font:inherit;font-size:15px;font-weight:600;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:9px 16px;border-radius:999px;cursor:pointer}
+nav button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px}
+.stage{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:820px){.stage{grid-template-columns:1fr}}
+svg{display:block;width:100%;height:auto}
+.board{background:var(--wash);border-radius:8px;touch-action:none}
+.big{font-family:var(--display);font-weight:400;font-size:64px;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.tag{display:inline-block;font-weight:600;padding:4px 14px;border-radius:999px;color:#fff;font-size:15px}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.slider{display:flex;align-items:center;gap:12px;margin:16px 0}
+.slider label{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.slider input{flex:1;accent-color:var(--accent);min-width:0}
+.slider output{font-weight:600;min-width:58px;text-align:right;font-variant-numeric:tabular-nums}
+.note{background:var(--wash);border-radius:10px;padding:16px 20px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:6px}
+.card svg{background:var(--wash);border-radius:8px}
+.card h3{font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:-.02em;margin:6px 0 0}
+.card .life{color:var(--muted);font-size:15.5px}
+.eq{font-variant-numeric:tabular-nums;font-weight:600}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:16px}
+td,th{border-bottom:1px solid var(--line);padding:8px 8px;text-align:left}
+th{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.pill{display:inline-block;min-width:28px;text-align:center;font-weight:600;border-radius:999px;padding:1px 9px;background:var(--wash)}
+.kicker{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.q{font-family:var(--display);font-weight:400;font-size:30px;letter-spacing:-.02em;line-height:1.15;margin:8px 0 14px}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.opts button{font:inherit;font-weight:600;font-size:19px;padding:16px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+.opts button.ok{border-color:var(--teal);background:color-mix(in srgb,var(--teal) 18%,var(--panel))}
+.opts button.bad{border-color:var(--coral);background:color-mix(in srgb,var(--coral) 18%,var(--panel))}
+.hide{display:none}
+.band{background:var(--sky);border-radius:10px;padding:20px 22px;margin-top:14px}
+footer{border-top:1px solid var(--line);margin-top:36px;padding-top:18px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;color:var(--muted);font-size:15px}
+text{font-family:var(--body);font-weight:600;fill:var(--ink)}
+.axis{stroke:var(--ink);stroke-width:2.5;stroke-linecap:round}
+.thin{stroke:var(--muted);stroke-width:1.5}
+
+input[type=number]{min-width:0}
+.bar{display:flex;align-items:center;gap:10px;margin:6px 0;font-variant-numeric:tabular-nums}
+.bar .lab{width:92px;font-size:15px;color:var(--muted)}
+.bar .fill{height:26px;border-radius:6px;min-width:3px}
+.bar .val{font-weight:600;font-size:15px}
+.seg{display:flex;height:38px;border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+.seg div{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:14px;white-space:nowrap}
+.lines p{margin:0 0 6px}
+.ok-t{color:var(--teal);font-weight:600}
+.bad-t{color:var(--coral);font-weight:600}
+
+.row{align-items:center}
+.pill{line-height:1.5}
+
+</style>
+</head>
+<body>
+<div class="top"><a class="logo" href="/"><i></i>TrucosDeAula</a><a href="/infografias/" style="text-decoration:none"><small>← Infografías y material</small></a></div>
+<div class="wrap">
+<header>
+  <div class="eyebrow">Geometría · Triángulos</div>
+  <h1>Los triángulos ya los usas <em>en el techo de tu casa</em><span class="dot">.</span></h1>
+  <p class="lead">Mueve los ángulos y mira cómo cambia el triángulo. Tipos por lados y por ángulos, con ejemplos de la vida diaria.</p>
+</header>
+</div>
+<div class="strip" aria-hidden="true"><div class="track"><span>techos</span><b>+</b><span>escaleras</span><b>×</b><span>señales</span><b>÷</b><span>rampas</span><b>√</b><span>puentes</span><b>∑</b><span>tirolesas</span><b>π</b><span>techos</span><b>+</b><span>escaleras</span><b>×</b><span>señales</span><b>÷</b><span>rampas</span><b>√</b><span>puentes</span><b>∑</b><span>tirolesas</span><b>π</b></div></div>
+<div class="wrap" style="padding-top:0">
+<nav role="tablist" aria-label="Temas">
+  <button role="tab" data-tab="clasificacion" aria-selected="true">1. Tipos de triángulo</button>
+  <button role="tab" data-tab="propiedades" aria-selected="false">2. Propiedades</button>
+  <button role="tab" data-tab="reto" aria-selected="false">3. Reto rápido</button>
+  
+</nav>
+<section id="tab-clasificacion">
+  <div class="stage">
+    <div class="panel">
+      <svg id="svgTri" class="board" viewBox="0 0 400 270" role="img" aria-label="Triángulo que cambia con los ángulos A y B"></svg>
+      <div class="slider"><label for="rngA">Ángulo A</label><input id="rngA" type="range" min="10" max="160" step="1" value="60"><output id="outA">60°</output></div>
+      <div class="slider"><label for="rngB">Ángulo B</label><input id="rngB" type="range" min="10" max="110" step="1" value="60"><output id="outB">60°</output></div>
+      <div class="row" id="presetsTri"></div>
+    </div>
+    <div class="panel">
+      <div class="kicker">El ángulo C se calcula solo</div>
+      <div class="big" id="bigC">60°</div>
+      <div class="row">
+        <span class="tag" id="tagSide">Equilátero</span>
+        <span class="tag" id="tagAng">Acutángulo</span>
+      </div>
+      <p id="descTri"></p>
+      <p id="lifeTri" style="color:var(--muted)"></p>
+      <div class="seg" id="seg" aria-label="Los tres ángulos suman 180 grados"></div>
+      <p style="color:var(--muted);font-size:15px;margin-top:8px">Los tres ángulos de cualquier triángulo suman 180°.</p>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:14px;overflow-x:auto">
+    <table>
+      <tr><th>Se clasifica por</th><th>Tipo</th><th>Cómo se reconoce</th><th>En la vida diaria</th></tr>
+      <tr><td>Sus lados</td><td>Equilátero</td><td>3 lados iguales</td><td>La señal de “ceda el paso”</td></tr>
+      <tr><td>Sus lados</td><td>Isósceles</td><td>2 lados iguales</td><td>El techo de dos aguas de una casa</td></tr>
+      <tr><td>Sus lados</td><td>Escaleno</td><td>3 lados distintos</td><td>La vela de una lancha</td></tr>
+      <tr><td>Sus ángulos</td><td>Acutángulo</td><td>3 ángulos agudos</td><td>Una rebanada de pizza partida a la mitad</td></tr>
+      <tr><td>Sus ángulos</td><td>Rectángulo</td><td>1 ángulo de 90°</td><td>La escuadra de geometría, una rampa recargada en la pared</td></tr>
+      <tr><td>Sus ángulos</td><td>Obtusángulo</td><td>1 ángulo mayor de 90°</td><td>Un bumerán visto de frente</td></tr>
+    </table>
+  </div>
+</section>
+
+<section id="tab-propiedades" class="hide">
+  <div class="stage">
+    <div class="panel">
+      <h2>¿Con estos tres palitos se arma un triángulo?</h2>
+      <svg id="svgIneq" class="board" viewBox="0 0 400 270" role="img" aria-label="Triángulo armado con tres lados o intento fallido"></svg>
+      <div class="slider"><label for="sa">Lado a</label><input id="sa" type="range" min="1" max="12" step="1" value="5"><output id="outSa">5</output></div>
+      <div class="slider"><label for="sb">Lado b</label><input id="sb" type="range" min="1" max="12" step="1" value="6"><output id="outSb">6</output></div>
+      <div class="slider"><label for="sc">Lado c</label><input id="sc" type="range" min="1" max="12" step="1" value="7"><output id="outSc">7</output></div>
+    </div>
+    <div class="panel">
+      <h2 id="verdict">Sí se arma</h2>
+      <div class="lines" id="ineqLines"></div>
+      <div class="band" style="margin-top:14px">
+        <b>Regla:</b> la suma de dos lados cualesquiera tiene que ser mayor que el tercero. Si no, los lados no alcanzan a cerrarse.
+      </div>
+      <p style="color:var(--muted);margin-top:12px">Con palitos muy desiguales, el más largo supera a los otros dos juntos y no deja que se unan.</p>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <h2>Otras tres ideas para quedarte</h2>
+    <div class="lines">
+      <p><b>Elementos:</b> 3 lados, 3 vértices y 3 ángulos.</p>
+      <p><b>Suma de ángulos:</b> A + B + C = 180°. Con dos ángulos puedes sacar el tercero.</p>
+      <p><b>Triángulo rectángulo:</b> tiene un ángulo de 90°, así que los otros dos suman 90° y son agudos.</p>
+    </div>
+  </div>
+</section>
+
+<section id="tab-reto" class="hide">
+  <div class="stage">
+    <div class="panel">
+      <div class="kicker" id="retoInfo">Pregunta 1</div>
+      <div class="q" id="retoQ"></div>
+      <svg id="svgReto" class="board" viewBox="0 0 360 240" role="img" aria-label="Figura de la pregunta"></svg>
+    </div>
+    <div class="panel">
+      <div id="retoOpts"></div>
+      <p id="retoMsg" style="margin-top:14px;min-height:50px"></p>
+      <div class="row"><button class="btn" id="retoNext">Siguiente</button><span class="pill" id="retoScore">0 de 0</span></div>
+    </div>
+  </div>
+</section>
+
+<footer><span class="logo"><i></i>TrucosDeAula</span><span>Divulgación matemática, sin bata de laboratorio.</span></footer>
+</div>
+<script>
+(function(){
+var $ = function(s){return document.querySelector(s);};
+var rad = function(d){return d*Math.PI/180;};
+function pt(cx,cy,r,deg){return [cx+r*Math.cos(rad(deg)), cy-r*Math.sin(rad(deg))];}
+function wedge(cx,cy,r,a0,a1){
+  var span=a1-a0;
+  if(span>=359.99){return 'M '+(cx-r)+' '+cy+' A '+r+' '+r+' 0 1 0 '+(cx+r)+' '+cy+' A '+r+' '+r+' 0 1 0 '+(cx-r)+' '+cy+' Z';}
+  var s=pt(cx,cy,r,a0), e=pt(cx,cy,r,a1);
+  return 'M '+cx+' '+cy+' L '+s[0].toFixed(2)+' '+s[1].toFixed(2)+' A '+r+' '+r+' 0 '+(span>180?1:0)+' 0 '+e[0].toFixed(2)+' '+e[1].toFixed(2)+' Z';
+}
+function rnd(n){return Math.floor(Math.random()*n);}
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=rnd(i+1);var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function uniq(a){return a.filter(function(v,i){return a.indexOf(v)===i;});}
+function pick(a){return a[rnd(a.length)];}
+function r2(v){return Math.round(v*100)/100;}
+function fmt(v){var x=r2(v);return (x%1===0)?String(x):String(x);}
+function numOpts(ans,cands,f){
+  var list=uniq([ans].concat(cands).filter(function(v){return v>0;}));
+  var rest=list.slice(1);
+  var k=1;
+  while(rest.length<3){var c=ans+k*Math.max(1,Math.round(ans*0.1)); if(rest.indexOf(c)<0&&c!==ans&&c>0) rest.push(c); k++; if(k>40) break;}
+  var out=[ans].concat(shuffle(rest).slice(0,3));
+  return shuffle(out).map(f);
+}
+
+/* pestañas con hash */
+function initTabs(names){
+  function show(name){
+    if(names.indexOf(name)<0) name=names[0];
+    names.forEach(function(t){
+      $('#tab-'+t).classList.toggle('hide', t!==name);
+      document.querySelector('[data-tab="'+t+'"]').setAttribute('aria-selected', t===name?'true':'false');
+    });
+  }
+  document.querySelectorAll('[data-tab]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var n=b.getAttribute('data-tab'); show(n);
+      try{ location.hash=n; }catch(e){}
+    });
+  });
+  window.addEventListener('hashchange',function(){show(location.hash.replace('#',''));});
+  show(location.hash.replace('#',''));
+}
+
+/* reto: opción múltiple o respuesta numérica */
+function Quiz(gen){
+  var score=0,total=0,qn=0,answered=false;
+  function finish(good,msg){
+    if(answered) return; answered=true; total++; if(good) score++;
+    $('#retoScore').textContent=score+' de '+total;
+    $('#retoMsg').textContent=msg;
+  }
+  function next(){
+    answered=false; qn++;
+    var q=gen();
+    $('#retoInfo').textContent='Pregunta '+qn;
+    $('#retoQ').textContent=q.text;
+    var sv=$('#svgReto'); sv.innerHTML=q.svg||''; sv.style.display=q.svg?'block':'none';
+    var box=$('#retoOpts'); box.innerHTML=''; $('#retoMsg').textContent='';
+    if(q.opts){
+      box.className='opts';
+      q.opts.forEach(function(o){
+        var b=document.createElement('button'); b.textContent=o;
+        b.addEventListener('click',function(){
+          if(answered) return;
+          var good=(o===q.ans);
+          b.classList.add(good?'ok':'bad');
+          box.querySelectorAll('button').forEach(function(x){ if(x.textContent===q.ans) x.classList.add('ok'); });
+          finish(good,(good?'Correcto. ':'La respuesta es '+q.ans+'. ')+(q.why||''));
+        });
+        box.appendChild(b);
+      });
+    } else {
+      box.className='';
+      box.innerHTML='<div class="slider" style="margin-top:0"><input id="numIn" type="number" step="any" inputmode="decimal" aria-label="Tu respuesta" style="flex:1;font:inherit;font-size:20px;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink)"><span class="pill">'+(q.unit||'')+'</span></div><button class="btn" id="numGo">Comprobar</button>';
+      var go=function(){
+        if(answered) return;
+        var v=parseFloat($('#numIn').value);
+        if(isNaN(v)){ $('#retoMsg').textContent='Escribe un número.'; return; }
+        var good=Math.abs(v-q.ans)<=(q.tol||0.01);
+        finish(good,(good?'Correcto. ':'La respuesta es '+fmt(q.ans)+(q.unit?' '+q.unit:'')+'. ')+(q.why||''));
+      };
+      $('#numGo').addEventListener('click',go);
+      $('#numIn').addEventListener('keydown',function(e){ if(e.key==='Enter') go(); });
+    }
+  }
+  $('#retoNext').addEventListener('click',next);
+  next();
+}
+
+var SIDEC={'Equilátero':'var(--accent)','Isósceles':'var(--plum)','Escaleno':'var(--grey)'};
+var ANGC={'Acutángulo':'var(--teal)','Rectángulo':'var(--gold)','Obtusángulo':'var(--coral)'};
+var SIDEINFO={
+  'Equilátero':'Sus tres lados miden lo mismo y sus tres ángulos miden 60°.',
+  'Isósceles':'Tiene dos lados iguales y los dos ángulos de la base también son iguales.',
+  'Escaleno':'Sus tres lados y sus tres ángulos son distintos.'
+};
+var ANGINFO={
+  'Acutángulo':'Los tres ángulos son agudos, menores de 90°.',
+  'Rectángulo':'Tiene un ángulo de 90°, marcado con un cuadrito.',
+  'Obtusángulo':'Tiene un ángulo obtuso, mayor de 90°.'
+};
+var LIFE={
+  'Rectángulo':'la escuadra de geometría o una rampa recargada en la pared.',
+  'Obtusángulo':'un bumerán visto de frente.',
+  'Equilátero':'la señal de “ceda el paso”.',
+  'Isósceles':'el techo de dos aguas de una casa.',
+  'Escaleno':'la vela de una lancha.'
+};
+function angType(A,B,C){var m=Math.max(A,B,C); return m===90?'Rectángulo':(m>90?'Obtusángulo':'Acutángulo');}
+function sideType(A,B,C){ if(A===B&&B===C) return 'Equilátero'; if(A===B||B===C||A===C) return 'Isósceles'; return 'Escaleno'; }
+
+function trianglePts(A,B){
+  var C=180-A-B, b=Math.sin(rad(B)), c=Math.sin(rad(C));
+  return {A:[0,0],B:[c,0],C:[b*Math.cos(rad(A)), b*Math.sin(rad(A))]};
+}
+function layout(P,W,H,pad){
+  var xs=[P.A[0],P.B[0],P.C[0]], ys=[P.A[1],P.B[1],P.C[1]];
+  var minx=Math.min.apply(null,xs),maxx=Math.max.apply(null,xs),miny=Math.min.apply(null,ys),maxy=Math.max.apply(null,ys);
+  var s=Math.min((W-2*pad)/(maxx-minx),(H-2*pad)/(maxy-miny));
+  var ox=(W-(maxx-minx)*s)/2, oy=(H+(maxy-miny)*s)/2;
+  var f=function(p){return [ox+(p[0]-minx)*s, oy-(p[1]-miny)*s];};
+  return {A:f(P.A),B:f(P.B),C:f(P.C),s:s};
+}
+function dirTo(v,u){var d=Math.atan2(-(u[1]-v[1]),u[0]-v[0])*180/Math.PI; return d<0?d+360:d;}
+
+function drawTri(A,B,opt){
+  opt=opt||{};
+  var W=opt.W||400, H=opt.H||270, C=180-A-B;
+  var L=layout(trianglePts(A,B),W,H,52);
+  var V={A:L.A,B:L.B,C:L.C};
+  var next={A:'B',B:'C',C:'A'}, prev={A:'C',B:'A',C:'B'};
+  var ang={A:A,B:B,C:C};
+  var cols={A:'var(--accent)',B:'var(--gold)',C:'var(--coral)'};
+  var cen=[(V.A[0]+V.B[0]+V.C[0])/3,(V.A[1]+V.B[1]+V.C[1])/3];
+  var s='<polygon points="'+V.A.join(',')+' '+V.B.join(',')+' '+V.C.join(',')+'" fill="var(--accent)" fill-opacity=".08"/>';
+  ['A','B','C'].forEach(function(k){
+    var v=V[k], n=V[next[k]], p=V[prev[k]];
+    var a0=dirTo(v,n), a1=dirTo(v,p); if(a1<a0) a1+=360;
+    if(ang[k]===90){
+      var ux=n[0]-v[0], uy=n[1]-v[1], ul=Math.hypot(ux,uy), wx=p[0]-v[0], wy=p[1]-v[1], wl=Math.hypot(wx,wy);
+      var q1=[v[0]+ux/ul*16,v[1]+uy/ul*16], q3=[v[0]+wx/wl*16,v[1]+wy/wl*16], q2=[q1[0]+wx/wl*16,q1[1]+wy/wl*16];
+      s+='<path d="M '+q1.join(' ')+' L '+q2.join(' ')+' L '+q3.join(' ')+'" fill="none" stroke="var(--ink)" stroke-width="2"/>';
+    } else {
+      s+='<path d="'+wedge(v[0],v[1],34,a0,a1)+'" fill="'+cols[k]+'" fill-opacity=".4" stroke="'+cols[k]+'" stroke-width="2"/>';
+    }
+    var mid=(a0+a1)/2, lr=ang[k]<35?64:50, m=pt(v[0],v[1],lr,mid);
+    var txt=(opt.hide===k)?'?':(ang[k]+'°');
+    s+='<text x="'+m[0].toFixed(1)+'" y="'+(m[1]+5).toFixed(1)+'" text-anchor="middle" font-size="15">'+txt+'</text>';
+  });
+  s+='<polygon points="'+V.A.join(',')+' '+V.B.join(',')+' '+V.C.join(',')+'" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>';
+  /* marcas de lados iguales: el lado opuesto a cada ángulo */
+  var sides=[['a','B','C',A],['b','C','A',B],['c','A','B',C]];
+  var st=sideType(A,B,C);
+  sides.forEach(function(sd,i){
+    var opp=sd[3], same=0;
+    [A,B,C].forEach(function(x){ if(x===opp) same++; });
+    if(same>=2 && st!=='Escaleno'){
+      var p1=V[sd[1]], p2=V[sd[2]], mx=(p1[0]+p2[0])/2, my=(p1[1]+p2[1])/2;
+      var dx=p2[0]-p1[0], dy=p2[1]-p1[1], dl=Math.hypot(dx,dy), nx=-dy/dl*7, ny=dx/dl*7;
+      s+='<line x1="'+(mx-nx).toFixed(1)+'" y1="'+(my-ny).toFixed(1)+'" x2="'+(mx+nx).toFixed(1)+'" y2="'+(my+ny).toFixed(1)+'" stroke="var(--ink)" stroke-width="3"/>';
+    }
+  });
+  ['A','B','C'].forEach(function(k){
+    var v=V[k], dx=v[0]-cen[0], dy=v[1]-cen[1], dl=Math.hypot(dx,dy)||1;
+    s+='<text x="'+(v[0]+dx/dl*17).toFixed(1)+'" y="'+(v[1]+dy/dl*17+5).toFixed(1)+'" text-anchor="middle" font-size="17" style="fill:var(--muted)">'+k+'</text>';
+  });
+  return s;
+}
+
+/* ---- pestaña 1 ---- */
+var rngA=$('#rngA'), rngB=$('#rngB');
+function setTri(A,B){
+  rngB.max=170-A; if(B>170-A) B=170-A;
+  rngA.value=A; rngB.value=B;
+  var C=180-A-B;
+  $('#outA').textContent=A+'°'; $('#outB').textContent=B+'°';
+  $('#svgTri').innerHTML=drawTri(A,B);
+  $('#bigC').textContent=C+'°';
+  var ts=sideType(A,B,C), ta=angType(A,B,C);
+  var t1=$('#tagSide'), t2=$('#tagAng');
+  t1.textContent=ts; t1.style.background=SIDEC[ts];
+  t2.textContent=ta; t2.style.background=ANGC[ta];
+  $('#descTri').textContent=SIDEINFO[ts]+' '+ANGINFO[ta];
+  var lf=(ta==='Rectángulo'||ta==='Obtusángulo')?LIFE[ta]:LIFE[ts];
+  $('#lifeTri').textContent='En la vida diaria: '+lf;
+  var cols=['var(--accent)','var(--gold)','var(--coral)'], vals=[A,B,C], names=['A','B','C'], h='';
+  vals.forEach(function(v,i){ h+='<div style="width:'+(v/180*100)+'%;background:'+cols[i]+'">'+names[i]+' '+v+'°</div>'; });
+  $('#seg').innerHTML=h;
+}
+rngA.addEventListener('input',function(){setTri(parseInt(rngA.value,10),parseInt(rngB.value,10));});
+rngB.addEventListener('input',function(){setTri(parseInt(rngA.value,10),parseInt(rngB.value,10));});
+[['Equilátero',60,60],['Isósceles',50,50],['Escaleno',40,60],['Rectángulo',90,30],['Obtusángulo',110,35]].forEach(function(p){
+  var b=document.createElement('button'); b.className='chip'; b.textContent=p[0];
+  b.addEventListener('click',function(){setTri(p[1],p[2]);});
+  $('#presetsTri').appendChild(b);
+});
+setTri(60,60);
+
+/* ---- pestaña 2: desigualdad del triángulo ---- */
+function drawIneq(){
+  var a=+$('#sa').value, b=+$('#sb').value, c=+$('#sc').value;
+  $('#outSa').textContent=a; $('#outSb').textContent=b; $('#outSc').textContent=c;
+  var ok1=a+b>c, ok2=a+c>b, ok3=b+c>a, ok=ok1&&ok2&&ok3;
+  var rows=[[a,b,c,'a','b','c',ok1],[a,c,b,'a','c','b',ok2],[b,c,a,'b','c','a',ok3]];
+  var h='';
+  rows.forEach(function(r){
+    h+='<p class="'+(r[6]?'ok-t':'bad-t')+'">'+r[3]+' + '+r[4]+' = '+(r[0]+r[1])+(r[6]?' > ':' ≤ ')+r[5]+' = '+r[2]+(r[6]?'  ✓':'  ✗')+'</p>';
+  });
+  $('#ineqLines').innerHTML=h;
+  var s='';
+  if(ok){
+    var x=(b*b+c*c-a*a)/(2*c), y=Math.sqrt(Math.max(0,b*b-x*x));
+    var L=layout({A:[0,0],B:[c,0],C:[x,y]},400,270,56);
+    var V={A:L.A,B:L.B,C:L.C};
+    s+='<polygon points="'+V.A.join(',')+' '+V.B.join(',')+' '+V.C.join(',')+'" fill="var(--accent)" fill-opacity=".14" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>';
+    var cen=[(V.A[0]+V.B[0]+V.C[0])/3,(V.A[1]+V.B[1]+V.C[1])/3];
+    [['a',V.B,V.C,a],['b',V.C,V.A,b],['c',V.A,V.B,c]].forEach(function(sd){
+      var mx=(sd[1][0]+sd[2][0])/2, my=(sd[1][1]+sd[2][1])/2, dx=mx-cen[0], dy=my-cen[1], dl=Math.hypot(dx,dy)||1;
+      s+='<text x="'+(mx+dx/dl*20).toFixed(1)+'" y="'+(my+dy/dl*20+5).toFixed(1)+'" text-anchor="middle" font-size="16">'+sd[0]+' = '+sd[3]+'</text>';
+    });
+    $('#verdict').textContent='Sí se arma';
+  } else {
+    var arr=[a,b,c].slice().sort(function(p,q){return q-p;}), big=arr[0], s1=arr[1], s2=arr[2];
+    var u=320/big, x0=40;
+    s+='<line x1="'+x0+'" y1="190" x2="'+(x0+big*u)+'" y2="190" stroke="var(--ink)" stroke-width="5" stroke-linecap="round"/>';
+    s+='<text x="'+(x0+big*u/2)+'" y="218" text-anchor="middle" font-size="16">el más largo = '+big+'</text>';
+    s+='<line x1="'+x0+'" y1="120" x2="'+(x0+s1*u)+'" y2="120" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"/>';
+    s+='<line x1="'+(x0+big*u)+'" y1="120" x2="'+(x0+big*u-s2*u)+'" y2="120" stroke="var(--coral)" stroke-width="5" stroke-linecap="round"/>';
+    s+='<text x="'+(x0+big*u/2)+'" y="96" text-anchor="middle" font-size="16">los otros dos juntos = '+(s1+s2)+'</text>';
+    s+='<text x="'+(x0+big*u/2)+'" y="60" text-anchor="middle" font-size="15" style="fill:var(--muted)">no alcanzan a cerrar el triángulo</text>';
+    $('#verdict').textContent='No se arma';
+  }
+  $('#svgIneq').innerHTML=s;
+}
+['sa','sb','sc'].forEach(function(id){ $('#'+id).addEventListener('input',drawIneq); });
+drawIneq();
+
+/* ---- reto ---- */
+Quiz(function(){
+  var k=rnd(5), q={};
+  if(k===0){
+    var A=pick([30,40,50,60,70,80,100,110]), B=pick([20,30,40,50,60,70]);
+    if(A+B>=170) B=20;
+    var ans=180-A-B;
+    q={text:'Dos ángulos de un triángulo miden '+A+'° y '+B+'°. ¿Cuánto mide el tercero?',ans:ans+'°',opts:numOpts(ans,[ans+10,ans-10,ans+20],function(v){return v+'°';}),why:'Los tres suman 180°.',svg:drawTri(A,B,{W:360,H:240,hide:'C'})};
+  } else if(k===1){
+    var t=pick(['Equilátero','Isósceles','Escaleno']), s3;
+    if(t==='Equilátero'){var n=2+rnd(8); s3=[n,n,n];}
+    else if(t==='Isósceles'){var n2=3+rnd(7), m=1+rnd(2*n2-1); if(m===n2) m=n2-1; s3=shuffle([n2,n2,m]);}
+    else {var a=3+rnd(4), b=a+1+rnd(2), c=b+1+rnd(2); if(a+b<=c) c=a+b-1; s3=shuffle([a,b,c]);}
+    q={text:'Un triángulo tiene lados de '+s3[0]+' cm, '+s3[1]+' cm y '+s3[2]+' cm. ¿Cómo se clasifica por sus lados?',ans:t,opts:shuffle(['Equilátero','Isósceles','Escaleno','No se puede armar']),why:'Cuenta cuántos lados iguales hay.'};
+  } else if(k===2){
+    var set=pick([[90,35,55],[110,40,30],[60,70,50],[90,45,45],[100,50,30],[80,60,40]]);
+    var ta=angType(set[0],set[1],set[2]);
+    q={text:'Un triángulo tiene ángulos de '+set[0]+'°, '+set[1]+'° y '+set[2]+'°. ¿Cómo se clasifica por sus ángulos?',ans:ta,opts:shuffle(['Acutángulo','Rectángulo','Obtusángulo','Equilátero']),why:'Busca el ángulo más grande: menor, igual o mayor que 90°.',svg:drawTri(set[0],set[1],{W:360,H:240})};
+  } else if(k===3){
+    q={text:'Los ángulos de un triángulo miden x, 2x y 3x. ¿Cuánto mide el mayor?',ans:'90°',opts:shuffle(['30°','60°','90°','120°']),why:'x + 2x + 3x = 180°, entonces x = 30° y el mayor es 3x = 90°.'};
+  } else {
+    q={text:'Un triángulo isósceles tiene dos ángulos iguales de x y un tercero de 3x − 30. ¿Cuánto mide el ángulo distinto?',ans:'96°',opts:shuffle(['42°','84°','96°','108°']),why:'x + x + 3x − 30 = 180, entonces 5x = 210 y x = 42°. El tercero mide 3(42) − 30 = 96°.'};
+  }
+  return q;
+});
+initTabs(['clasificacion','propiedades','reto']);
+
+})();
+</script>
+</body>
+</html>

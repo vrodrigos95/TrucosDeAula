@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Volumen de cuerpos · TrucosDeAula</title>
+<meta name="description" content="Material interactivo de geometría: volumen y capacidad de cubo, prisma, cilindro, cono, pirámide y esfera.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+/* Sistema TrucosDeAula: fondo crema, tinta casi negra, azul eléctrico para el énfasis, dorado para los detalles. Cabecera con logo, franja negra de operaciones, tarjetas blancas de borde fino. */
+:root{
+  --bg:#FAF9F6;
+  --panel:#FFFFFF;
+  --ink:#101012;
+  --muted:#5f5f66;
+  --line:rgba(16,16,18,.16);
+  --navy:#101012;
+  --accent:#1B44E8;
+  --gold:#C79A3E;
+  --teal:#2E8B7A;
+  --coral:#D9503A;
+  --plum:#7B4FD0;
+  --blue:#1B44E8;
+  --grey:#8a8a90;
+  --wash:#EFE6D9;
+  --sky:#DCE6F5;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"Instrument Sans",Helvetica,Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 24px;border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:9px;font-family:var(--body);font-weight:700;font-size:17px;text-decoration:none;color:var(--ink)}
+.logo i{width:15px;height:15px;border-radius:50%;background:var(--accent);display:block}
+.top small{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.wrap{max-width:1040px;margin:0 auto;padding:44px 20px 56px}
+header+*{}
+.eyebrow{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.eyebrow:before{content:"";width:26px;height:1px;background:var(--gold)}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(40px,7.4vw,92px);line-height:.98;letter-spacing:-.035em;margin:14px 0 0;text-wrap:balance}
+h1 em{color:var(--accent);font-style:italic}
+h1 .dot{color:var(--ink)}
+.lead{max-width:560px;color:var(--muted);margin:20px 0 0}
+h2{font-family:var(--display);font-weight:600;font-size:28px;letter-spacing:-.02em;line-height:1.1;margin:0 0 8px;text-wrap:balance}
+h2 .q{color:var(--gold)}
+p{margin:0 0 10px}
+.strip{background:var(--ink);color:var(--bg);overflow:hidden;white-space:nowrap;padding:12px 0}
+.strip .track{display:inline-block;animation:slide 38s linear infinite;font-family:var(--display);font-size:24px;letter-spacing:-.01em}
+.strip span{margin:0 18px}
+.strip b{color:var(--gold);font-weight:400;margin:0 6px}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion: reduce){.strip .track{animation:none}}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 22px}
+nav button,.chip,.btn{font:inherit;font-size:15px;font-weight:600;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:9px 16px;border-radius:999px;cursor:pointer}
+nav button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px}
+.stage{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:820px){.stage{grid-template-columns:1fr}}
+svg{display:block;width:100%;height:auto}
+.board{background:var(--wash);border-radius:8px;touch-action:none}
+.big{font-family:var(--display);font-weight:400;font-size:64px;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.tag{display:inline-block;font-weight:600;padding:4px 14px;border-radius:999px;color:#fff;font-size:15px}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.slider{display:flex;align-items:center;gap:12px;margin:16px 0}
+.slider label{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.slider input{flex:1;accent-color:var(--accent);min-width:0}
+.slider output{font-weight:600;min-width:58px;text-align:right;font-variant-numeric:tabular-nums}
+.note{background:var(--wash);border-radius:10px;padding:16px 20px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:6px}
+.card svg{background:var(--wash);border-radius:8px}
+.card h3{font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:-.02em;margin:6px 0 0}
+.card .life{color:var(--muted);font-size:15.5px}
+.eq{font-variant-numeric:tabular-nums;font-weight:600}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:16px}
+td,th{border-bottom:1px solid var(--line);padding:8px 8px;text-align:left}
+th{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.pill{display:inline-block;min-width:28px;text-align:center;font-weight:600;border-radius:999px;padding:1px 9px;background:var(--wash)}
+.kicker{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.q{font-family:var(--display);font-weight:400;font-size:30px;letter-spacing:-.02em;line-height:1.15;margin:8px 0 14px}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.opts button{font:inherit;font-weight:600;font-size:19px;padding:16px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+.opts button.ok{border-color:var(--teal);background:color-mix(in srgb,var(--teal) 18%,var(--panel))}
+.opts button.bad{border-color:var(--coral);background:color-mix(in srgb,var(--coral) 18%,var(--panel))}
+.hide{display:none}
+.band{background:var(--sky);border-radius:10px;padding:20px 22px;margin-top:14px}
+footer{border-top:1px solid var(--line);margin-top:36px;padding-top:18px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;color:var(--muted);font-size:15px}
+text{font-family:var(--body);font-weight:600;fill:var(--ink)}
+.axis{stroke:var(--ink);stroke-width:2.5;stroke-linecap:round}
+.thin{stroke:var(--muted);stroke-width:1.5}
+
+input[type=number]{min-width:0}
+.bar{display:flex;align-items:center;gap:10px;margin:6px 0;font-variant-numeric:tabular-nums}
+.bar .lab{width:92px;font-size:15px;color:var(--muted)}
+.bar .fill{height:26px;border-radius:6px;min-width:3px}
+.bar .val{font-weight:600;font-size:15px}
+.seg{display:flex;height:38px;border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+.seg div{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:14px;white-space:nowrap}
+.lines p{margin:0 0 6px}
+.ok-t{color:var(--teal);font-weight:600}
+.bad-t{color:var(--coral);font-weight:600}
+
+.row{align-items:center}
+.pill{line-height:1.5}
+
+</style>
+</head>
+<body>
+<div class="top"><a class="logo" href="/"><i></i>TrucosDeAula</a><a href="/infografias/" style="text-decoration:none"><small>← Infografías y material</small></a></div>
+<div class="wrap">
+<header>
+  <div class="eyebrow">Geometría · Volumen</div>
+  <h1>El volumen ya lo usas <em>al llenar un tinaco</em><span class="dot">.</span></h1>
+  <p class="lead">Cubo, prisma, cilindro, cono, pirámide y esfera. Cambia las medidas y mira cuánto espacio ocupan y cuántos litros les caben.</p>
+</header>
+</div>
+<div class="strip" aria-hidden="true"><div class="track"><span>tinacos</span><b>+</b><span>latas</span><b>×</b><span>helados</span><b>÷</b><span>cajas</span><b>√</b><span>albercas</span><b>∑</b><span>balones</span><b>π</b><span>tinacos</span><b>+</b><span>latas</span><b>×</b><span>helados</span><b>÷</b><span>cajas</span><b>√</b><span>albercas</span><b>∑</b><span>balones</span><b>π</b></div></div>
+<div class="wrap" style="padding-top:0">
+<nav role="tablist" aria-label="Temas">
+  <button role="tab" data-tab="solidos" aria-selected="true">1. Cuerpos geométricos</button>
+  <button role="tab" data-tab="relaciones" aria-selected="false">2. El truco del un tercio</button>
+  <button role="tab" data-tab="reto" aria-selected="false">3. Reto rápido</button>
+  
+</nav>
+<section id="tab-solidos">
+  <div class="stage">
+    <div class="panel">
+      <div class="row" id="chipsSol" style="margin-top:0"></div>
+      <svg id="svgSol" class="board" viewBox="0 0 360 280" role="img" aria-label="Cuerpo geométrico con sus medidas"></svg>
+      <div id="slidersSol"></div>
+    </div>
+    <div class="panel">
+      <h2 id="solName">Cilindro</h2>
+      <p id="solLife" style="color:var(--muted)"></p>
+      <div class="band" style="margin:0 0 12px">
+        <div class="kicker" style="margin-bottom:4px">Volumen · cuánto espacio ocupa</div>
+        <div class="eq" id="volF"></div>
+        <div class="eq" id="volV" style="font-size:22px;margin-top:4px"></div>
+      </div>
+      <div class="note">
+        <div class="kicker" style="margin-bottom:4px">Capacidad · cuánto líquido le cabe</div>
+        <div class="eq" id="capV" style="font-size:22px"></div>
+      </div>
+      <p style="color:var(--muted);font-size:15px;margin-top:12px">Medidas en cm. Un litro equivale a 1000 cm³.</p>
+    </div>
+  </div>
+</section>
+
+<section id="tab-relaciones" class="hide">
+  <div class="stage">
+    <div class="panel">
+      <h2>Mismos datos, distinto cuerpo</h2>
+      <div class="slider"><label for="rr">Radio r</label><input id="rr" type="range" min="1" max="10" step="1" value="3"><output id="o_rr">3</output></div>
+      <div class="slider"><label for="rh">Altura h</label><input id="rh" type="range" min="1" max="12" step="1" value="8"><output id="o_rh">8</output></div>
+      <div id="relBars"></div>
+    </div>
+    <div class="panel">
+      <h2>Lo que se queda</h2>
+      <div class="lines">
+        <p><b>Cono y cilindro</b> con la misma base y la misma altura: el cono es la tercera parte. Hacen falta 3 conos de helado para llenar un vaso del mismo tamaño.</p>
+        <p><b>Pirámide y prisma</b> con la misma base y la misma altura: igual, un tercio.</p>
+        <p><b>Esfera y cilindro</b> que la envuelve (altura 2r): la esfera ocupa dos tercios.</p>
+      </div>
+      <div class="band" style="margin-top:14px">Por eso en las fórmulas del cono y de la pirámide aparece ⅓.</div>
+    </div>
+  </div>
+</section>
+
+<section id="tab-reto" class="hide">
+  <div class="stage">
+    <div class="panel">
+      <div class="kicker" id="retoInfo">Pregunta 1</div>
+      <div class="q" id="retoQ"></div>
+      <svg id="svgReto" class="board" viewBox="0 0 360 240" role="img" aria-label="Figura de la pregunta"></svg>
+    </div>
+    <div class="panel">
+      <div id="retoOpts"></div>
+      <p id="retoMsg" style="margin-top:14px;min-height:50px"></p>
+      <div class="row"><button class="btn" id="retoNext">Siguiente</button><span class="pill" id="retoScore">0 de 0</span></div>
+    </div>
+  </div>
+</section>
+
+<footer><span class="logo"><i></i>TrucosDeAula</span><span>Divulgación matemática, sin bata de laboratorio.</span></footer>
+</div>
+<script>
+(function(){
+var $ = function(s){return document.querySelector(s);};
+var rad = function(d){return d*Math.PI/180;};
+function pt(cx,cy,r,deg){return [cx+r*Math.cos(rad(deg)), cy-r*Math.sin(rad(deg))];}
+function wedge(cx,cy,r,a0,a1){
+  var span=a1-a0;
+  if(span>=359.99){return 'M '+(cx-r)+' '+cy+' A '+r+' '+r+' 0 1 0 '+(cx+r)+' '+cy+' A '+r+' '+r+' 0 1 0 '+(cx-r)+' '+cy+' Z';}
+  var s=pt(cx,cy,r,a0), e=pt(cx,cy,r,a1);
+  return 'M '+cx+' '+cy+' L '+s[0].toFixed(2)+' '+s[1].toFixed(2)+' A '+r+' '+r+' 0 '+(span>180?1:0)+' 0 '+e[0].toFixed(2)+' '+e[1].toFixed(2)+' Z';
+}
+function rnd(n){return Math.floor(Math.random()*n);}
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=rnd(i+1);var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function uniq(a){return a.filter(function(v,i){return a.indexOf(v)===i;});}
+function pick(a){return a[rnd(a.length)];}
+function r2(v){return Math.round(v*100)/100;}
+function fmt(v){var x=r2(v);return (x%1===0)?String(x):String(x);}
+function numOpts(ans,cands,f){
+  var list=uniq([ans].concat(cands).filter(function(v){return v>0;}));
+  var rest=list.slice(1);
+  var k=1;
+  while(rest.length<3){var c=ans+k*Math.max(1,Math.round(ans*0.1)); if(rest.indexOf(c)<0&&c!==ans&&c>0) rest.push(c); k++; if(k>40) break;}
+  var out=[ans].concat(shuffle(rest).slice(0,3));
+  return shuffle(out).map(f);
+}
+
+/* pestañas con hash */
+function initTabs(names){
+  function show(name){
+    if(names.indexOf(name)<0) name=names[0];
+    names.forEach(function(t){
+      $('#tab-'+t).classList.toggle('hide', t!==name);
+      document.querySelector('[data-tab="'+t+'"]').setAttribute('aria-selected', t===name?'true':'false');
+    });
+  }
+  document.querySelectorAll('[data-tab]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var n=b.getAttribute('data-tab'); show(n);
+      try{ location.hash=n; }catch(e){}
+    });
+  });
+  window.addEventListener('hashchange',function(){show(location.hash.replace('#',''));});
+  show(location.hash.replace('#',''));
+}
+
+/* reto: opción múltiple o respuesta numérica */
+function Quiz(gen){
+  var score=0,total=0,qn=0,answered=false;
+  function finish(good,msg){
+    if(answered) return; answered=true; total++; if(good) score++;
+    $('#retoScore').textContent=score+' de '+total;
+    $('#retoMsg').textContent=msg;
+  }
+  function next(){
+    answered=false; qn++;
+    var q=gen();
+    $('#retoInfo').textContent='Pregunta '+qn;
+    $('#retoQ').textContent=q.text;
+    var sv=$('#svgReto'); sv.innerHTML=q.svg||''; sv.style.display=q.svg?'block':'none';
+    var box=$('#retoOpts'); box.innerHTML=''; $('#retoMsg').textContent='';
+    if(q.opts){
+      box.className='opts';
+      q.opts.forEach(function(o){
+        var b=document.createElement('button'); b.textContent=o;
+        b.addEventListener('click',function(){
+          if(answered) return;
+          var good=(o===q.ans);
+          b.classList.add(good?'ok':'bad');
+          box.querySelectorAll('button').forEach(function(x){ if(x.textContent===q.ans) x.classList.add('ok'); });
+          finish(good,(good?'Correcto. ':'La respuesta es '+q.ans+'. ')+(q.why||''));
+        });
+        box.appendChild(b);
+      });
+    } else {
+      box.className='';
+      box.innerHTML='<div class="slider" style="margin-top:0"><input id="numIn" type="number" step="any" inputmode="decimal" aria-label="Tu respuesta" style="flex:1;font:inherit;font-size:20px;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink)"><span class="pill">'+(q.unit||'')+'</span></div><button class="btn" id="numGo">Comprobar</button>';
+      var go=function(){
+        if(answered) return;
+        var v=parseFloat($('#numIn').value);
+        if(isNaN(v)){ $('#retoMsg').textContent='Escribe un número.'; return; }
+        var good=Math.abs(v-q.ans)<=(q.tol||0.01);
+        finish(good,(good?'Correcto. ':'La respuesta es '+fmt(q.ans)+(q.unit?' '+q.unit:'')+'. ')+(q.why||''));
+      };
+      $('#numGo').addEventListener('click',go);
+      $('#numIn').addEventListener('keydown',function(e){ if(e.key==='Enter') go(); });
+    }
+  }
+  $('#retoNext').addEventListener('click',next);
+  next();
+}
+
+var PI=Math.PI;
+function sliderHTML(id,label,min,max,val){
+  return '<div class="slider"><label for="'+id+'">'+label+'</label><input id="'+id+'" type="range" min="'+min+'" max="'+max+'" step="1" value="'+val+'"><output id="o_'+id+'">'+val+'</output></div>';
+}
+var FILLS={front:'fill="var(--gold)" fill-opacity=".28"',top:'fill="var(--gold)" fill-opacity=".5"',side:'fill="var(--gold)" fill-opacity=".38"'};
+var STK='stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"';
+function t(x,y,s,a){return '<text x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" text-anchor="'+(a||'middle')+'" font-size="15">'+s+'</text>';}
+
+var SOL={
+  cubo:{n:'Cubo',life:'Un dado o un cubo de hielo.',p:[['a','Arista',1,10,4]],
+    vol:function(v){return [ 'V = a³','V = '+v.a+'³ = '+(v.a*v.a*v.a),v.a*v.a*v.a];}},
+  prisma:{n:'Prisma rectangular',life:'Una caja de cereal, un ladrillo, un tinaco rectangular.',p:[['l','Largo',1,12,8],['w','Ancho',1,10,4],['h','Alto',1,12,5]],
+    vol:function(v){return ['V = l · w · h','V = '+v.l+' · '+v.w+' · '+v.h+' = '+(v.l*v.w*v.h),v.l*v.w*v.h];}},
+  cilindro:{n:'Cilindro',life:'Una lata de refresco o un tinaco redondo.',p:[['r','Radio',1,8,3],['h','Altura',1,12,8]],
+    vol:function(v){var x=PI*v.r*v.r*v.h;return ['V = π · r² · h','V = π · '+v.r+'² · '+v.h+' ≈ '+r2(x),x];}},
+  cono:{n:'Cono',life:'Un cono de helado o un cono de tránsito.',p:[['r','Radio',1,8,3],['h','Altura',1,12,9]],
+    vol:function(v){var x=PI*v.r*v.r*v.h/3;return ['V = ⅓ · π · r² · h','V = ⅓ · π · '+v.r+'² · '+v.h+' ≈ '+r2(x),x];}},
+  piramide:{n:'Pirámide de base cuadrada',life:'La Pirámide del Sol en Teotihuacán o la punta de un obelisco.',p:[['l','Lado de la base',1,12,6],['h','Altura',1,12,7]],
+    vol:function(v){var x=v.l*v.l*v.h/3;return ['V = ⅓ · l² · h','V = ⅓ · '+v.l+'² · '+v.h+' ≈ '+r2(x),x];}},
+  esfera:{n:'Esfera',life:'Un balón o una canica.',p:[['r','Radio',1,10,4]],
+    vol:function(v){var x=4*PI*v.r*v.r*v.r/3;return ['V = ⁴⁄₃ · π · r³','V = ⁴⁄₃ · π · '+v.r+'³ ≈ '+r2(x),x];}}
+};
+var solKey='cilindro', sv={};
+
+function drawPrism(l,w,h){
+  var k=Math.min(190/(l+0.5*w),170/(h+0.35*w)), W=l*k, H=h*k, dx=w*k*0.5, dy=w*k*0.35;
+  var ox=(360-(W+dx))/2-6, oy=(280+(H+dy))/2-4;
+  var A=[ox,oy], B=[ox+W,oy], C=[ox+W,oy-H], D=[ox,oy-H], E=[ox+dx,oy-H-dy], F=[ox+W+dx,oy-H-dy], G=[ox+W+dx,oy-dy];
+  var P=function(a){return a.map(function(p){return p[0].toFixed(1)+','+p[1].toFixed(1);}).join(' ');};
+  return '<polygon points="'+P([D,C,F,E])+'" '+FILLS.top+' '+STK+'/>'+
+         '<polygon points="'+P([B,G,F,C])+'" '+FILLS.side+' '+STK+'/>'+
+         '<polygon points="'+P([A,B,C,D])+'" '+FILLS.front+' '+STK+'/>'+
+         t(ox+W/2,oy+20,'largo = '+l)+t(ox+W+dx+8,oy-dy/2+5,'ancho = '+w,'start')+t(ox-8,oy-H/2+5,'alto = '+h,'end');
+}
+function drawCyl(r,h){
+  var k=Math.min(220/(2*r),170/(h+0.7*r)), rx=r*k, ry=rx*0.33, H=h*k;
+  var cx=180, yb=(280+(H+ry*2))/2-ry-4, yt=yb-H;
+  return '<path d="M '+(cx-rx)+' '+yt+' L '+(cx-rx)+' '+yb+' A '+rx+' '+ry+' 0 0 0 '+(cx+rx)+' '+yb+' L '+(cx+rx)+' '+yt+'" '+FILLS.front+' '+STK+'/>'+
+         '<ellipse cx="'+cx+'" cy="'+yt+'" rx="'+rx+'" ry="'+ry+'" '+FILLS.top+' '+STK+'/>'+
+         '<line x1="'+cx+'" y1="'+yt+'" x2="'+(cx+rx)+'" y2="'+yt+'" stroke="var(--accent)" stroke-width="3"/>'+
+         t(cx+rx/2,yt-ry-8,'r = '+r)+t(cx-rx-8,(yt+yb)/2+5,'h = '+h,'end');
+}
+function drawCone(r,h){
+  var k=Math.min(220/(2*r),180/(h+0.7*r)), rx=r*k, ry=rx*0.33, H=h*k;
+  var cx=180, yb=(280+(H+ry*2))/2-ry+2, yt=yb-H;
+  return '<path d="M '+(cx-rx)+' '+yb+' A '+rx+' '+ry+' 0 0 0 '+(cx+rx)+' '+yb+' L '+cx+' '+yt+' Z" '+FILLS.front+' '+STK+'/>'+
+         '<path d="M '+(cx-rx)+' '+yb+' A '+rx+' '+ry+' 0 0 1 '+(cx+rx)+' '+yb+'" fill="none" stroke="var(--ink)" stroke-width="2" stroke-dasharray="5 4"/>'+
+         '<line x1="'+cx+'" y1="'+yt+'" x2="'+cx+'" y2="'+yb+'" stroke="var(--accent)" stroke-width="3" stroke-dasharray="6 4"/>'+
+         '<line x1="'+cx+'" y1="'+yb+'" x2="'+(cx+rx)+'" y2="'+yb+'" stroke="var(--accent)" stroke-width="3"/>'+
+         t(cx+rx/2,yb+ry+18,'r = '+r)+t(cx-rx-10,(yt+yb)/2+5,'h = '+h,'end');
+}
+function drawPyr(l,h){
+  var k=Math.min(220/(l*1.45),180/(h+l*0.3)), L=l*k, d=L*0.45, e=L*0.3, H=h*k;
+  var ox=(360-(L+d))/2, yb=(280+(H+e))/2-2;
+  var A=[ox,yb], B=[ox+L,yb], C=[ox+L+d,yb-e], D=[ox+d,yb-e], Ap=[(ox+ox+L+d+L+d)/4-0, yb-e/2-H];
+  Ap=[(A[0]+C[0])/2, yb-e/2-H];
+  var P=function(a){return a.map(function(p){return p[0].toFixed(1)+','+p[1].toFixed(1);}).join(' ');};
+  return '<polygon points="'+P([A,B,C,D])+'" '+FILLS.top+' stroke="var(--ink)" stroke-width="2" stroke-dasharray="5 4"/>'+
+         '<polygon points="'+P([B,C,Ap])+'" '+FILLS.side+' '+STK+'/>'+
+         '<polygon points="'+P([A,B,Ap])+'" '+FILLS.front+' '+STK+'/>'+
+         '<line x1="'+Ap[0].toFixed(1)+'" y1="'+Ap[1].toFixed(1)+'" x2="'+Ap[0].toFixed(1)+'" y2="'+(yb-e/2).toFixed(1)+'" stroke="var(--accent)" stroke-width="3" stroke-dasharray="6 4"/>'+
+         t(ox+L/2,yb+20,'lado = '+l)+t(Ap[0]+24,Ap[1]+20,'h = '+h,'start');
+}
+function drawSphere(r){
+  var R=40+r*9, cx=180, cy=140, ry=R*0.3;
+  return '<defs><radialGradient id="sg" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="var(--gold)" stop-opacity=".55"/></radialGradient></defs>'+
+         '<circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="url(#sg)" '+STK+'/>'+
+         '<path d="M '+(cx-R)+' '+cy+' A '+R+' '+ry+' 0 0 0 '+(cx+R)+' '+cy+'" fill="none" stroke="var(--ink)" stroke-width="2"/>'+
+         '<path d="M '+(cx-R)+' '+cy+' A '+R+' '+ry+' 0 0 1 '+(cx+R)+' '+cy+'" fill="none" stroke="var(--ink)" stroke-width="2" stroke-dasharray="5 4"/>'+
+         '<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+R)+'" y2="'+cy+'" stroke="var(--accent)" stroke-width="3"/><circle cx="'+cx+'" cy="'+cy+'" r="4" fill="var(--ink)"/>'+
+         t(cx+R/2,cy+22,'r = '+r);
+}
+function drawSol(){
+  var s='';
+  if(solKey==='cubo') s=drawPrism(sv.a,sv.a,sv.a);
+  else if(solKey==='prisma') s=drawPrism(sv.l,sv.w,sv.h);
+  else if(solKey==='cilindro') s=drawCyl(sv.r,sv.h);
+  else if(solKey==='cono') s=drawCone(sv.r,sv.h);
+  else if(solKey==='piramide') s=drawPyr(sv.l,sv.h);
+  else s=drawSphere(sv.r);
+  $('#svgSol').innerHTML=s;
+  var S=SOL[solKey], v=S.vol(sv);
+  $('#solName').textContent=S.n;
+  $('#solLife').textContent='En la vida diaria: '+S.life.charAt(0).toLowerCase()+S.life.slice(1);
+  $('#volF').textContent=v[0]; $('#volV').textContent=v[1]+' cm³';
+  var lit=v[2]/1000;
+  $('#capV').textContent=(lit<1?'≈ '+r2(v[2]/1000*1000)+' mililitros':'≈ '+r2(lit)+' litros');
+}
+function setSol(key){
+  solKey=key; var S=SOL[key]; sv={}; var h='';
+  S.p.forEach(function(p){ sv[p[0]]=p[4]; h+=sliderHTML('s_'+p[0],p[1],p[2],p[3],p[4]); });
+  $('#slidersSol').innerHTML=h;
+  S.p.forEach(function(p){
+    $('#s_'+p[0]).addEventListener('input',function(e){ sv[p[0]]=parseInt(e.target.value,10); $('#o_s_'+p[0]).textContent=sv[p[0]]; drawSol(); });
+  });
+  document.querySelectorAll('[data-sol]').forEach(function(b){
+    var on=b.getAttribute('data-sol')===key;
+    b.style.background=on?'var(--ink)':'var(--panel)'; b.style.color=on?'var(--bg)':'var(--ink)'; b.style.borderColor=on?'var(--ink)':'var(--line)';
+  });
+  drawSol();
+}
+Object.keys(SOL).forEach(function(k){
+  var b=document.createElement('button'); b.className='chip'; b.textContent=SOL[k].n; b.setAttribute('data-sol',k);
+  b.addEventListener('click',function(){setSol(k);});
+  $('#chipsSol').appendChild(b);
+});
+setSol('cilindro');
+
+/* relaciones */
+function barsHTML(title,aLab,a,bLab,b,note){
+  var m=Math.max(a,b), wa=Math.max(2,a/m*100), wb=Math.max(2,b/m*100);
+  return '<div style="margin:16px 0"><div class="kicker">'+title+'</div>'+
+    '<div class="bar"><span class="lab">'+aLab+'</span><span class="fill" style="width:'+(wa*0.55)+'%;background:var(--accent)"></span><span class="val">'+r2(a)+' cm³</span></div>'+
+    '<div class="bar"><span class="lab">'+bLab+'</span><span class="fill" style="width:'+(wb*0.55)+'%;background:var(--gold)"></span><span class="val">'+r2(b)+' cm³</span></div>'+
+    '<div style="color:var(--muted);font-size:15px">'+note+'</div></div>';
+}
+function drawRel(){
+  var r=+$('#rr').value, h=+$('#rh').value;
+  $('#o_rr').textContent=r; $('#o_rh').textContent=h;
+  var cil=PI*r*r*h, con=cil/3, pri=(2*r)*(2*r)*h, pir=pri/3, esf=4*PI*r*r*r/3, cil2=PI*r*r*2*r;
+  $('#relBars').innerHTML=
+    barsHTML('Cilindro y cono · radio '+r+', altura '+h,'Cilindro',cil,'Cono',con,'El cilindro vale '+r2(cil/con)+' veces el cono.')+
+    barsHTML('Prisma y pirámide · base '+(2*r)+' × '+(2*r)+', altura '+h,'Prisma',pri,'Pirámide',pir,'El prisma vale '+r2(pri/pir)+' veces la pirámide.')+
+    barsHTML('Cilindro que envuelve y esfera · radio '+r+', altura '+(2*r),'Cilindro',cil2,'Esfera',esf,'La esfera ocupa '+r2(esf/cil2*100)+'% del cilindro, o sea dos tercios.');
+}
+$('#rr').addEventListener('input',drawRel); $('#rh').addEventListener('input',drawRel);
+drawRel();
+
+/* reto */
+Quiz(function(){
+  var k=rnd(6), q={};
+  if(k===0){
+    var l=pick([20,24,25,30]), w=pick([10,12]), h=pick([5,6,8]);
+    q={text:'Un ladrillo mide '+l+' × '+w+' × '+h+' cm. ¿Cuál es su volumen?',ans:l*w*h,unit:'cm³',tol:0.01,why:'V = l · w · h = '+l+' · '+w+' · '+h+' = '+(l*w*h)+' cm³.'};
+  } else if(k===1){
+    var r=pick([2,3,4,5]), h2=pick([8,10,12]);
+    q={text:'Una lata cilíndrica tiene radio de '+r+' cm y altura de '+h2+' cm. ¿Cuál es su volumen? Usa π = 3.14.',ans:r2(3.14*r*r*h2),unit:'cm³',tol:0.02,why:'V = π r² h = 3.14 · '+r+'² · '+h2+' = '+r2(3.14*r*r*h2)+' cm³.'};
+  } else if(k===2){
+    var rc=pick([2,3,4]), hc=pick([6,9,12]);
+    q={text:'Un cono de helado tiene radio de '+rc+' cm y altura de '+hc+' cm. ¿Cuál es su volumen? Usa π = 3.14.',ans:r2(3.14*rc*rc*hc/3),unit:'cm³',tol:0.02,why:'V = ⅓ π r² h = ⅓ · 3.14 · '+rc+'² · '+hc+' = '+r2(3.14*rc*rc*hc/3)+' cm³.'};
+  } else if(k===3){
+    var re=pick([3,6]);
+    q={text:'Un balón tiene radio de '+re+' cm. ¿Cuál es su volumen? Usa π = 3.14.',ans:r2(4*3.14*re*re*re/3),unit:'cm³',tol:0.02,why:'V = ⁴⁄₃ π r³ = ⁴⁄₃ · 3.14 · '+re+'³ = '+r2(4*3.14*re*re*re/3)+' cm³.'};
+  } else if(k===4){
+    var d=pick([[20,10,5],[30,20,10],[50,40,30],[40,25,20],[100,50,40]]), vv=d[0]*d[1]*d[2];
+    q={text:'Una caja mide '+d[0]+' × '+d[1]+' × '+d[2]+' cm. ¿Cuántos litros de agua le caben?',ans:vv/1000,unit:'litros',tol:0.01,why:'V = '+vv+' cm³ y 1000 cm³ = 1 litro, entonces caben '+(vv/1000)+' litros.'};
+  } else {
+    var a=pick([3,4,5,6,8,10]);
+    q={text:'Un cubo de hielo tiene una arista de '+a+' cm. ¿Cuál es su volumen?',ans:a*a*a,unit:'cm³',tol:0.01,why:'V = a³ = '+a+'³ = '+(a*a*a)+' cm³.'};
+  }
+  return q;
+});
+initTabs(['solidos','relaciones','reto']);
+
+})();
+</script>
+</body>
+</html>
