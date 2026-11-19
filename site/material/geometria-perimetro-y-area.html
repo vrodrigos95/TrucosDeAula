@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Perímetro y área · TrucosDeAula</title>
+<meta name="description" content="Material interactivo de geometría: perímetro y área de figuras básicas y compuestas.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+/* Sistema TrucosDeAula: fondo crema, tinta casi negra, azul eléctrico para el énfasis, dorado para los detalles. Cabecera con logo, franja negra de operaciones, tarjetas blancas de borde fino. */
+:root{
+  --bg:#FAF9F6;
+  --panel:#FFFFFF;
+  --ink:#101012;
+  --muted:#5f5f66;
+  --line:rgba(16,16,18,.16);
+  --navy:#101012;
+  --accent:#1B44E8;
+  --gold:#C79A3E;
+  --teal:#2E8B7A;
+  --coral:#D9503A;
+  --plum:#7B4FD0;
+  --blue:#1B44E8;
+  --grey:#8a8a90;
+  --wash:#EFE6D9;
+  --sky:#DCE6F5;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"Instrument Sans",Helvetica,Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 24px;border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:9px;font-family:var(--body);font-weight:700;font-size:17px;text-decoration:none;color:var(--ink)}
+.logo i{width:15px;height:15px;border-radius:50%;background:var(--accent);display:block}
+.top small{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.wrap{max-width:1040px;margin:0 auto;padding:44px 20px 56px}
+header+*{}
+.eyebrow{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.eyebrow:before{content:"";width:26px;height:1px;background:var(--gold)}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(40px,7.4vw,92px);line-height:.98;letter-spacing:-.035em;margin:14px 0 0;text-wrap:balance}
+h1 em{color:var(--accent);font-style:italic}
+h1 .dot{color:var(--ink)}
+.lead{max-width:560px;color:var(--muted);margin:20px 0 0}
+h2{font-family:var(--display);font-weight:600;font-size:28px;letter-spacing:-.02em;line-height:1.1;margin:0 0 8px;text-wrap:balance}
+h2 .q{color:var(--gold)}
+p{margin:0 0 10px}
+.strip{background:var(--ink);color:var(--bg);overflow:hidden;white-space:nowrap;padding:12px 0}
+.strip .track{display:inline-block;animation:slide 38s linear infinite;font-family:var(--display);font-size:24px;letter-spacing:-.01em}
+.strip span{margin:0 18px}
+.strip b{color:var(--gold);font-weight:400;margin:0 6px}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion: reduce){.strip .track{animation:none}}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 22px}
+nav button,.chip,.btn{font:inherit;font-size:15px;font-weight:600;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:9px 16px;border-radius:999px;cursor:pointer}
+nav button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px}
+.stage{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:820px){.stage{grid-template-columns:1fr}}
+svg{display:block;width:100%;height:auto}
+.board{background:var(--wash);border-radius:8px;touch-action:none}
+.big{font-family:var(--display);font-weight:400;font-size:64px;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.tag{display:inline-block;font-weight:600;padding:4px 14px;border-radius:999px;color:#fff;font-size:15px}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.slider{display:flex;align-items:center;gap:12px;margin:16px 0}
+.slider label{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.slider input{flex:1;accent-color:var(--accent);min-width:0}
+.slider output{font-weight:600;min-width:58px;text-align:right;font-variant-numeric:tabular-nums}
+.note{background:var(--wash);border-radius:10px;padding:16px 20px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:6px}
+.card svg{background:var(--wash);border-radius:8px}
+.card h3{font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:-.02em;margin:6px 0 0}
+.card .life{color:var(--muted);font-size:15.5px}
+.eq{font-variant-numeric:tabular-nums;font-weight:600}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:16px}
+td,th{border-bottom:1px solid var(--line);padding:8px 8px;text-align:left}
+th{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.pill{display:inline-block;min-width:28px;text-align:center;font-weight:600;border-radius:999px;padding:1px 9px;background:var(--wash)}
+.kicker{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.q{font-family:var(--display);font-weight:400;font-size:30px;letter-spacing:-.02em;line-height:1.15;margin:8px 0 14px}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.opts button{font:inherit;font-weight:600;font-size:19px;padding:16px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+.opts button.ok{border-color:var(--teal);background:color-mix(in srgb,var(--teal) 18%,var(--panel))}
+.opts button.bad{border-color:var(--coral);background:color-mix(in srgb,var(--coral) 18%,var(--panel))}
+.hide{display:none}
+.band{background:var(--sky);border-radius:10px;padding:20px 22px;margin-top:14px}
+footer{border-top:1px solid var(--line);margin-top:36px;padding-top:18px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;color:var(--muted);font-size:15px}
+text{font-family:var(--body);font-weight:600;fill:var(--ink)}
+.axis{stroke:var(--ink);stroke-width:2.5;stroke-linecap:round}
+.thin{stroke:var(--muted);stroke-width:1.5}
+
+input[type=number]{min-width:0}
+.bar{display:flex;align-items:center;gap:10px;margin:6px 0;font-variant-numeric:tabular-nums}
+.bar .lab{width:92px;font-size:15px;color:var(--muted)}
+.bar .fill{height:26px;border-radius:6px;min-width:3px}
+.bar .val{font-weight:600;font-size:15px}
+.seg{display:flex;height:38px;border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+.seg div{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:14px;white-space:nowrap}
+.lines p{margin:0 0 6px}
+.ok-t{color:var(--teal);font-weight:600}
+.bad-t{color:var(--coral);font-weight:600}
+
+.row{align-items:center}
+.pill{line-height:1.5}
+
+</style>
+</head>
+<body>
+<div class="top"><a class="logo" href="/"><i></i>TrucosDeAula</a><a href="/infografias/" style="text-decoration:none"><small>← Infografías y material</small></a></div>
+<div class="wrap">
+<header>
+  <div class="eyebrow">Geometría · Perímetro y área</div>
+  <h1>El área ya la usas <em>cuando compras mosaicos</em><span class="dot">.</span></h1>
+  <p class="lead">El perímetro es el contorno y el área es lo que cubre. Mueve las medidas y mira las dos al mismo tiempo.</p>
+</header>
+</div>
+<div class="strip" aria-hidden="true"><div class="track"><span>mosaicos</span><b>+</b><span>cercas</span><b>×</b><span>pintura</span><b>÷</b><span>pizzas</span><b>√</b><span>terrenos</span><b>∑</b><span>alfombras</span><b>π</b><span>mosaicos</span><b>+</b><span>cercas</span><b>×</b><span>pintura</span><b>÷</b><span>pizzas</span><b>√</b><span>terrenos</span><b>∑</b><span>alfombras</span><b>π</b></div></div>
+<div class="wrap" style="padding-top:0">
+<nav role="tablist" aria-label="Temas">
+  <button role="tab" data-tab="basicas" aria-selected="true">1. Figuras básicas</button>
+  <button role="tab" data-tab="compuestas" aria-selected="false">2. Figuras compuestas</button>
+  <button role="tab" data-tab="reto" aria-selected="false">3. Reto rápido</button>
+  
+</nav>
+<section id="tab-basicas">
+  <div class="stage">
+    <div class="panel">
+      <div class="row" id="chipsFig" style="margin-top:0"></div>
+      <svg id="svgFig" class="board" viewBox="0 0 360 260" role="img" aria-label="Figura con su cuadrícula de unidades"></svg>
+      <div id="sliders"></div>
+    </div>
+    <div class="panel">
+      <h2 id="figName">Rectángulo</h2>
+      <p id="figLife" style="color:var(--muted)"></p>
+      <div class="note" style="margin-bottom:12px">
+        <div class="kicker" style="margin-bottom:4px">Perímetro · el contorno</div>
+        <div class="eq" id="perF"></div>
+        <div class="eq" id="perV" style="font-size:22px;margin-top:4px"></div>
+      </div>
+      <div class="band" style="margin:0">
+        <div class="kicker" style="margin-bottom:4px">Área · lo que cubre</div>
+        <div class="eq" id="areaF"></div>
+        <div class="eq" id="areaV" style="font-size:22px;margin-top:4px"></div>
+      </div>
+      <p style="color:var(--muted);font-size:15px;margin-top:12px">Cada cuadrito de la cuadrícula mide 1 cm × 1 cm, o sea 1 cm² de área. El perímetro se mide en cm; el área, en cm².</p>
+    </div>
+  </div>
+</section>
+
+<section id="tab-compuestas" class="hide">
+  <div class="stage">
+    <div class="panel">
+      <div class="row" id="chipsComp" style="margin-top:0"></div>
+      <svg id="svgComp" class="board" viewBox="0 0 360 260" role="img" aria-label="Figura compuesta dividida en partes"></svg>
+      <div id="slidersComp"></div>
+    </div>
+    <div class="panel">
+      <h2 id="compName">Forma en L</h2>
+      <p id="compLife" style="color:var(--muted)"></p>
+      <div class="band" style="margin:0 0 12px">
+        <div class="kicker" style="margin-bottom:4px">Área</div>
+        <div class="lines" id="compArea"></div>
+      </div>
+      <div class="note">
+        <div class="kicker" style="margin-bottom:4px">Perímetro</div>
+        <div class="lines" id="compPer"></div>
+      </div>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <h2>El truco de las figuras compuestas</h2>
+    <p>Partes la figura en piezas que ya conoces, calculas cada una y las sumas. O completas la figura a un rectángulo y le restas lo que sobra. Las dos rutas dan el mismo resultado.</p>
+  </div>
+</section>
+
+<section id="tab-reto" class="hide">
+  <div class="stage">
+    <div class="panel">
+      <div class="kicker" id="retoInfo">Pregunta 1</div>
+      <div class="q" id="retoQ"></div>
+      <svg id="svgReto" class="board" viewBox="0 0 360 240" role="img" aria-label="Figura de la pregunta"></svg>
+    </div>
+    <div class="panel">
+      <div id="retoOpts"></div>
+      <p id="retoMsg" style="margin-top:14px;min-height:50px"></p>
+      <div class="row"><button class="btn" id="retoNext">Siguiente</button><span class="pill" id="retoScore">0 de 0</span></div>
+    </div>
+  </div>
+</section>
+
+<footer><span class="logo"><i></i>TrucosDeAula</span><span>Divulgación matemática, sin bata de laboratorio.</span></footer>
+</div>
+<script>
+(function(){
+var $ = function(s){return document.querySelector(s);};
+var rad = function(d){return d*Math.PI/180;};
+function pt(cx,cy,r,deg){return [cx+r*Math.cos(rad(deg)), cy-r*Math.sin(rad(deg))];}
+function wedge(cx,cy,r,a0,a1){
+  var span=a1-a0;
+  if(span>=359.99){return 'M '+(cx-r)+' '+cy+' A '+r+' '+r+' 0 1 0 '+(cx+r)+' '+cy+' A '+r+' '+r+' 0 1 0 '+(cx-r)+' '+cy+' Z';}
+  var s=pt(cx,cy,r,a0), e=pt(cx,cy,r,a1);
+  return 'M '+cx+' '+cy+' L '+s[0].toFixed(2)+' '+s[1].toFixed(2)+' A '+r+' '+r+' 0 '+(span>180?1:0)+' 0 '+e[0].toFixed(2)+' '+e[1].toFixed(2)+' Z';
+}
+function rnd(n){return Math.floor(Math.random()*n);}
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=rnd(i+1);var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function uniq(a){return a.filter(function(v,i){return a.indexOf(v)===i;});}
+function pick(a){return a[rnd(a.length)];}
+function r2(v){return Math.round(v*100)/100;}
+function fmt(v){var x=r2(v);return (x%1===0)?String(x):String(x);}
+function numOpts(ans,cands,f){
+  var list=uniq([ans].concat(cands).filter(function(v){return v>0;}));
+  var rest=list.slice(1);
+  var k=1;
+  while(rest.length<3){var c=ans+k*Math.max(1,Math.round(ans*0.1)); if(rest.indexOf(c)<0&&c!==ans&&c>0) rest.push(c); k++; if(k>40) break;}
+  var out=[ans].concat(shuffle(rest).slice(0,3));
+  return shuffle(out).map(f);
+}
+
+/* pestañas con hash */
+function initTabs(names){
+  function show(name){
+    if(names.indexOf(name)<0) name=names[0];
+    names.forEach(function(t){
+      $('#tab-'+t).classList.toggle('hide', t!==name);
+      document.querySelector('[data-tab="'+t+'"]').setAttribute('aria-selected', t===name?'true':'false');
+    });
+  }
+  document.querySelectorAll('[data-tab]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var n=b.getAttribute('data-tab'); show(n);
+      try{ location.hash=n; }catch(e){}
+    });
+  });
+  window.addEventListener('hashchange',function(){show(location.hash.replace('#',''));});
+  show(location.hash.replace('#',''));
+}
+
+/* reto: opción múltiple o respuesta numérica */
+function Quiz(gen){
+  var score=0,total=0,qn=0,answered=false;
+  function finish(good,msg){
+    if(answered) return; answered=true; total++; if(good) score++;
+    $('#retoScore').textContent=score+' de '+total;
+    $('#retoMsg').textContent=msg;
+  }
+  function next(){
+    answered=false; qn++;
+    var q=gen();
+    $('#retoInfo').textContent='Pregunta '+qn;
+    $('#retoQ').textContent=q.text;
+    var sv=$('#svgReto'); sv.innerHTML=q.svg||''; sv.style.display=q.svg?'block':'none';
+    var box=$('#retoOpts'); box.innerHTML=''; $('#retoMsg').textContent='';
+    if(q.opts){
+      box.className='opts';
+      q.opts.forEach(function(o){
+        var b=document.createElement('button'); b.textContent=o;
+        b.addEventListener('click',function(){
+          if(answered) return;
+          var good=(o===q.ans);
+          b.classList.add(good?'ok':'bad');
+          box.querySelectorAll('button').forEach(function(x){ if(x.textContent===q.ans) x.classList.add('ok'); });
+          finish(good,(good?'Correcto. ':'La respuesta es '+q.ans+'. ')+(q.why||''));
+        });
+        box.appendChild(b);
+      });
+    } else {
+      box.className='';
+      box.innerHTML='<div class="slider" style="margin-top:0"><input id="numIn" type="number" step="any" inputmode="decimal" aria-label="Tu respuesta" style="flex:1;font:inherit;font-size:20px;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink)"><span class="pill">'+(q.unit||'')+'</span></div><button class="btn" id="numGo">Comprobar</button>';
+      var go=function(){
+        if(answered) return;
+        var v=parseFloat($('#numIn').value);
+        if(isNaN(v)){ $('#retoMsg').textContent='Escribe un número.'; return; }
+        var good=Math.abs(v-q.ans)<=(q.tol||0.01);
+        finish(good,(good?'Correcto. ':'La respuesta es '+fmt(q.ans)+(q.unit?' '+q.unit:'')+'. ')+(q.why||''));
+      };
+      $('#numGo').addEventListener('click',go);
+      $('#numIn').addEventListener('keydown',function(e){ if(e.key==='Enter') go(); });
+    }
+  }
+  $('#retoNext').addEventListener('click',next);
+  next();
+}
+
+var PI=Math.PI;
+function sliderHTML(id,label,min,max,val,unit){
+  return '<div class="slider"><label for="'+id+'">'+label+'</label><input id="'+id+'" type="range" min="'+min+'" max="'+max+'" step="1" value="'+val+'"><output id="o_'+id+'">'+val+(unit||'')+'</output></div>';
+}
+function gridLines(ox,oy,W,H,u,step){
+  var s='',i;
+  for(i=0;i<=W+1e-9;i+=step) s+='<line x1="'+(ox+i*u).toFixed(1)+'" y1="'+oy.toFixed(1)+'" x2="'+(ox+i*u).toFixed(1)+'" y2="'+(oy-H*u).toFixed(1)+'" stroke="var(--ink)" stroke-opacity=".12"/>';
+  for(i=0;i<=H+1e-9;i+=step) s+='<line x1="'+ox.toFixed(1)+'" y1="'+(oy-i*u).toFixed(1)+'" x2="'+(ox+W*u).toFixed(1)+'" y2="'+(oy-i*u).toFixed(1)+'" stroke="var(--ink)" stroke-opacity=".12"/>';
+  return s;
+}
+function lab(x,y,t,anchor){return '<text x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" text-anchor="'+(anchor||'middle')+'" font-size="15">'+t+'</text>';}
+
+/* ---- figuras básicas ---- */
+var FIG={
+  cuadrado:{n:'Cuadrado',life:'El mosaico de un baño o un pañuelo.',p:[['l','Lado',1,12,5]],
+    dims:function(v){return [v.l,v.l];},
+    per:function(v){return ['P = 4 · l','P = 4 · '+v.l+' = '+(4*v.l)+' cm'];},
+    area:function(v){return ['A = l²','A = '+v.l+'² = '+(v.l*v.l)+' cm²'];}},
+  rectangulo:{n:'Rectángulo',life:'Una hoja del cuaderno, una cancha, una puerta.',p:[['b','Base',1,14,8],['h','Altura',1,10,5]],
+    dims:function(v){return [v.b,v.h];},
+    per:function(v){return ['P = 2(b + h)','P = 2('+v.b+' + '+v.h+') = '+(2*(v.b+v.h))+' cm'];},
+    area:function(v){return ['A = b · h','A = '+v.b+' · '+v.h+' = '+(v.b*v.h)+' cm²'];}},
+  triangulo:{n:'Triángulo rectángulo',life:'Una escuadra, un banderín, una rampa vista de lado.',p:[['b','Base',1,14,8],['h','Altura',1,10,6]],
+    dims:function(v){return [v.b,v.h];},
+    per:function(v){var c=Math.sqrt(v.b*v.b+v.h*v.h);return ['P = b + h + c, con c = √(b² + h²)','P = '+v.b+' + '+v.h+' + '+r2(c)+' = '+r2(v.b+v.h+c)+' cm'];},
+    area:function(v){return ['A = b · h ÷ 2','A = '+v.b+' · '+v.h+' ÷ 2 = '+r2(v.b*v.h/2)+' cm²'];}},
+  circulo:{n:'Círculo',life:'Una pizza, una llanta, una moneda.',p:[['r','Radio',1,8,5]],
+    dims:function(v){return [2*v.r,2*v.r];},
+    per:function(v){return ['P = 2 · π · r','P = 2 · π · '+v.r+' ≈ '+r2(2*PI*v.r)+' cm'];},
+    area:function(v){return ['A = π · r²','A = π · '+v.r+'² ≈ '+r2(PI*v.r*v.r)+' cm²'];}},
+  trapecio:{n:'Trapecio isósceles',life:'El perfil de una cubeta o de un puesto de tianguis.',p:[['B','Base mayor',3,14,10],['b','Base menor',1,13,6],['h','Altura',1,9,5]],
+    dims:function(v){return [v.B,v.h];},
+    per:function(v){var l=Math.sqrt(v.h*v.h+Math.pow((v.B-v.b)/2,2));return ['P = B + b + 2l, con l = √(h² + ((B − b) ÷ 2)²)','P = '+v.B+' + '+v.b+' + 2('+r2(l)+') = '+r2(v.B+v.b+2*l)+' cm'];},
+    area:function(v){return ['A = (B + b) · h ÷ 2','A = ('+v.B+' + '+v.b+') · '+v.h+' ÷ 2 = '+r2((v.B+v.b)*v.h/2)+' cm²'];}}
+};
+var figKey='rectangulo', vals={};
+function figShape(key,v,ox,oy,u){
+  var fillA='fill="var(--gold)" fill-opacity=".38"', ln='stroke="var(--accent)" stroke-width="4" stroke-linejoin="round"';
+  if(key==='cuadrado') return '<rect x="'+ox+'" y="'+(oy-v.l*u)+'" width="'+(v.l*u)+'" height="'+(v.l*u)+'" '+fillA+' '+ln+'/>'+lab(ox+v.l*u/2,oy+20,'l = '+v.l);
+  if(key==='rectangulo') return '<rect x="'+ox+'" y="'+(oy-v.h*u)+'" width="'+(v.b*u)+'" height="'+(v.h*u)+'" '+fillA+' '+ln+'/>'+lab(ox+v.b*u/2,oy+20,'b = '+v.b)+lab(ox-8,oy-v.h*u/2+5,'h = '+v.h,'end');
+  if(key==='triangulo') return '<polygon points="'+ox+','+oy+' '+(ox+v.b*u)+','+oy+' '+ox+','+(oy-v.h*u)+'" '+fillA+' '+ln+'/>'+lab(ox+v.b*u/2,oy+20,'b = '+v.b)+lab(ox-8,oy-v.h*u/2+5,'h = '+v.h,'end');
+  if(key==='circulo'){var cx=ox+v.r*u, cy=oy-v.r*u; return '<circle cx="'+cx+'" cy="'+cy+'" r="'+(v.r*u)+'" '+fillA+' '+ln+'/><line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+v.r*u)+'" y2="'+cy+'" stroke="var(--ink)" stroke-width="2.5"/><circle cx="'+cx+'" cy="'+cy+'" r="4" fill="var(--ink)"/>'+lab(cx+v.r*u/2,cy-8,'r = '+v.r);}
+  var off=(v.B-v.b)/2;
+  return '<polygon points="'+ox+','+oy+' '+(ox+v.B*u)+','+oy+' '+(ox+(v.B-off)*u)+','+(oy-v.h*u)+' '+(ox+off*u)+','+(oy-v.h*u)+'" '+fillA+' '+ln+'/>'+lab(ox+v.B*u/2,oy+20,'B = '+v.B)+lab(ox+v.B*u/2,oy-v.h*u-8,'b = '+v.b)+lab(ox+v.B*u+6,oy-v.h*u/2+5,'h = '+v.h,'start');
+}
+function drawFig(){
+  var F=FIG[figKey], d=F.dims(vals), W=d[0], H=d[1];
+  var u=Math.min(250/W,170/H), ox=(360-W*u)/2, oy=(260+H*u)/2-6;
+  var step=(W>24||H>24)?2:1;
+  var s=gridLines(ox,oy,W,H,u,step)+figShape(figKey,vals,ox,oy,u);
+  $('#svgFig').innerHTML=s;
+  $('#figName').textContent=F.n;
+  $('#figLife').textContent='En la vida diaria: '+F.life.charAt(0).toLowerCase()+F.life.slice(1);
+  var p=F.per(vals), a=F.area(vals);
+  $('#perF').textContent=p[0]; $('#perV').textContent=p[1];
+  $('#areaF').textContent=a[0]; $('#areaV').textContent=a[1];
+}
+function setFig(key){
+  figKey=key; var F=FIG[key]; vals={}; var h='';
+  F.p.forEach(function(p){ vals[p[0]]=p[4]; h+=sliderHTML('f_'+p[0],p[1],p[2],p[3],p[4],''); });
+  $('#sliders').innerHTML=h;
+  F.p.forEach(function(p){
+    $('#f_'+p[0]).addEventListener('input',function(e){
+      vals[p[0]]=parseInt(e.target.value,10); $('#o_f_'+p[0]).textContent=vals[p[0]];
+      if(key==='trapecio'){ if(vals.b>=vals.B){ vals.b=vals.B-1; $('#f_b').value=vals.b; $('#o_f_b').textContent=vals.b; } }
+      drawFig();
+    });
+  });
+  document.querySelectorAll('[data-fig]').forEach(function(b){
+    var on=b.getAttribute('data-fig')===key;
+    b.style.background=on?'var(--ink)':'var(--panel)'; b.style.color=on?'var(--bg)':'var(--ink)'; b.style.borderColor=on?'var(--ink)':'var(--line)';
+  });
+  drawFig();
+}
+Object.keys(FIG).forEach(function(k){
+  var b=document.createElement('button'); b.className='chip'; b.textContent=FIG[k].n; b.setAttribute('data-fig',k);
+  b.addEventListener('click',function(){setFig(k);});
+  $('#chipsFig').appendChild(b);
+});
+setFig('rectangulo');
+
+/* ---- figuras compuestas ---- */
+var compKey='L', cv={};
+function drawComp(){
+  var s='', area='', per='', name, life;
+  if(compKey==='L'){
+    name='Forma en L'; life='La planta de un cuarto con un recoveco, o el plano de una casa.';
+    var W=cv.W, H=cv.H, w=cv.w, h=cv.h;
+    var u=Math.min(260/W,180/H), ox=(360-W*u)/2, oy=(260+H*u)/2-6;
+    s+=gridLines(ox,oy,W,H,u,1);
+    s+='<rect x="'+ox+'" y="'+(oy-(H-h)*u)+'" width="'+(W*u)+'" height="'+((H-h)*u)+'" fill="var(--accent)" fill-opacity=".3"/>';
+    s+='<rect x="'+ox+'" y="'+(oy-H*u)+'" width="'+((W-w)*u)+'" height="'+(h*u)+'" fill="var(--gold)" fill-opacity=".45"/>';
+    s+='<polygon points="'+ox+','+oy+' '+(ox+W*u)+','+oy+' '+(ox+W*u)+','+(oy-(H-h)*u)+' '+(ox+(W-w)*u)+','+(oy-(H-h)*u)+' '+(ox+(W-w)*u)+','+(oy-H*u)+' '+ox+','+(oy-H*u)+'" fill="none" stroke="var(--ink)" stroke-width="3.5" stroke-linejoin="round"/>';
+    s+=lab(ox+W*u/2,oy+20,'W = '+W)+lab(ox-8,oy-H*u/2+5,'H = '+H,'end')+lab(ox+(W-w/2)*u,oy-(H-h)*u-8,'w = '+w)+lab(ox+(W-w)*u+8,oy-(H-h/2)*u+5,'h = '+h,'start');
+    var A1=W*(H-h), A2=(W-w)*h;
+    area='<p>Partiendo en dos rectángulos: W(H − h) + (W − w)h</p><p class="eq">'+W+'('+(H-h)+') + '+(W-w)+'('+h+') = '+A1+' + '+A2+' = '+(A1+A2)+' cm²</p><p>Completando el rectángulo: W · H − w · h</p><p class="eq">'+W+' · '+H+' − '+w+' · '+h+' = '+(W*H)+' − '+(w*h)+' = '+(W*H-w*h)+' cm²</p>';
+    per='<p>Los lados del recoveco suman lo mismo que los lados que le quitaste al rectángulo, así que el perímetro es el del rectángulo grande.</p><p class="eq">P = 2(W + H) = 2('+W+' + '+H+') = '+(2*(W+H))+' cm</p>';
+  } else {
+    name='Ventana con arco'; life='Una ventana de iglesia, la entrada de un túnel, una puerta con arco.';
+    var b=cv.b, hh=cv.hh, r=b/2;
+    var Wd=b, Ht=hh+r;
+    var u2=Math.min(250/Wd,190/Ht), ox2=(360-Wd*u2)/2, oy2=(260+Ht*u2)/2-6;
+    s+=gridLines(ox2,oy2,Wd,hh,u2,1);
+    s+='<rect x="'+ox2+'" y="'+(oy2-hh*u2)+'" width="'+(b*u2)+'" height="'+(hh*u2)+'" fill="var(--accent)" fill-opacity=".3"/>';
+    s+='<path d="M '+ox2+' '+(oy2-hh*u2)+' A '+(r*u2)+' '+(r*u2)+' 0 0 1 '+(ox2+b*u2)+' '+(oy2-hh*u2)+' Z" fill="var(--gold)" fill-opacity=".45"/>';
+    s+='<path d="M '+ox2+' '+oy2+' L '+(ox2+b*u2)+' '+oy2+' L '+(ox2+b*u2)+' '+(oy2-hh*u2)+' A '+(r*u2)+' '+(r*u2)+' 0 0 0 '+ox2+' '+(oy2-hh*u2)+' Z" fill="none" stroke="var(--ink)" stroke-width="3.5" stroke-linejoin="round"/>';
+    s+=lab(ox2+b*u2/2,oy2+20,'b = '+b)+lab(ox2-8,oy2-hh*u2/2+5,'h = '+hh,'end')+lab(ox2+b*u2/2,oy2-hh*u2-r*u2/2+5,'r = '+r);
+    var Ar=b*hh, As=PI*r*r/2;
+    area='<p>Rectángulo + medio círculo: b · h + π r² ÷ 2</p><p class="eq">'+b+' · '+hh+' + π · '+r+'² ÷ 2 ≈ '+r2(Ar)+' + '+r2(As)+' = '+r2(Ar+As)+' cm²</p>';
+    per='<p>Base + dos lados + el arco (media circunferencia). El lado de arriba del rectángulo no cuenta, porque ya no es contorno.</p><p class="eq">P = b + 2h + π r = '+b+' + '+(2*hh)+' + π · '+r+' ≈ '+r2(b+2*hh+PI*r)+' cm</p>';
+  }
+  $('#svgComp').innerHTML=s; $('#compName').textContent=name;
+  $('#compLife').textContent='En la vida diaria: '+life.charAt(0).toLowerCase()+life.slice(1);
+  $('#compArea').innerHTML=area; $('#compPer').innerHTML=per;
+}
+function setComp(key){
+  compKey=key; var h='';
+  if(key==='L'){
+    cv={W:10,H:8,w:4,h:3};
+    h=sliderHTML('c_W','Ancho W',4,14,cv.W,'')+sliderHTML('c_H','Alto H',4,12,cv.H,'')+sliderHTML('c_w','Recoveco w',1,cv.W-1,cv.w,'')+sliderHTML('c_h','Recoveco h',1,cv.H-1,cv.h,'');
+  } else {
+    cv={b:6,hh:4};
+    h=sliderHTML('c_b','Base b',2,12,cv.b,'')+sliderHTML('c_hh','Altura h',1,10,cv.hh,'');
+  }
+  $('#slidersComp').innerHTML=h;
+  Object.keys(cv).forEach(function(k){
+    $('#c_'+k).addEventListener('input',function(e){
+      cv[k]=parseInt(e.target.value,10); $('#o_c_'+k).textContent=cv[k];
+      if(key==='L'){
+        $('#c_w').max=cv.W-1; if(cv.w>cv.W-1){cv.w=cv.W-1; $('#c_w').value=cv.w; $('#o_c_w').textContent=cv.w;}
+        $('#c_h').max=cv.H-1; if(cv.h>cv.H-1){cv.h=cv.H-1; $('#c_h').value=cv.h; $('#o_c_h').textContent=cv.h;}
+      }
+      drawComp();
+    });
+  });
+  document.querySelectorAll('[data-comp]').forEach(function(b){
+    var on=b.getAttribute('data-comp')===key;
+    b.style.background=on?'var(--ink)':'var(--panel)'; b.style.color=on?'var(--bg)':'var(--ink)'; b.style.borderColor=on?'var(--ink)':'var(--line)';
+  });
+  drawComp();
+}
+[['L','Forma en L'],['V','Rectángulo con semicírculo']].forEach(function(c){
+  var b=document.createElement('button'); b.className='chip'; b.textContent=c[1]; b.setAttribute('data-comp',c[0]);
+  b.addEventListener('click',function(){setComp(c[0]);});
+  $('#chipsComp').appendChild(b);
+});
+setComp('L');
+
+/* ---- reto ---- */
+Quiz(function(){
+  var k=rnd(5), q={};
+  if(k===0){
+    var L=3+rnd(6), W=3+rnd(4);
+    q={text:'El piso de una recámara mide '+L+' m × '+W+' m. ¿Cuántos mosaicos cuadrados de 50 cm por lado se necesitan?',ans:L*W*4,unit:'mosaicos',tol:0.01,why:'Área = '+L+' · '+W+' = '+(L*W)+' m². Cada mosaico cubre 0.25 m², así que caben 4 por metro cuadrado.'};
+  } else if(k===1){
+    var a=8+rnd(10), b=5+rnd(7);
+    q={text:'Un terreno rectangular mide '+a+' m de frente por '+b+' m de fondo. ¿Cuántos metros de cerca se necesitan para rodearlo una vez?',ans:2*(a+b),unit:'m',tol:0.01,why:'P = 2('+a+' + '+b+') = '+(2*(a+b))+' m.'};
+  } else if(k===2){
+    var d=pick([20,24,30,36,40]), r=d/2;
+    q={text:'Una pizza mide '+d+' cm de diámetro. ¿Cuál es su área? Usa π = 3.14.',ans:r2(3.14*r*r),unit:'cm²',tol:0.02,why:'r = '+r+' cm y A = π r² = 3.14 · '+r+'² = '+r2(3.14*r*r)+' cm².'};
+  } else if(k===3){
+    var l=pick([7,8,9,10,11,12,13]);
+    q={text:'Un cuadrado tiene un área de '+(l*l)+' cm². ¿Cuánto mide su perímetro?',ans:4*l,unit:'cm',tol:0.01,why:'El lado es √'+(l*l)+' = '+l+' cm y P = 4 · '+l+' = '+(4*l)+' cm.'};
+  } else {
+    var bb=pick([4,5,8,10,12]), hh=pick([3,4,5,6,7,9]);
+    q={text:'Un rectángulo tiene un área de '+(bb*hh)+' cm² y su base mide '+bb+' cm. ¿Cuánto mide su perímetro?',ans:2*(bb+hh),unit:'cm',tol:0.01,why:'La altura es '+(bb*hh)+' ÷ '+bb+' = '+hh+' cm y P = 2('+bb+' + '+hh+') = '+(2*(bb+hh))+' cm.'};
+  }
+  return q;
+});
+initTabs(['basicas','compuestas','reto']);
+
+})();
+</script>
+</body>
+</html>
