@@ -112,6 +112,10 @@ input[type=number]{min-width:0}
 .row{align-items:center}
 .pill{line-height:1.5}
 
+.fun{border:1.5px dashed var(--gold);border-radius:10px;padding:14px 18px;margin-top:12px;background:var(--panel)}
+.fun p{margin:0 0 6px;font-size:16px;line-height:1.5}
+.fun p:last-child{margin:0}
+
 </style>
 </head>
 <body>
@@ -150,7 +154,8 @@ input[type=number]{min-width:0}
         <div class="kicker" style="margin-bottom:4px">Capacidad · cuánto líquido le cabe</div>
         <div class="eq" id="capV" style="font-size:22px"></div>
       </div>
-      <p style="color:var(--muted);font-size:15px;margin-top:12px">Medidas en cm. Un litro equivale a 1000 cm³.</p>
+      <div class="fun" id="funSol"></div>
+      <p style="color:var(--muted);font-size:15px;margin-top:12px">Medidas en cm. Ab es el área de la base y hc es la altura del cuerpo. Un litro equivale a 1000 cm³.</p>
     </div>
   </div>
 </section>
@@ -170,7 +175,7 @@ input[type=number]{min-width:0}
         <p><b>Pirámide y prisma</b> con la misma base y la misma altura: igual, un tercio.</p>
         <p><b>Esfera y cilindro</b> que la envuelve (altura 2r): la esfera ocupa dos tercios.</p>
       </div>
-      <div class="band" style="margin-top:14px">Por eso en las fórmulas del cono y de la pirámide aparece ⅓.</div>
+      <div class="band" style="margin-top:14px">Por eso en las fórmulas del cono y de la pirámide aparece la división entre 3.</div>
     </div>
   </div>
 </section>
@@ -293,19 +298,29 @@ function t(x,y,s,a){return '<text x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" text
 
 var SOL={
   cubo:{n:'Cubo',life:'Un dado o un cubo de hielo.',p:[['a','Arista',1,10,4]],
-    vol:function(v){return [ 'V = a³','V = '+v.a+'³ = '+(v.a*v.a*v.a),v.a*v.a*v.a];}},
+    vol:function(v){return ['V = Ab x hc','V = ('+v.a+' x '+v.a+') x '+v.a+' = '+(v.a*v.a*v.a),v.a*v.a*v.a];}},
   prisma:{n:'Prisma rectangular',life:'Una caja de cereal, un ladrillo, un tinaco rectangular.',p:[['l','Largo',1,12,8],['w','Ancho',1,10,4],['h','Alto',1,12,5]],
-    vol:function(v){return ['V = l · w · h','V = '+v.l+' · '+v.w+' · '+v.h+' = '+(v.l*v.w*v.h),v.l*v.w*v.h];}},
+    vol:function(v){return ['V = Ab x hc','V = ('+v.l+' x '+v.w+') x '+v.h+' = '+(v.l*v.w*v.h),v.l*v.w*v.h];}},
   cilindro:{n:'Cilindro',life:'Una lata de refresco o un tinaco redondo.',p:[['r','Radio',1,8,3],['h','Altura',1,12,8]],
-    vol:function(v){var x=PI*v.r*v.r*v.h;return ['V = π · r² · h','V = π · '+v.r+'² · '+v.h+' ≈ '+r2(x),x];}},
+    vol:function(v){var x=PI*v.r*v.r*v.h;return ['V = πr²h','V = π x '+v.r+'² x '+v.h+' ≈ '+r2(x),x];}},
   cono:{n:'Cono',life:'Un cono de helado o un cono de tránsito.',p:[['r','Radio',1,8,3],['h','Altura',1,12,9]],
-    vol:function(v){var x=PI*v.r*v.r*v.h/3;return ['V = ⅓ · π · r² · h','V = ⅓ · π · '+v.r+'² · '+v.h+' ≈ '+r2(x),x];}},
+    vol:function(v){var x=PI*v.r*v.r*v.h/3;return ['V = (πr²h) / 3','V = (π x '+v.r+'² x '+v.h+') / 3 ≈ '+r2(x),x];}},
   piramide:{n:'Pirámide de base cuadrada',life:'La Pirámide del Sol en Teotihuacán o la punta de un obelisco.',p:[['l','Lado de la base',1,12,6],['h','Altura',1,12,7]],
-    vol:function(v){var x=v.l*v.l*v.h/3;return ['V = ⅓ · l² · h','V = ⅓ · '+v.l+'² · '+v.h+' ≈ '+r2(x),x];}},
+    vol:function(v){var x=v.l*v.l*v.h/3;return ['V = (Ab x hc) / 3','V = ('+(v.l*v.l)+' x '+v.h+') / 3 ≈ '+r2(x),x];}},
   esfera:{n:'Esfera',life:'Un balón o una canica.',p:[['r','Radio',1,10,4]],
-    vol:function(v){var x=4*PI*v.r*v.r*v.r/3;return ['V = ⁴⁄₃ · π · r³','V = ⁴⁄₃ · π · '+v.r+'³ ≈ '+r2(x),x];}}
+    vol:function(v){var x=4*PI*v.r*v.r*v.r/3;return ['V = (4/3)πr³','V = (4/3) x π x '+v.r+'³ ≈ '+r2(x),x];}}
 };
 var solKey='cilindro', sv={};
+var FUNSOL={
+  cubo:['<b>Elevar al cubo</b> viene de aquí: a x a x a. La base es una capa de a x a cubitos y apilas a capas. Por eso a³ se lee “a al cubo”.','Es la misma fórmula del prisma, <b>Ab x hc</b>: cubitos por capa por número de capas.'],
+  prisma:['<b>Ab x hc</b>: piensa en cubitos de 1 cm. La base te dice cuántos caben en una capa (Ab) y la altura cuántas capas apilas (hc). Cubitos por capa por capas.','Es la fórmula madre de los cuerpos: la mayoría solo la modifica un poco.'],
+  cilindro:['<b>πr²h</b> es la fórmula del prisma con otra base. Una capa circular tiene área πr² y apilas h capas, igual que Ab x hc.','Por eso al cilindro le sale bien todo lo que sabes del círculo: solo le agregas la altura.'],
+  cono:['<b>(πr²h) / 3</b>: un cono cabe exactamente 3 veces en un cilindro con la misma base y la misma altura. Se comprueba llenando un cono de papel con arroz y vaciándolo en un vaso: se llena con 3 conos.','El 3 de abajo es esa comprobación hecha fórmula.'],
+  piramide:['<b>(Ab x hc) / 3</b>: un cubo se puede armar con 3 pirámides iguales que parten de una misma esquina. Con la misma base y la misma altura, una pirámide es la tercera parte de un prisma.','Es la misma idea del cono: la punta le quita dos terceras partes al volumen.'],
+  esfera:['<b>(4/3)πr³</b>: Arquímedes descubrió que una esfera cabe justo en un cilindro de su misma anchura y ocupa dos tercios de él. Ese cilindro vale πr² x 2r = 2πr³, y dos tercios de eso es (4/3)πr³.','Se cuenta que estaba tan orgulloso de este resultado que pidió grabar una esfera dentro de un cilindro en su tumba.']
+};
+function funHTML(a){return a.map(function(t){return '<p>'+t+'</p>';}).join('');}
+
 
 function drawPrism(l,w,h){
   var k=Math.min(190/(l+0.5*w),170/(h+0.35*w)), W=l*k, H=h*k, dx=w*k*0.5, dy=w*k*0.35;
@@ -382,6 +397,7 @@ function setSol(key){
     var on=b.getAttribute('data-sol')===key;
     b.style.background=on?'var(--ink)':'var(--panel)'; b.style.color=on?'var(--bg)':'var(--ink)'; b.style.borderColor=on?'var(--ink)':'var(--line)';
   });
+  $('#funSol').innerHTML='<div class="kicker" style="margin-bottom:6px">Dato curioso</div>'+funHTML(FUNSOL[key]);
   drawSol();
 }
 Object.keys(SOL).forEach(function(k){
@@ -416,22 +432,22 @@ Quiz(function(){
   var k=rnd(6), q={};
   if(k===0){
     var l=pick([20,24,25,30]), w=pick([10,12]), h=pick([5,6,8]);
-    q={text:'Un ladrillo mide '+l+' × '+w+' × '+h+' cm. ¿Cuál es su volumen?',ans:l*w*h,unit:'cm³',tol:0.01,why:'V = l · w · h = '+l+' · '+w+' · '+h+' = '+(l*w*h)+' cm³.'};
+    q={text:'Un ladrillo mide '+l+' × '+w+' × '+h+' cm. ¿Cuál es su volumen?',ans:l*w*h,unit:'cm³',tol:0.01,why:'V = Ab x hc = ('+l+' x '+w+') x '+h+' = '+(l*w*h)+' cm³.'};
   } else if(k===1){
     var r=pick([2,3,4,5]), h2=pick([8,10,12]);
-    q={text:'Una lata cilíndrica tiene radio de '+r+' cm y altura de '+h2+' cm. ¿Cuál es su volumen? Usa π = 3.14.',ans:r2(3.14*r*r*h2),unit:'cm³',tol:0.02,why:'V = π r² h = 3.14 · '+r+'² · '+h2+' = '+r2(3.14*r*r*h2)+' cm³.'};
+    q={text:'Una lata cilíndrica tiene radio de '+r+' cm y altura de '+h2+' cm. ¿Cuál es su volumen? Usa π = 3.14.',ans:r2(3.14*r*r*h2),unit:'cm³',tol:0.02,why:'V = πr²h = 3.14 x '+r+'² x '+h2+' = '+r2(3.14*r*r*h2)+' cm³.'};
   } else if(k===2){
     var rc=pick([2,3,4]), hc=pick([6,9,12]);
-    q={text:'Un cono de helado tiene radio de '+rc+' cm y altura de '+hc+' cm. ¿Cuál es su volumen? Usa π = 3.14.',ans:r2(3.14*rc*rc*hc/3),unit:'cm³',tol:0.02,why:'V = ⅓ π r² h = ⅓ · 3.14 · '+rc+'² · '+hc+' = '+r2(3.14*rc*rc*hc/3)+' cm³.'};
+    q={text:'Un cono de helado tiene radio de '+rc+' cm y altura de '+hc+' cm. ¿Cuál es su volumen? Usa π = 3.14.',ans:r2(3.14*rc*rc*hc/3),unit:'cm³',tol:0.02,why:'V = (πr²h) / 3 = (3.14 x '+rc+'² x '+hc+') / 3 = '+r2(3.14*rc*rc*hc/3)+' cm³.'};
   } else if(k===3){
     var re=pick([3,6]);
-    q={text:'Un balón tiene radio de '+re+' cm. ¿Cuál es su volumen? Usa π = 3.14.',ans:r2(4*3.14*re*re*re/3),unit:'cm³',tol:0.02,why:'V = ⁴⁄₃ π r³ = ⁴⁄₃ · 3.14 · '+re+'³ = '+r2(4*3.14*re*re*re/3)+' cm³.'};
+    q={text:'Un balón tiene radio de '+re+' cm. ¿Cuál es su volumen? Usa π = 3.14.',ans:r2(4*3.14*re*re*re/3),unit:'cm³',tol:0.02,why:'V = (4/3)πr³ = (4/3) x 3.14 x '+re+'³ = '+r2(4*3.14*re*re*re/3)+' cm³.'};
   } else if(k===4){
     var d=pick([[20,10,5],[30,20,10],[50,40,30],[40,25,20],[100,50,40]]), vv=d[0]*d[1]*d[2];
     q={text:'Una caja mide '+d[0]+' × '+d[1]+' × '+d[2]+' cm. ¿Cuántos litros de agua le caben?',ans:vv/1000,unit:'litros',tol:0.01,why:'V = '+vv+' cm³ y 1000 cm³ = 1 litro, entonces caben '+(vv/1000)+' litros.'};
   } else {
     var a=pick([3,4,5,6,8,10]);
-    q={text:'Un cubo de hielo tiene una arista de '+a+' cm. ¿Cuál es su volumen?',ans:a*a*a,unit:'cm³',tol:0.01,why:'V = a³ = '+a+'³ = '+(a*a*a)+' cm³.'};
+    q={text:'Un cubo de hielo tiene una arista de '+a+' cm. ¿Cuál es su volumen?',ans:a*a*a,unit:'cm³',tol:0.01,why:'V = Ab x hc = ('+a+' x '+a+') x '+a+' = '+(a*a*a)+' cm³.'};
   }
   return q;
 });

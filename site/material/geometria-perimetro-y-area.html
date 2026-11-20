@@ -112,6 +112,10 @@ input[type=number]{min-width:0}
 .row{align-items:center}
 .pill{line-height:1.5}
 
+.fun{border:1.5px dashed var(--gold);border-radius:10px;padding:14px 18px;margin-top:12px;background:var(--panel)}
+.fun p{margin:0 0 6px;font-size:16px;line-height:1.5}
+.fun p:last-child{margin:0}
+
 </style>
 </head>
 <body>
@@ -151,6 +155,7 @@ input[type=number]{min-width:0}
         <div class="eq" id="areaF"></div>
         <div class="eq" id="areaV" style="font-size:22px;margin-top:4px"></div>
       </div>
+      <div class="fun" id="funFig"></div>
       <p style="color:var(--muted);font-size:15px;margin-top:12px">Cada cuadrito de la cuadrícula mide 1 cm × 1 cm, o sea 1 cm² de área. El perímetro se mide en cm; el área, en cm².</p>
     </div>
   </div>
@@ -306,26 +311,35 @@ function lab(x,y,t,anchor){return '<text x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+
 var FIG={
   cuadrado:{n:'Cuadrado',life:'El mosaico de un baño o un pañuelo.',p:[['l','Lado',1,12,5]],
     dims:function(v){return [v.l,v.l];},
-    per:function(v){return ['P = 4 · l','P = 4 · '+v.l+' = '+(4*v.l)+' cm'];},
+    per:function(v){return ['P = 4l','P = 4 x '+v.l+' = '+(4*v.l)+' cm'];},
     area:function(v){return ['A = l²','A = '+v.l+'² = '+(v.l*v.l)+' cm²'];}},
   rectangulo:{n:'Rectángulo',life:'Una hoja del cuaderno, una cancha, una puerta.',p:[['b','Base',1,14,8],['h','Altura',1,10,5]],
     dims:function(v){return [v.b,v.h];},
     per:function(v){return ['P = 2(b + h)','P = 2('+v.b+' + '+v.h+') = '+(2*(v.b+v.h))+' cm'];},
-    area:function(v){return ['A = b · h','A = '+v.b+' · '+v.h+' = '+(v.b*v.h)+' cm²'];}},
+    area:function(v){return ['A = b x h','A = '+v.b+' x '+v.h+' = '+(v.b*v.h)+' cm²'];}},
   triangulo:{n:'Triángulo rectángulo',life:'Una escuadra, un banderín, una rampa vista de lado.',p:[['b','Base',1,14,8],['h','Altura',1,10,6]],
     dims:function(v){return [v.b,v.h];},
-    per:function(v){var c=Math.sqrt(v.b*v.b+v.h*v.h);return ['P = b + h + c, con c = √(b² + h²)','P = '+v.b+' + '+v.h+' + '+r2(c)+' = '+r2(v.b+v.h+c)+' cm'];},
-    area:function(v){return ['A = b · h ÷ 2','A = '+v.b+' · '+v.h+' ÷ 2 = '+r2(v.b*v.h/2)+' cm²'];}},
+    per:function(v){var c=Math.sqrt(v.b*v.b+v.h*v.h);return ['P = a + b + c (suma de los tres lados)','P = '+v.b+' + '+v.h+' + '+r2(c)+' = '+r2(v.b+v.h+c)+' cm'];},
+    area:function(v){return ['A = (b x h) / 2','A = ('+v.b+' x '+v.h+') / 2 = '+r2(v.b*v.h/2)+' cm²'];}},
   circulo:{n:'Círculo',life:'Una pizza, una llanta, una moneda.',p:[['r','Radio',1,8,5]],
     dims:function(v){return [2*v.r,2*v.r];},
-    per:function(v){return ['P = 2 · π · r','P = 2 · π · '+v.r+' ≈ '+r2(2*PI*v.r)+' cm'];},
-    area:function(v){return ['A = π · r²','A = π · '+v.r+'² ≈ '+r2(PI*v.r*v.r)+' cm²'];}},
+    per:function(v){return ['P = 2πr','P = 2 x π x '+v.r+' ≈ '+r2(2*PI*v.r)+' cm'];},
+    area:function(v){return ['A = πr²','A = π x '+v.r+'² ≈ '+r2(PI*v.r*v.r)+' cm²'];}},
   trapecio:{n:'Trapecio isósceles',life:'El perfil de una cubeta o de un puesto de tianguis.',p:[['B','Base mayor',3,14,10],['b','Base menor',1,13,6],['h','Altura',1,9,5]],
     dims:function(v){return [v.B,v.h];},
-    per:function(v){var l=Math.sqrt(v.h*v.h+Math.pow((v.B-v.b)/2,2));return ['P = B + b + 2l, con l = √(h² + ((B − b) ÷ 2)²)','P = '+v.B+' + '+v.b+' + 2('+r2(l)+') = '+r2(v.B+v.b+2*l)+' cm'];},
-    area:function(v){return ['A = (B + b) · h ÷ 2','A = ('+v.B+' + '+v.b+') · '+v.h+' ÷ 2 = '+r2((v.B+v.b)*v.h/2)+' cm²'];}}
+    per:function(v){var l=Math.sqrt(v.h*v.h+Math.pow((v.B-v.b)/2,2));return ['P = a + b + c + d (suma de los cuatro lados)','P = '+v.B+' + '+v.b+' + '+r2(l)+' + '+r2(l)+' = '+r2(v.B+v.b+2*l)+' cm'];},
+    area:function(v){return ['A = (B + b) x h / 2','A = ('+v.B+' + '+v.b+') x '+v.h+' / 2 = '+r2((v.B+v.b)*v.h/2)+' cm²'];}}
 };
 var figKey='rectangulo', vals={};
+var FUNFIG={
+  cuadrado:['<b>l²</b> se lee “lado al cuadrado” por algo literal: multiplicas lado por lado y obtienes cuadritos. Un cuadrado de lado 5 tiene 5 filas de 5 cuadritos, o sea 25.','<b>4l</b> es un atajo: como los cuatro lados son iguales, en vez de sumar l + l + l + l multiplicas 4 por l.'],
+  rectangulo:['<b>b x h</b>: en el rectángulo caben h filas y cada fila tiene b cuadritos. Contar filas iguales es multiplicar, y por eso el área es una multiplicación.','<b>2(b + h)</b>: al recorrer el contorno pasas por dos bases y dos alturas. Es b + h + b + h, que se agrupa como dos veces (b + h).'],
+  triangulo:['<b>(b x h) / 2</b>: si cortas un rectángulo por su diagonal salen dos triángulos iguales. Cada uno es la mitad del rectángulo, así que su área es b x h dividido entre 2.','<b>a + b + c</b> no tiene atajo: es el único caso en que solo queda sumar los tres lados.'],
+  circulo:['<b>π</b> es lo que sale al dividir lo que mide el borde de cualquier círculo entre su diámetro: siempre da unos 3.14, sea una moneda o una pista de atletismo. Por eso <b>2πr</b> es “π veces el diámetro”.','<b>πr²</b>: si cortas el círculo en gajos como una pizza y los acomodas alternados, se arma casi un rectángulo. Su base es la mitad del borde (πr) y su altura es r, y πr x r = πr².'],
+  trapecio:['<b>(B + b) x h / 2</b>: si pegas otro trapecio igual, girado, se forma un rectángulo torcido de base B + b y altura h. El trapecio es la mitad de ese. Dicho de otro modo, es el promedio de las dos bases por la altura.','<b>a + b + c + d</b>: igual que el triángulo, el perímetro de un trapecio es sumar sus cuatro lados.']
+};
+function funHTML(a){return a.map(function(t){return '<p>'+t+'</p>';}).join('');}
+
 function figShape(key,v,ox,oy,u){
   var fillA='fill="var(--gold)" fill-opacity=".38"', ln='stroke="var(--accent)" stroke-width="4" stroke-linejoin="round"';
   if(key==='cuadrado') return '<rect x="'+ox+'" y="'+(oy-v.l*u)+'" width="'+(v.l*u)+'" height="'+(v.l*u)+'" '+fillA+' '+ln+'/>'+lab(ox+v.l*u/2,oy+20,'l = '+v.l);
@@ -362,6 +376,7 @@ function setFig(key){
     var on=b.getAttribute('data-fig')===key;
     b.style.background=on?'var(--ink)':'var(--panel)'; b.style.color=on?'var(--bg)':'var(--ink)'; b.style.borderColor=on?'var(--ink)':'var(--line)';
   });
+  $('#funFig').innerHTML='<div class="kicker" style="margin-bottom:6px">Dato curioso</div>'+funHTML(FUNFIG[key]);
   drawFig();
 }
 Object.keys(FIG).forEach(function(k){
@@ -385,7 +400,7 @@ function drawComp(){
     s+='<polygon points="'+ox+','+oy+' '+(ox+W*u)+','+oy+' '+(ox+W*u)+','+(oy-(H-h)*u)+' '+(ox+(W-w)*u)+','+(oy-(H-h)*u)+' '+(ox+(W-w)*u)+','+(oy-H*u)+' '+ox+','+(oy-H*u)+'" fill="none" stroke="var(--ink)" stroke-width="3.5" stroke-linejoin="round"/>';
     s+=lab(ox+W*u/2,oy+20,'W = '+W)+lab(ox-8,oy-H*u/2+5,'H = '+H,'end')+lab(ox+(W-w/2)*u,oy-(H-h)*u-8,'w = '+w)+lab(ox+(W-w)*u+8,oy-(H-h/2)*u+5,'h = '+h,'start');
     var A1=W*(H-h), A2=(W-w)*h;
-    area='<p>Partiendo en dos rectángulos: W(H − h) + (W − w)h</p><p class="eq">'+W+'('+(H-h)+') + '+(W-w)+'('+h+') = '+A1+' + '+A2+' = '+(A1+A2)+' cm²</p><p>Completando el rectángulo: W · H − w · h</p><p class="eq">'+W+' · '+H+' − '+w+' · '+h+' = '+(W*H)+' − '+(w*h)+' = '+(W*H-w*h)+' cm²</p>';
+    area='<p>Partiendo en dos rectángulos: W(H − h) + (W − w)h</p><p class="eq">'+W+'('+(H-h)+') + '+(W-w)+'('+h+') = '+A1+' + '+A2+' = '+(A1+A2)+' cm²</p><p>Completando el rectángulo: W x H − w x h</p><p class="eq">'+W+' x '+H+' − '+w+' x '+h+' = '+(W*H)+' − '+(w*h)+' = '+(W*H-w*h)+' cm²</p>';
     per='<p>Los lados del recoveco suman lo mismo que los lados que le quitaste al rectángulo, así que el perímetro es el del rectángulo grande.</p><p class="eq">P = 2(W + H) = 2('+W+' + '+H+') = '+(2*(W+H))+' cm</p>';
   } else {
     name='Ventana con arco'; life='Una ventana de iglesia, la entrada de un túnel, una puerta con arco.';
@@ -398,8 +413,8 @@ function drawComp(){
     s+='<path d="M '+ox2+' '+oy2+' L '+(ox2+b*u2)+' '+oy2+' L '+(ox2+b*u2)+' '+(oy2-hh*u2)+' A '+(r*u2)+' '+(r*u2)+' 0 0 0 '+ox2+' '+(oy2-hh*u2)+' Z" fill="none" stroke="var(--ink)" stroke-width="3.5" stroke-linejoin="round"/>';
     s+=lab(ox2+b*u2/2,oy2+20,'b = '+b)+lab(ox2-8,oy2-hh*u2/2+5,'h = '+hh,'end')+lab(ox2+b*u2/2,oy2-hh*u2-r*u2/2+5,'r = '+r);
     var Ar=b*hh, As=PI*r*r/2;
-    area='<p>Rectángulo + medio círculo: b · h + π r² ÷ 2</p><p class="eq">'+b+' · '+hh+' + π · '+r+'² ÷ 2 ≈ '+r2(Ar)+' + '+r2(As)+' = '+r2(Ar+As)+' cm²</p>';
-    per='<p>Base + dos lados + el arco (media circunferencia). El lado de arriba del rectángulo no cuenta, porque ya no es contorno.</p><p class="eq">P = b + 2h + π r = '+b+' + '+(2*hh)+' + π · '+r+' ≈ '+r2(b+2*hh+PI*r)+' cm</p>';
+    area='<p>Rectángulo + medio círculo: b x h + πr² / 2</p><p class="eq">'+b+' x '+hh+' + π x '+r+'² / 2 ≈ '+r2(Ar)+' + '+r2(As)+' = '+r2(Ar+As)+' cm²</p>';
+    per='<p>Base + dos lados + el arco (media circunferencia). El lado de arriba del rectángulo no cuenta, porque ya no es contorno.</p><p class="eq">P = b + 2h + πr = '+b+' + '+(2*hh)+' + π x '+r+' ≈ '+r2(b+2*hh+PI*r)+' cm</p>';
   }
   $('#svgComp').innerHTML=s; $('#compName').textContent=name;
   $('#compLife').textContent='En la vida diaria: '+life.charAt(0).toLowerCase()+life.slice(1);
@@ -443,19 +458,19 @@ Quiz(function(){
   var k=rnd(5), q={};
   if(k===0){
     var L=3+rnd(6), W=3+rnd(4);
-    q={text:'El piso de una recámara mide '+L+' m × '+W+' m. ¿Cuántos mosaicos cuadrados de 50 cm por lado se necesitan?',ans:L*W*4,unit:'mosaicos',tol:0.01,why:'Área = '+L+' · '+W+' = '+(L*W)+' m². Cada mosaico cubre 0.25 m², así que caben 4 por metro cuadrado.'};
+    q={text:'El piso de una recámara mide '+L+' m × '+W+' m. ¿Cuántos mosaicos cuadrados de 50 cm por lado se necesitan?',ans:L*W*4,unit:'mosaicos',tol:0.01,why:'Área = '+L+' x '+W+' = '+(L*W)+' m². Cada mosaico cubre 0.25 m², así que caben 4 por metro cuadrado.'};
   } else if(k===1){
     var a=8+rnd(10), b=5+rnd(7);
     q={text:'Un terreno rectangular mide '+a+' m de frente por '+b+' m de fondo. ¿Cuántos metros de cerca se necesitan para rodearlo una vez?',ans:2*(a+b),unit:'m',tol:0.01,why:'P = 2('+a+' + '+b+') = '+(2*(a+b))+' m.'};
   } else if(k===2){
     var d=pick([20,24,30,36,40]), r=d/2;
-    q={text:'Una pizza mide '+d+' cm de diámetro. ¿Cuál es su área? Usa π = 3.14.',ans:r2(3.14*r*r),unit:'cm²',tol:0.02,why:'r = '+r+' cm y A = π r² = 3.14 · '+r+'² = '+r2(3.14*r*r)+' cm².'};
+    q={text:'Una pizza mide '+d+' cm de diámetro. ¿Cuál es su área? Usa π = 3.14.',ans:r2(3.14*r*r),unit:'cm²',tol:0.02,why:'r = '+r+' cm y A = πr² = 3.14 x '+r+'² = '+r2(3.14*r*r)+' cm².'};
   } else if(k===3){
     var l=pick([7,8,9,10,11,12,13]);
-    q={text:'Un cuadrado tiene un área de '+(l*l)+' cm². ¿Cuánto mide su perímetro?',ans:4*l,unit:'cm',tol:0.01,why:'El lado es √'+(l*l)+' = '+l+' cm y P = 4 · '+l+' = '+(4*l)+' cm.'};
+    q={text:'Un cuadrado tiene un área de '+(l*l)+' cm². ¿Cuánto mide su perímetro?',ans:4*l,unit:'cm',tol:0.01,why:'El lado es √'+(l*l)+' = '+l+' cm y P = 4 x '+l+' = '+(4*l)+' cm.'};
   } else {
     var bb=pick([4,5,8,10,12]), hh=pick([3,4,5,6,7,9]);
-    q={text:'Un rectángulo tiene un área de '+(bb*hh)+' cm² y su base mide '+bb+' cm. ¿Cuánto mide su perímetro?',ans:2*(bb+hh),unit:'cm',tol:0.01,why:'La altura es '+(bb*hh)+' ÷ '+bb+' = '+hh+' cm y P = 2('+bb+' + '+hh+') = '+(2*(bb+hh))+' cm.'};
+    q={text:'Un rectángulo tiene un área de '+(bb*hh)+' cm² y su base mide '+bb+' cm. ¿Cuánto mide su perímetro?',ans:2*(bb+hh),unit:'cm',tol:0.01,why:'La altura es '+(bb*hh)+' / '+bb+' = '+hh+' cm y P = 2('+bb+' + '+hh+') = '+(2*(bb+hh))+' cm.'};
   }
   return q;
 });
